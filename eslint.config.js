@@ -1,4 +1,5 @@
 import antfu from '@antfu/eslint-config'
+import pluginQuery from '@tanstack/eslint-plugin-query'
 
 export default antfu({
   vue: false,
@@ -18,4 +19,6 @@ export default antfu({
     'node/prefer-global/buffer': 'off',
     'unused-imports/no-unused-imports': 'warn',
   },
-})
+}).prepend(
+  ...pluginQuery,
+)
