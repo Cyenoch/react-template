@@ -20,5 +20,5 @@ export default antfu({
     'unused-imports/no-unused-imports': 'warn',
   },
 }).prepend(
-  ...pluginQuery,
+  ...pluginQuery.configs['flat/recommended'],
 )
