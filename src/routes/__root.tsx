@@ -1,7 +1,11 @@
-import { Link, Outlet, createRootRoute } from '@tanstack/react-router'
+import { Link, Outlet, createRootRouteWithContext } from '@tanstack/react-router'
 import { TanStackQueryDevtools, TanStackRouterDevtools } from '@/components/provider/tanstack-devtools'
 
-export const Route = createRootRoute({
+interface RootRouteContext {
+
+}
+
+export const Route = createRootRouteWithContext<RootRouteContext>()({
   component: () => (
     <>
       <div className="p-2 flex gap-2">
