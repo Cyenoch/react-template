@@ -1,4 +1,5 @@
 import { ThemeProvider } from './dark-theme'
+import { AppQueryClientProvider } from './react-query'
 
 export const AppProviders: FC = ({ children }) => {
   return (
@@ -6,7 +7,9 @@ export const AppProviders: FC = ({ children }) => {
       defaultTheme="system"
       storageKey="theme"
     >
-      {children}
+      <AppQueryClientProvider>
+        {children}
+      </AppQueryClientProvider>
     </ThemeProvider>
   )
 }
