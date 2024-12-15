@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { type UserSlice, createUserSlice } from './user'
+import { createUserSlice, type UserSlice } from './user'
 
 export * from './user'
 

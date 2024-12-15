@@ -1,5 +1,5 @@
-import { Link, Outlet, createRootRouteWithContext } from '@tanstack/react-router'
 import { TanStackQueryDevtools, TanStackRouterDevtools } from '@/components/provider/tanstack-devtools'
+import { createRootRouteWithContext, Link, Outlet } from '@tanstack/react-router'
 
 interface RootRouteContext {
 

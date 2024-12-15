@@ -1,15 +1,11 @@
 import antfu from '@antfu/eslint-config'
-import reactPlugin from 'eslint-plugin-react'
-import reactHooksPlugin from 'eslint-plugin-react-hooks'
-import { fixupPluginRules } from '@eslint/compat'
+import pluginRouter from '@tanstack/eslint-plugin-router'
 import pluginQuery from '@tanstack/eslint-plugin-query'
-
-const patchedReactHooksPlugin = fixupPluginRules(reactHooksPlugin)
 
 /** @type {import("eslint").Linter.Config[]} */
 const config = antfu({
   gitignore: true,
-  react: false,
+  react: true,
   jsx: true,
   vue: false,
   yaml: false,
@@ -18,9 +14,6 @@ const config = antfu({
   solid: false,
   svelte: false,
   unocss: false,
-  plugins: {
-    react: reactPlugin,
-  },
 }, {
   ignores: [
     'dist',
@@ -33,14 +26,8 @@ const config = antfu({
     'README.md',
     'bun.lockb',
     'src/components/ui',
+    'src/routeTree.gen.ts',
   ],
-}, ...pluginQuery.configs['flat/recommended'], {
-  name: 'Country: react hooks plugin',
-  plugins: { 'react-hooks': patchedReactHooksPlugin },
-  rules: {
-    ...patchedReactHooksPlugin.configs.recommended.rules,
-    'react-hooks/exhaustive-deps': ['error'],
-  },
 }, {
   rules: {
     'no-console': 'off',
@@ -48,23 +35,15 @@ const config = antfu({
     'node/prefer-global/process': 'off',
     'node/prefer-global/buffer': 'off',
     'unused-imports/no-unused-imports': 'warn',
-    'react/jsx-boolean-value': 'error',
-    'react/jsx-max-props-per-line': 'error',
-    'react/jsx-sort-props': [
-      'error',
-      {
-        callbacksLast: true,
-        shorthandFirst: true,
-        reservedFirst: true,
-        multiline: 'last',
-      },
-    ],
   },
 }, {
   files: ['tailwind.config.js', 'postcss.config.js'],
   rules: {
     'import/no-anonymous-default-export': 'off',
   },
-})
+},
+  ...pluginRouter.configs['flat/recommended'],
+  ...pluginQuery.configs['flat/recommended'],
+)
 
 export default config
