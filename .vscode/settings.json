@@ -20,5 +20,6 @@
     "source.addMissingImports.ts": "never",
     "source.removeUnused.ts": "never",
     "source.removeUnusedImports": "never"
-  }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

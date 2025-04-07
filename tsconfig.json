@@ -32,5 +32,9 @@
   "include": [
     "app/**/*.ts",
     "app/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    ".vinxi"
   ]
 }

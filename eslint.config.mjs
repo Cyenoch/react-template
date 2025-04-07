@@ -4,6 +4,9 @@ import oxlint from 'eslint-plugin-oxlint'
 export default antfu({
   vue: false,
   react: true,
+  formatters: {
+    css: true,
+  },
   ignores: [
     '.vscode/',
     '.vinxi/',
