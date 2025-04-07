@@ -1,19 +1,36 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "baseUrl": ".",
+    "target": "ES2022",
+    "jsx": "react-jsx",
+    "lib": [
+      "ES2022",
+      "DOM.Iterable",
+      "DOM"
+    ],
+    "moduleDetection": "force",
+    "moduleResolution": "Bundler",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
-  },
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
+      "~/*": ["./src/*"]
     },
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ],
-  "files": []
+    "allowImportingTsExtensions": true,
+    "allowJs": true,
+    // Best practices
+    "strict": true,
+    "strictNullChecks": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": true,
+    // Some stricter flags (disabled by default)
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noEmit": true,
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": false,
+    "skipLibCheck": true
+  },
+  "include": [
+    "app/**/*.ts",
+    "app/**/*.tsx"
+  ]
 }

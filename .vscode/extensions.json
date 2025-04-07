@@ -1,7 +1,7 @@
 {
   "recommendations": [
-    "dbaeumer.vscode-eslint",
-    "editorconfig.editorconfig",
-    "usernamehw.errorlens"
+    "usernamehw.errorlens",
+    "oxc.oxc-vscode",
+    "esbenp.prettier-vscode"
   ]
 }
