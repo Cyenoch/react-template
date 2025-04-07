@@ -4,6 +4,15 @@ import tsConfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   vite: {
+    optimizeDeps: {
+      include: [
+        '@tanstack/react-start',
+        'react-dom/client',
+        '@tanstack/react-router',
+        '@tanstack/react-router-with-query',
+        '@tanstack/react-query',
+      ],
+    },
     plugins: [
       tsConfigPaths({
         projects: ['./tsconfig.json'],
