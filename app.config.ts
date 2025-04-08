@@ -1,4 +1,4 @@
-import { defineConfig } from '@tanstack/react-start/config'
+import { defineConfig } from '@tanstack/start/config'
 import autoImport from 'unplugin-auto-import/vite'
 import tsConfigPaths from 'vite-tsconfig-paths'
 
