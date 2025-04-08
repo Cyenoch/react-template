@@ -1,7 +1,7 @@
 import type { QueryClient } from '@tanstack/react-query'
 import appCss from '@/styles/global.css?url'
 
-import { seo } from '@/utils/seo'
+import { seo } from '@/lib/utils/seo'
 import {
   createRootRouteWithContext,
   HeadContent,

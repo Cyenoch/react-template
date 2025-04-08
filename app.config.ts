@@ -17,6 +17,10 @@ export default defineConfig({
         '@tanstack/react-router',
         '@tanstack/react-router-with-query',
         '@tanstack/react-query',
+        '@radix-ui/react-slot',
+        'class-variance-authority',
+        'clsx',
+        'tailwind-merge',
       ],
     },
     plugins: [

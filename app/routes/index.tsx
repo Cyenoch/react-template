@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
@@ -10,6 +11,10 @@ function RouteComponent() {
       <h1>
         Hello "/"!
       </h1>
+
+      <Button>
+        Hello Button
+      </Button>
     </div>
   )
 }
