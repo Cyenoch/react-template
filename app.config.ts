@@ -6,6 +6,9 @@ export default defineConfig({
   tsr: {
     appDirectory: 'app',
   },
+  server: {
+    preset: 'bun',
+  },
   vite: {
     optimizeDeps: {
       include: [

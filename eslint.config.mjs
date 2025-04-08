@@ -10,6 +10,7 @@ export default antfu({
   ignores: [
     '.vscode/',
     '.vinxi/',
+    '.output/',
     'node_modules/',
     'public/',
     'app/routeTree.gen.ts',
