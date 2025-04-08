@@ -24,6 +24,8 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "search.exclude": {
     "**/node_modules": true,
+    "**/.vinxi": true,
+    "**/.output": true,
     "bun.lock": true,
   }
 }
