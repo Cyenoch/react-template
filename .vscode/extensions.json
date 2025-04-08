@@ -2,6 +2,6 @@
   "recommendations": [
     "usernamehw.errorlens",
     "oxc.oxc-vscode",
-    "esbenp.prettier-vscode"
+    "dbaeumer.vscode-eslint"
   ]
 }
