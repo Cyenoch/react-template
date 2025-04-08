@@ -21,5 +21,9 @@
     "source.removeUnused.ts": "never",
     "source.removeUnusedImports": "never"
   },
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "search.exclude": {
+    "**/node_modules": true,
+    "bun.lock": true,
+  }
 }

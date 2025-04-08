@@ -12,7 +12,7 @@ export default defineConfig({
   vite: {
     optimizeDeps: {
       include: [
-        '@tanstack/react-start',
+        '@tanstack/start',
         'react-dom/client',
         '@tanstack/react-router',
         '@tanstack/react-router-with-query',
