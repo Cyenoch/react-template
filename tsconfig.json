@@ -9,9 +9,10 @@
       "DOM"
     ],
     "moduleDetection": "force",
+    "baseUrl": ".",
     "moduleResolution": "Bundler",
     "paths": {
-      "~/*": ["./src/*"]
+      "@/*": ["app/*"]
     },
     "allowImportingTsExtensions": true,
     "allowJs": true,

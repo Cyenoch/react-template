@@ -3,6 +3,9 @@ import autoImport from 'unplugin-auto-import/vite'
 import tsConfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
+  tsr: {
+    appDirectory: 'app',
+  },
   vite: {
     optimizeDeps: {
       include: [

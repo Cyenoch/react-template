@@ -1,4 +1,7 @@
 import type { QueryClient } from '@tanstack/react-query'
+import appCss from '@/styles/global.css?url'
+
+import { seo } from '@/utils/seo'
 import {
   createRootRouteWithContext,
   HeadContent,
@@ -18,8 +21,15 @@ export const Route = createRootRouteWithContext<{
         name: 'viewport',
         content: 'width=device-width, initial-scale=1',
       },
-      {
+      ...seo({
         title: '[ReactTemplate]',
+        description: '[ReactTemplate]',
+      }),
+    ],
+    links: [
+      {
+        rel: 'stylesheet',
+        href: appCss,
       },
     ],
   }),
@@ -41,7 +51,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
 
-      <body>
+      <body className="min-h-[100dvh]">
         {children}
         <Scripts />
       </body>
