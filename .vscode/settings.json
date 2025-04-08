@@ -11,7 +11,7 @@
   "prettier.configPath": ".prettier.json",
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "editor.codeActionsOnSave": {
-    "source.fixAll.ts": "explicit",
+    "source.fixAll.ts": "never",
     "source.fixAll.oxc": "explicit",
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "never",

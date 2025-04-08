@@ -4,7 +4,7 @@
   "private": true,
   "module": "index.ts",
   "scripts": {
-    "dev": "vinxi dev",
+    "dev": "bun -b vinxi dev",
     "build": "vinxi build",
     "start": "vinxi start"
   },

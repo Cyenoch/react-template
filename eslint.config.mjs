@@ -15,4 +15,8 @@ export default antfu({
     'app/routeTree.gen.ts',
     'app/types/',
   ],
-}, oxlint.buildFromOxlintConfigFile('.oxlintrc.json'))
+}, oxlint.buildFromOxlintConfigFile('.oxlintrc.json'), {
+  rules: {
+    'react-hooks-extra/no-direct-set-state-in-use-effect': 'off',
+  },
+})
