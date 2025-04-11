@@ -1,7 +1,7 @@
 import type { QueryClient } from '@tanstack/react-query'
-import appCss from '@/styles/global.css?url'
-
 import { seo } from '@/lib/utils/seo'
+
+import appCss from '@/styles/global.css?url'
 import {
   createRootRouteWithContext,
   HeadContent,
@@ -51,7 +51,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
 
-      <body className="min-h-[100dvh]">
+      <body className="min-h-dvh">
         {children}
         <Scripts />
       </body>
