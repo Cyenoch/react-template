@@ -1,4 +1,4 @@
-import { registerGlobalMiddleware } from '@tanstack/start'
+import { registerGlobalMiddleware } from '@tanstack/react-start'
 
 registerGlobalMiddleware({
   middleware: [],

@@ -1,4 +1,4 @@
-import { defineConfig } from '@tanstack/start/config'
+import { defineConfig } from '@tanstack/react-start/config'
 import autoImport from 'unplugin-auto-import/vite'
 import tsConfigPaths from 'vite-tsconfig-paths'
 
@@ -12,7 +12,7 @@ export default defineConfig({
   vite: {
     optimizeDeps: {
       include: [
-        '@tanstack/start',
+        '@tanstack/react-start',
         'react-dom/client',
         '@tanstack/react-router',
         '@tanstack/react-router-with-query',
