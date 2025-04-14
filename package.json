@@ -45,7 +45,6 @@
     "oxlint": "^0.16.6",
     "postcss": "^8.5.3",
     "tailwindcss": "3",
-    "unplugin-auto-import": "^19.1.2",
     "vite-tsconfig-paths": "^5.1.4"
   }
 }
