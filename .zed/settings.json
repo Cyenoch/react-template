@@ -3,5 +3,14 @@
     "code_actions": {
       "source.fixAll.eslint": true
     }
+  },
+  "inlay_hints": {
+    "enabled": true
+  },
+  "diagnostics": {
+    "include_warnings": true,
+    "inline": {
+      "enabled": true
+    }
   }
 }
