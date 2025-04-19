@@ -5,7 +5,9 @@
     }
   },
   "inlay_hints": {
-    "enabled": true
+    "enabled": true,
+    "show_type_hints": false,
+    "show_parameter_hints": false
   },
   "diagnostics": {
     "include_warnings": true,
