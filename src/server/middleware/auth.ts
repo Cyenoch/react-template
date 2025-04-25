@@ -1,19 +1,22 @@
+import type { Session, User } from '../auth'
 import { SpanStatusCode } from '@opentelemetry/api'
 import { createMiddleware, serverOnly } from '@tanstack/react-start'
 import { getProxyRequestHeaders } from '@tanstack/react-start/server'
-import { auth } from '../auth'
+import { getAuth } from '../auth'
 import { getContext, setContext } from '../context'
+import { getDatabase } from './database'
 import { getTracer } from './tracing'
 
 export const authMiddleware = createMiddleware().server(async ({ next }) => {
-  let cache: Awaited<ReturnType<typeof auth.api.getSession>>
+  const auth = getAuth(getDatabase())
+  let cache: { session: Session, user: User } | null = null
   async function retireSession() {
     if (cache)
       return cache!
     return await getTracer().startActiveSpan('Retire Session', async (span) => {
       const headers = await getProxyRequestHeaders()
       span.setAttribute('headers', JSON.stringify(headers))
-      const session = await auth.api.getSession({ headers })
+      const session = await getAuth(getDatabase()).api.getSession({ headers })
       span.setStatus({
         code: SpanStatusCode.OK,
         message: JSON.stringify(session),
@@ -37,6 +40,7 @@ export const authMiddleware = createMiddleware().server(async ({ next }) => {
     context: {
       session: sessionGetter,
       user: userGetter,
+      auth,
     },
   })
 })
@@ -63,8 +67,9 @@ export const getUserFromContext = serverOnly(async () => getContext('user')())
 
 declare module '../context' {
   interface ContextMap {
-    'session': () => Promise<NonNullable<Awaited<ReturnType<typeof auth.api.getSession>>>['session'] | undefined>
-    'user': () => Promise<NonNullable<Awaited<ReturnType<typeof auth.api.getSession>>>['user'] | undefined>
-    'async-session': () => Promise<Awaited<ReturnType<typeof auth.api.getSession>>>
+    'session': () => Promise<Session | undefined>
+    'user': () => Promise<User | undefined>
+    'async-session': () => Promise<{ session: Session, user: User } | null>
+    'auth': ReturnType<typeof getAuth>
   }
 }
