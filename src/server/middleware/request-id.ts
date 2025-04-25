@@ -1,9 +1,12 @@
-import { createMiddleware } from '@tanstack/react-start'
-import { getContext } from '@tanstack/react-start/server'
+import { createMiddleware, serverOnly } from '@tanstack/react-start'
 import { v7 } from 'uuid'
+import { getContext, setContext } from '../context'
 
-export const requestIdMiddleware = createMiddleware().server(({ next }) => {
+export const requestIdMiddleware = createMiddleware().server(async ({ next }) => {
   const id = v7()
+
+  setContext('requestId', id)
+
   return next({
     context: {
       requestId: id,
@@ -11,6 +14,10 @@ export const requestIdMiddleware = createMiddleware().server(({ next }) => {
   })
 })
 
-export function getRequestId() {
-  return getContext('request-id') as string
+export const getRequestId = serverOnly(() => getContext('requestId'))
+
+declare module '../context' {
+  interface ContextMap {
+    requestId: string
+  }
 }

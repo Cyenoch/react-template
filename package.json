@@ -5,8 +5,8 @@
   "module": "index.ts",
   "scripts": {
     "dev": "bun -b vinxi dev",
-    "build": "vinxi build",
-    "start": "vinxi start",
+    "build": "bun -b vinxi build",
+    "start": "bun -b vinxi start",
     "ba:gen": "bunx -b @better-auth/cli generate --output src/server/database/schema/better-auth.ts -y"
   },
   "peerDependencies": {

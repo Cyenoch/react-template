@@ -1,7 +1,8 @@
-import { createMiddleware } from '@tanstack/react-start'
-import { getContext, getWebRequest, setContext } from '@tanstack/react-start/server'
+import { createMiddleware, serverOnly } from '@tanstack/react-start'
+import { getWebRequest } from '@tanstack/react-start/server'
 import { differenceInMilliseconds } from 'date-fns/differenceInMilliseconds'
 import pino from 'pino'
+import { getContext, setContext } from '../context'
 import { requestIdMiddleware } from './request-id'
 
 const rootLogger = pino({
@@ -35,15 +36,19 @@ export const loggerMiddleware = createMiddleware().middleware([requestIdMiddlewa
 export const logRequestsMiddleware = createMiddleware().middleware([loggerMiddleware]).server(async ({ next, context: { logger } }) => {
   const now = new Date()
   const request = getWebRequest()
-  logger.debug(request, 'Request Incoming')
+  logger.trace(request, '<<< Request Incoming <<<')
   try {
     return await next()
   }
   finally {
-    logger.debug(request, 'Request Completed in %dms', differenceInMilliseconds(new Date(), now))
+    logger.trace(request, '>>> Request Completed in %dms >>>', differenceInMilliseconds(new Date(), now))
   }
 })
 
-export function getLogger() {
-  return getContext('logger') as pino.Logger
+export const getLogger = serverOnly(() => getContext('logger'))
+
+declare module '../context' {
+  interface ContextMap {
+    logger: pino.Logger
+  }
 }

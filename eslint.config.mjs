@@ -10,6 +10,7 @@ export default antfu({
   ignores: [
     '.vscode/',
     '.output/',
+    '.vinxi/',
     '.db',
     'node_modules/',
     'public/',

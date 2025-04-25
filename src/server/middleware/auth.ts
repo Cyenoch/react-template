@@ -1,23 +1,32 @@
-import { createMiddleware } from '@tanstack/react-start'
-import { getContext, getProxyRequestHeaders, setContext } from '@tanstack/react-start/server'
+import { createMiddleware, serverOnly } from '@tanstack/react-start'
+import { getProxyRequestHeaders } from '@tanstack/react-start/server'
 import { auth } from '../auth'
+import { getContext, setContext } from '../context'
 
 export const authMiddleware = createMiddleware().server(async ({ next }) => {
-  let cache: Awaited<ReturnType<typeof auth.api.getSession>> | undefined
-  const retireSession = async () => {
+  let cache: Awaited<ReturnType<typeof auth.api.getSession>>
+  async function retireSession() {
     if (cache)
-      return cache
+      return cache!
     const headers = await getProxyRequestHeaders()
     const session = await auth.api.getSession({ headers })
     return cache = session
   }
 
-  setContext('async-session', retireSession)
+  const sessionGetter = async () => {
+    return await retireSession().then(value => value?.session)
+  }
+  const userGetter = async () => {
+    return await retireSession().then(value => value?.user)
+  }
+
+  setContext('session', sessionGetter)
+  setContext('user', userGetter)
 
   return next({
     context: {
-      session: async () => await retireSession().then(value => value?.session),
-      user: async () => await retireSession().then(value => value?.user),
+      session: sessionGetter,
+      user: userGetter,
     },
   })
 })
@@ -39,12 +48,13 @@ export const requireAuthMiddleware = createMiddleware().middleware([authMiddlewa
   })
 })
 
-export async function getUserFromContext() {
-  const promise = getContext('async-session') as Promise<Awaited<ReturnType<typeof auth.api.getSession>>> | undefined
-  return promise ? await promise.then(value => value?.user) : undefined
-}
+export const getSessionFromContext = serverOnly(async () => getContext('session')())
+export const getUserFromContext = serverOnly(async () => getContext('user')())
 
-export async function getSessionFromContext() {
-  const promise = getContext('async-session') as Promise<Awaited<ReturnType<typeof auth.api.getSession>>> | undefined
-  return promise ? await promise.then(value => value?.session) : undefined
+declare module '../context' {
+  interface ContextMap {
+    'session': () => Promise<NonNullable<Awaited<ReturnType<typeof auth.api.getSession>>>['session'] | undefined>
+    'user': () => Promise<NonNullable<Awaited<ReturnType<typeof auth.api.getSession>>>['user'] | undefined>
+    'async-session': () => Promise<Awaited<ReturnType<typeof auth.api.getSession>>>
+  }
 }

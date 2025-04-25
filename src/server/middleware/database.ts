@@ -1,5 +1,5 @@
-import { createMiddleware } from '@tanstack/react-start'
-import { getContext, setContext } from '@tanstack/react-start/server'
+import { createMiddleware, serverOnly } from '@tanstack/react-start'
+import { getContext, setContext } from '../context'
 import { getDatabaseInstance, getSQLiteClient } from '../database'
 import { DatabasePinoLogger } from '../database/logger'
 import { loggerMiddleware } from './logger'
@@ -22,6 +22,10 @@ export const databaseMiddleware = createMiddleware().middleware([loggerMiddlewar
   }
 })
 
-export function getDatabase() {
-  return getContext('database') as ReturnType<typeof getDatabaseInstance>
+export const getDatabase = serverOnly(() => getContext('database'))
+
+declare module '../context' {
+  interface ContextMap {
+    database: ReturnType<typeof getDatabaseInstance>
+  }
 }
