@@ -9,15 +9,20 @@ export default antfu({
   },
   ignores: [
     '.vscode/',
-    '.vinxi/',
     '.output/',
+    '.db',
     'node_modules/',
     'public/',
-    'app/routeTree.gen.ts',
-    'app/types/',
+    'src/routeTree.gen.ts',
+    'src/types/',
+    'src/server/database/schema/better-auth.ts',
   ],
 }, oxlint.buildFromOxlintConfigFile('.oxlintrc.json'), {
   rules: {
     'react-hooks-extra/no-direct-set-state-in-use-effect': 'off',
+    'no-console': 'off',
+    // Bug: Maximum call stack size exceeded
+    'prefer-const': 'off',
+    'unused-imports/no-unused-imports': 'off',
   },
 })
