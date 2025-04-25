@@ -6,6 +6,7 @@ import { loggerMiddleware } from './logger'
 
 export const databaseMiddleware = createMiddleware().middleware([loggerMiddleware]).server(async ({ next, context: { logger } }) => {
   const client = getSQLiteClient()
+
   const db = getDatabaseInstance(client, new DatabasePinoLogger(logger))
 
   setContext('database', db)

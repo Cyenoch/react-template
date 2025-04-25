@@ -1,16 +1,26 @@
+import { SpanStatusCode } from '@opentelemetry/api'
 import { createMiddleware, serverOnly } from '@tanstack/react-start'
 import { getProxyRequestHeaders } from '@tanstack/react-start/server'
 import { auth } from '../auth'
 import { getContext, setContext } from '../context'
+import { getTracer } from './tracing'
 
 export const authMiddleware = createMiddleware().server(async ({ next }) => {
   let cache: Awaited<ReturnType<typeof auth.api.getSession>>
   async function retireSession() {
     if (cache)
       return cache!
-    const headers = await getProxyRequestHeaders()
-    const session = await auth.api.getSession({ headers })
-    return cache = session
+    return await getTracer().startActiveSpan('Retire Session', async (span) => {
+      const headers = await getProxyRequestHeaders()
+      span.setAttribute('headers', JSON.stringify(headers))
+      const session = await auth.api.getSession({ headers })
+      span.setStatus({
+        code: SpanStatusCode.OK,
+        message: JSON.stringify(session),
+      })
+      span.end()
+      return cache = session
+    })
   }
 
   const sessionGetter = async () => {
