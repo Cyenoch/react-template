@@ -64,6 +64,7 @@ export const requireAuthMiddleware = createMiddleware().middleware([authMiddlewa
 
 export const getSessionFromContext = serverOnly(async () => getContext('session')())
 export const getUserFromContext = serverOnly(async () => getContext('user')())
+export const getAuthFromContext = serverOnly(() => getContext('auth'))
 
 declare module '../context' {
   interface ContextMap {

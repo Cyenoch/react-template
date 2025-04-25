@@ -1,22 +1,22 @@
 import process from 'node:process'
 import { SpanStatusCode, trace } from '@opentelemetry/api'
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node'
-import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http'
+// import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http'
 import { ConsoleMetricExporter, PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
 import { NodeSDK } from '@opentelemetry/sdk-node'
-// import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node'
-import { createMiddleware } from '@tanstack/react-start'
+import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node'
+import { createMiddleware, serverOnly } from '@tanstack/react-start'
 import { getWebRequest } from '@tanstack/react-start/server'
 import { getContext, setContext } from '../context'
 import { requestIdMiddleware } from './request-id'
 
-function getSDK() {
+const getSDK = serverOnly(() => {
   return new NodeSDK({
     serviceName: '[ReactTemplate]',
-    // traceExporter: new ConsoleSpanExporter(),
-    traceExporter: new OTLPTraceExporter({
-      url: 'http://localhost:4318/v1/traces',
-    }),
+    traceExporter: new ConsoleSpanExporter(),
+    // traceExporter: new OTLPTraceExporter({
+    //   url: 'http://localhost:4318/v1/traces',
+    // }),
     metricReader: new PeriodicExportingMetricReader({
       exporter: new ConsoleMetricExporter(),
     }),
@@ -28,7 +28,7 @@ function getSDK() {
       }),
     ],
   })
-}
+})
 
 let started = false
 
@@ -82,7 +82,7 @@ export const openTelemetryMiddleware = createMiddleware()
     })
   })
 
-export const getTracer = () => getContext('tracer')
+export const getTracer = serverOnly(() => getContext('tracer'))
 
 declare module '../context' {
   interface ContextMap {
