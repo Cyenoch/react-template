@@ -6,22 +6,15 @@ import { loggerMiddleware } from './logger'
 import { getTracerSpan } from './tracing'
 
 export const databaseMiddleware = createMiddleware().middleware([loggerMiddleware]).server(async ({ next, context: { logger } }) => {
-  const client = getSQLClient()
-
-  const db = getDatabaseInstance(client, new DatabasePinoLogger(logger, getTracerSpan()))
+  const db = getDatabaseInstance(getSQLClient(), new DatabasePinoLogger(logger, getTracerSpan()))
 
   setContext('database', db)
 
-  try {
-    return await next({
-      context: {
-        db,
-      },
-    })
-  }
-  finally {
-    client.close()
-  }
+  return await next({
+    context: {
+      db,
+    },
+  })
 })
 
 export const getDatabase = serverOnly(() => {
