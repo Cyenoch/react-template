@@ -9,7 +9,7 @@ export const getSQLClient = serverOnly(() => {
   return new Database(Bun.env.DATABASE_URL)
 })
 
-export const getDatabaseInstance = serverOnly((client: SQLiteClient, logger: Logger) => {
+export const getDatabaseInstance = serverOnly((client: SQLiteClient = getSQLClient(), logger?: Logger) => {
   return drizzle({
     client,
     logger,
