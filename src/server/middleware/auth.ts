@@ -1,11 +1,11 @@
 import type { Session, User } from '../auth'
-import { SpanStatusCode, trace } from '@opentelemetry/api'
+import { SpanStatusCode } from '@opentelemetry/api'
 import { createMiddleware, serverOnly } from '@tanstack/react-start'
 import { getProxyRequestHeaders } from '@tanstack/react-start/server'
 import { getAuth } from '../auth'
 import { getContext, setContext } from '../context'
 import { getDatabase } from './database'
-import { getTracer } from './tracing'
+import { getTracer, getTracerSpan } from './tracing'
 
 export const authMiddleware = createMiddleware().server(async ({ next }) => {
   const auth = getAuth(getDatabase())
@@ -18,7 +18,7 @@ export const authMiddleware = createMiddleware().server(async ({ next }) => {
       const headers = await getProxyRequestHeaders()
       span.setAttribute('headers', JSON.stringify(headers))
       const session = await getAuth(getDatabase()).api.getSession({ headers })
-      trace.getActiveSpan()?.setAttributes({
+      getTracerSpan().setAttributes({
         'auth.session': JSON.stringify(session?.session),
         'auth.user': JSON.stringify(session?.user),
       })

@@ -4,7 +4,7 @@ import { Database } from 'bun:sqlite'
 import { drizzle } from 'drizzle-orm/bun-sqlite'
 import * as schema from './schema'
 
-export const getSQLiteClient = serverOnly(() => {
+export const getSQLClient = serverOnly(() => {
   console.assert(Bun.env.DATABASE_URL, 'DATABASE_URL is not defined')
   return new Database(Bun.env.DATABASE_URL)
 })
@@ -17,5 +17,5 @@ export const getDatabaseInstance = serverOnly((client: SQLiteClient, logger: Log
   })
 })
 
-export type SQLiteClient = ReturnType<typeof getSQLiteClient>
+export type SQLiteClient = ReturnType<typeof getSQLClient>
 export type DatabaseInstance = ReturnType<typeof getDatabaseInstance>

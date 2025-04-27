@@ -22,6 +22,7 @@ export default antfu({
   rules: {
     'react-hooks-extra/no-direct-set-state-in-use-effect': 'off',
     'no-console': 'off',
+    'react/no-array-index-key': 'off',
     // Bug: Maximum call stack size exceeded
     'prefer-const': 'off',
     'unused-imports/no-unused-imports': 'off',

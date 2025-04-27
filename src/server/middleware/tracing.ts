@@ -1,3 +1,4 @@
+import type { Span } from '@opentelemetry/api'
 import process from 'node:process'
 import { SpanStatusCode, trace } from '@opentelemetry/api'
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node'
@@ -6,7 +7,7 @@ import { ConsoleMetricExporter, PeriodicExportingMetricReader } from '@opentelem
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node'
 import { createMiddleware, serverOnly } from '@tanstack/react-start'
-import { getWebRequest } from '@tanstack/react-start/server'
+import { getWebRequest, isError } from '@tanstack/react-start/server'
 import { getContext, setContext } from '../context'
 
 const getSDK = serverOnly(() => {
@@ -49,6 +50,7 @@ export const openTelemetryMiddleware = createMiddleware()
     setContext('tracer', tracer)
 
     return await tracer.startActiveSpan(`[${request?.method}] ${url.pathname}`, async (span) => {
+      setContext('tracer-span', span)
       span.setAttributes({
         'function.id': functionId,
         'http.method': request?.method,
@@ -66,7 +68,19 @@ export const openTelemetryMiddleware = createMiddleware()
         return _
       }
       catch (error) {
-      // span.recordException(error)
+        if (isError(error)) {
+          span.recordException(error)
+        }
+        else if (error instanceof Error) {
+          span.recordException(error)
+        }
+        else if (typeof error === 'string') {
+          span.recordException(new Error(error))
+        }
+        else {
+          span.recordException(`Unknown error: ${error}`)
+        }
+
         span.setStatus({
           code: SpanStatusCode.ERROR,
           message: `${error}`,
@@ -86,8 +100,16 @@ export const getTracer = serverOnly(() => {
   return tracer
 })
 
+export const getTracerSpan = serverOnly(() => {
+  const span = getContext('tracer-span')
+  if (!span)
+    throw new Error('Tracer span not initialized. (Please use this function within the request context)')
+  return span
+})
+
 declare module '../context' {
   interface ContextMap {
-    tracer: ReturnType<typeof trace.getTracer>
+    'tracer': ReturnType<typeof trace.getTracer>
+    'tracer-span': Span
   }
 }

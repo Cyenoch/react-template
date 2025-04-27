@@ -1,13 +1,14 @@
 import { createMiddleware, serverOnly } from '@tanstack/react-start'
 import { getContext, setContext } from '../context'
-import { getDatabaseInstance, getSQLiteClient } from '../database'
+import { getDatabaseInstance, getSQLClient } from '../database'
 import { DatabasePinoLogger } from '../database/logger'
 import { loggerMiddleware } from './logger'
+import { getTracerSpan } from './tracing'
 
 export const databaseMiddleware = createMiddleware().middleware([loggerMiddleware]).server(async ({ next, context: { logger } }) => {
-  const client = getSQLiteClient()
+  const client = getSQLClient()
 
-  const db = getDatabaseInstance(client, new DatabasePinoLogger(logger))
+  const db = getDatabaseInstance(client, new DatabasePinoLogger(logger, getTracerSpan()))
 
   setContext('database', db)
 
