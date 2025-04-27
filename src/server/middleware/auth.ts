@@ -40,6 +40,7 @@ export const authMiddleware = createMiddleware().server(async ({ next }) => {
 
   setContext('session', sessionGetter)
   setContext('user', userGetter)
+  setContext('async-session', retireSession)
   setContext('auth', auth)
 
   return next({
