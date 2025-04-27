@@ -14,6 +14,9 @@ export const requestIdMiddleware = createMiddleware().server(async ({ next }) =>
     context: {
       requestId: id,
     },
+    sendContext: {
+      requestId: id,
+    },
   })
 })
 
