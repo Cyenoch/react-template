@@ -45,7 +45,12 @@ export const logRequestsMiddleware = createMiddleware().middleware([loggerMiddle
   }
 })
 
-export const getLogger = serverOnly(() => getContext('logger'))
+export const getLogger = serverOnly(() => {
+  const logger = getContext('logger')
+  if (!logger)
+    throw new Error('Logger not initialized. (Please use this function within the request context)')
+  return logger
+})
 
 declare module '../context' {
   interface ContextMap {

@@ -1,5 +1,5 @@
 import type { Session, User } from '../auth'
-import { SpanStatusCode } from '@opentelemetry/api'
+import { SpanStatusCode, trace } from '@opentelemetry/api'
 import { createMiddleware, serverOnly } from '@tanstack/react-start'
 import { getProxyRequestHeaders } from '@tanstack/react-start/server'
 import { getAuth } from '../auth'
@@ -10,6 +10,7 @@ import { getTracer } from './tracing'
 export const authMiddleware = createMiddleware().server(async ({ next }) => {
   const auth = getAuth(getDatabase())
   let cache: { session: Session, user: User } | null = null
+
   async function retireSession() {
     if (cache)
       return cache!
@@ -17,9 +18,13 @@ export const authMiddleware = createMiddleware().server(async ({ next }) => {
       const headers = await getProxyRequestHeaders()
       span.setAttribute('headers', JSON.stringify(headers))
       const session = await getAuth(getDatabase()).api.getSession({ headers })
+      trace.getActiveSpan()?.setAttributes({
+        'auth.session': JSON.stringify(session?.session),
+        'auth.user': JSON.stringify(session?.user),
+      })
       span.setStatus({
-        code: SpanStatusCode.OK,
-        message: JSON.stringify(session),
+        code: session ? SpanStatusCode.OK : SpanStatusCode.UNSET,
+        message: session ? 'Session found' : 'Session not found',
       })
       span.end()
       return cache = session
@@ -62,9 +67,26 @@ export const requireAuthMiddleware = createMiddleware().middleware([authMiddlewa
   })
 })
 
-export const getSessionFromContext = serverOnly(async () => getContext('session')())
-export const getUserFromContext = serverOnly(async () => getContext('user')())
-export const getAuthFromContext = serverOnly(() => getContext('auth'))
+export const getSessionFromContext = serverOnly(async () => {
+  const session = getContext('session')
+  if (!session)
+    throw new Error('Session not initialized. (Please use this function within the request context)')
+  return await session()
+})
+
+export const getUserFromContext = serverOnly(async () => {
+  const user = getContext('user')
+  if (!user)
+    throw new Error('User not initialized. (Please use this function within the request context)')
+  return await user()
+})
+
+export const getAuthFromContext = serverOnly(() => {
+  const auth = getContext('auth')
+  if (!auth)
+    throw new Error('Auth not initialized. (Please use this function within the request context)')
+  return auth
+})
 
 declare module '../context' {
   interface ContextMap {

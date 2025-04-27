@@ -5,8 +5,8 @@ import { requestIdMiddleware } from './request-id'
 import { openTelemetryMiddleware } from './tracing'
 
 export const appMiddlewares = [
-  requestIdMiddleware,
   openTelemetryMiddleware,
+  requestIdMiddleware,
   loggerMiddleware,
   logRequestsMiddleware,
   databaseMiddleware,

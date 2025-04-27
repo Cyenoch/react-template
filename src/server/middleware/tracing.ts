@@ -8,7 +8,6 @@ import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node'
 import { createMiddleware, serverOnly } from '@tanstack/react-start'
 import { getWebRequest } from '@tanstack/react-start/server'
 import { getContext, setContext } from '../context'
-import { requestIdMiddleware } from './request-id'
 
 const getSDK = serverOnly(() => {
   return new NodeSDK({
@@ -33,8 +32,7 @@ const getSDK = serverOnly(() => {
 let started = false
 
 export const openTelemetryMiddleware = createMiddleware()
-  .middleware([requestIdMiddleware])
-  .server(async ({ context: { requestId }, next, functionId }) => {
+  .server(async ({ next, functionId }) => {
     if (!started) {
       const sdk = getSDK()
       sdk.start()
@@ -53,7 +51,6 @@ export const openTelemetryMiddleware = createMiddleware()
     return await tracer.startActiveSpan(`[${request?.method}] ${url.pathname}`, async (span) => {
       span.setAttributes({
         'function.id': functionId,
-        'request.id': requestId,
         'http.method': request?.method,
         'http.url': request?.url,
       })
@@ -82,7 +79,12 @@ export const openTelemetryMiddleware = createMiddleware()
     })
   })
 
-export const getTracer = serverOnly(() => getContext('tracer'))
+export const getTracer = serverOnly(() => {
+  const tracer = getContext('tracer')
+  if (!tracer)
+    throw new Error('Tracer not initialized. (Please use this function within the request context)')
+  return tracer
+})
 
 declare module '../context' {
   interface ContextMap {

@@ -23,7 +23,12 @@ export const databaseMiddleware = createMiddleware().middleware([loggerMiddlewar
   }
 })
 
-export const getDatabase = serverOnly(() => getContext('database'))
+export const getDatabase = serverOnly(() => {
+  const db = getContext('database')
+  if (!db)
+    throw new Error('Database not initialized. (Please use this function within the request context)')
+  return db
+})
 
 declare module '../context' {
   interface ContextMap {
