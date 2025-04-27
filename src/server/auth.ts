@@ -1,22 +1,19 @@
-import type { DatabaseInstance } from './database'
-import { serverOnly } from '@tanstack/react-start'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { reactStartCookies } from 'better-auth/react-start'
+import { getDatabaseInstance } from './database'
 
-export const getAuth = serverOnly((db: DatabaseInstance) => {
-  return betterAuth({
-    database: drizzleAdapter(db, {
-      provider: 'sqlite',
-    }),
-    emailAndPassword: {
-      enabled: true,
-    },
-    plugins: [
-      reactStartCookies(),
-    ],
-  })
+export const auth = betterAuth({
+  database: drizzleAdapter(getDatabaseInstance(), {
+    provider: 'sqlite',
+  }),
+  emailAndPassword: {
+    enabled: true,
+  },
+  plugins: [
+    reactStartCookies(),
+  ],
 })
 
-export type Session = NonNullable<Awaited<ReturnType<ReturnType<typeof getAuth>['api']['getSession']>>>['session']
-export type User = NonNullable<Awaited<ReturnType<ReturnType<typeof getAuth>['api']['getSession']>>>['user']
+export type Session = NonNullable<Awaited<ReturnType<typeof auth['api']['getSession']>>>['session']
+export type User = NonNullable<Awaited<ReturnType<typeof auth['api']['getSession']>>>['user']
