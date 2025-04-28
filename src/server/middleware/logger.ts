@@ -38,12 +38,12 @@ export const loggerMiddleware = createMiddleware().middleware([requestIdMiddlewa
 export const logRequestsMiddleware = createMiddleware().middleware([loggerMiddleware]).server(async ({ next, context: { logger } }) => {
   const now = new Date()
   const request = getWebRequest()
-  logger.trace(request, '<<< Request Incoming <<<')
+  logger.debug(request, '<<< Request Incoming <<<')
   try {
     return await next()
   }
   finally {
-    logger.trace(request, '>>> Request Completed in %dms >>>', differenceInMilliseconds(new Date(), now))
+    logger.debug(request, '>>> Request Completed in %dms >>>', differenceInMilliseconds(new Date(), now))
   }
 })
 

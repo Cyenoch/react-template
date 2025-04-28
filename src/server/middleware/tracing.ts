@@ -38,11 +38,11 @@ export const openTelemetryMiddleware = createMiddleware()
       const sdk = getSDK()
       sdk.start()
       process.on('SIGTERM', () => {
-        logger.trace('Shutting down OpenTelemetry SDK... (SIGTERM)')
+        logger.info('Shutting down OpenTelemetry SDK... (SIGTERM)')
         sdk.shutdown()
       })
       process.on('SIGINT', () => {
-        logger.trace('Shutting down OpenTelemetry SDK... (SIGINT)')
+        logger.info('Shutting down OpenTelemetry SDK... (SIGINT)')
         sdk.shutdown()
       })
       started = true
