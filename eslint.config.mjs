@@ -16,7 +16,6 @@ export default antfu({
     'public/',
     'src/routeTree.gen.ts',
     'src/types/',
-    'src/server/database/schema/better-auth.ts',
   ],
 }, oxlint.buildFromOxlintConfigFile('.oxlintrc.json'), {
   rules: {
