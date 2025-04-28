@@ -14,8 +14,12 @@ export const getSQLClient = serverOnly(() => {
     return _sql
   _sql = new Database(Bun.env.DATABASE_URL)
   getRootLogger().trace('Opening database connection...')
-  process.on('exit', () => {
-    getRootLogger().trace('Closing database connection...')
+  process.on('SIGTERM', () => {
+    getRootLogger().trace('Closing database connection... (SIGTERM)')
+    _sql.close()
+  })
+  process.on('SIGINT', () => {
+    getRootLogger().trace('Closing database connection... (SIGINT)')
     _sql.close()
   })
   return _sql
