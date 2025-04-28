@@ -3,23 +3,22 @@ import process from 'node:process'
 import { SpanStatusCode, trace } from '@opentelemetry/api'
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node'
 // import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http'
-import { ConsoleMetricExporter, PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
 import { NodeSDK } from '@opentelemetry/sdk-node'
-import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node'
 import { createMiddleware, serverOnly } from '@tanstack/react-start'
 import { getWebRequest, isError } from '@tanstack/react-start/server'
 import { getContext, setContext } from '../context'
+import { getLogger } from './logger'
 
 const getSDK = serverOnly(() => {
   return new NodeSDK({
     serviceName: '[ReactTemplate]',
-    traceExporter: new ConsoleSpanExporter(),
+    // traceExporter: new ConsoleSpanExporter(),
     // traceExporter: new OTLPTraceExporter({
     //   url: 'http://localhost:4318/v1/traces',
     // }),
-    metricReader: new PeriodicExportingMetricReader({
-      exporter: new ConsoleMetricExporter(),
-    }),
+    // metricReader: new PeriodicExportingMetricReader({
+    // exporter: new ConsoleMetricExporter(),
+    // }),
     instrumentations: [
       getNodeAutoInstrumentations({
         '@opentelemetry/instrumentation-http': {
@@ -34,10 +33,12 @@ let started = false
 
 export const openTelemetryMiddleware = createMiddleware()
   .server(async ({ next, functionId }) => {
+    const logger = getLogger()
     if (!started) {
       const sdk = getSDK()
       sdk.start()
-      process.on('beforeExit', () => {
+      process.on('exit', () => {
+        logger.trace('Shutting down OpenTelemetry SDK...')
         sdk.shutdown()
       })
       started = true
@@ -53,6 +54,7 @@ export const openTelemetryMiddleware = createMiddleware()
       setContext('tracer-span', span)
       span.setAttributes({
         'function.id': functionId,
+        'request.id': getContext('requestId'),
         'http.method': request?.method,
         'http.url': request?.url,
       })

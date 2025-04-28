@@ -5,7 +5,7 @@ import pino from 'pino'
 import { getContext, setContext } from '../context'
 import { requestIdMiddleware } from './request-id'
 
-const rootLogger = pino({
+export const rootLogger = pino({
   level: Bun.env.LOG_LEVEL ?? 'trace',
   // ?? Bun.env.NODE_ENV === 'production'
   // ? 'info'
