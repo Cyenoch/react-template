@@ -5,7 +5,7 @@ import pino from 'pino'
 import { getContext, setContext } from '../context'
 import { requestIdMiddleware } from './request-id'
 
-export const rootLogger = pino({
+const rootLogger = pino({
   level: Bun.env.LOG_LEVEL ?? 'trace',
   // ?? Bun.env.NODE_ENV === 'production'
   // ? 'info'
@@ -17,6 +17,8 @@ export const rootLogger = pino({
     },
   },
 })
+
+export const getRootLogger = serverOnly(() => rootLogger)
 
 export const loggerMiddleware = createMiddleware().middleware([requestIdMiddleware]).server(async ({ next, context: { requestId }, functionId }) => {
   const logger = rootLogger.child({
