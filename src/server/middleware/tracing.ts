@@ -2,20 +2,31 @@ import type { Span } from '@opentelemetry/api'
 import process from 'node:process'
 import { SpanStatusCode, trace } from '@opentelemetry/api'
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node'
-// import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http'
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { createMiddleware, serverOnly } from '@tanstack/react-start'
 import { getWebRequest, isError } from '@tanstack/react-start/server'
 import { getContext, setContext } from '../context'
+import {
+  ATTR_APP_PREFIX,
+  ATTR_EXCEPTION_MESSAGE,
+  ATTR_EXCEPTION_TYPE,
+  ATTR_HTTP_REQUEST_METHOD,
+  ATTR_URL_FULL,
+} from '../telemetry/semantic-conventions'
 import { getLogger } from './logger'
+
+const traceExporter = Bun.env.OTEL_EXPORTER_OTLP_ENDPOINT
+  ? new OTLPTraceExporter({
+    url: Bun.env.OTEL_EXPORTER_OTLP_ENDPOINT,
+  })
+  : undefined
 
 const getSDK = serverOnly(() => {
   return new NodeSDK({
     serviceName: '[ReactTemplate]',
     // traceExporter: new ConsoleSpanExporter(),
-    // traceExporter: new OTLPTraceExporter({
-    //   url: 'http://localhost:4318/v1/traces',
-    // }),
+    traceExporter,
     // metricReader: new PeriodicExportingMetricReader({
     // exporter: new ConsoleMetricExporter(),
     // }),
@@ -48,7 +59,7 @@ export const openTelemetryMiddleware = createMiddleware()
       started = true
     }
 
-    const tracer = trace.getTracer('Server')
+    const tracer = trace.getTracer('[ReactTemplate]')
     const request = getWebRequest()
     const url = new URL(request!.url)
 
@@ -57,10 +68,10 @@ export const openTelemetryMiddleware = createMiddleware()
     return await tracer.startActiveSpan(`[${request?.method}] ${url.pathname}`, async (span) => {
       setContext('tracer-span', span)
       span.setAttributes({
-        'function.id': functionId,
-        'request.id': getContext('requestId'),
-        'http.method': request?.method,
-        'http.url': request?.url,
+        [`${ATTR_APP_PREFIX}function.id`]: functionId,
+        [`${ATTR_APP_PREFIX}request.id`]: getContext('requestId'),
+        [ATTR_HTTP_REQUEST_METHOD]: request?.method,
+        [ATTR_URL_FULL]: request?.url,
       })
       try {
         const _ = await next({
@@ -74,17 +85,28 @@ export const openTelemetryMiddleware = createMiddleware()
         return _
       }
       catch (error) {
-        if (isError(error)) {
+        if (isError(error) || error instanceof Error) {
           span.recordException(error)
-        }
-        else if (error instanceof Error) {
-          span.recordException(error)
+          span.setAttributes({
+            [ATTR_EXCEPTION_TYPE]: error.constructor.name,
+            [ATTR_EXCEPTION_MESSAGE]: error.message,
+          })
         }
         else if (typeof error === 'string') {
-          span.recordException(new Error(error))
+          const err = new Error(error)
+          span.recordException(err)
+          span.setAttributes({
+            [ATTR_EXCEPTION_TYPE]: 'StringError',
+            [ATTR_EXCEPTION_MESSAGE]: error,
+          })
         }
         else {
-          span.recordException(`Unknown error: ${error}`)
+          const errorMessage = `Unknown error: ${error}`
+          span.recordException(errorMessage)
+          span.setAttributes({
+            [ATTR_EXCEPTION_TYPE]: 'UnknownError',
+            [ATTR_EXCEPTION_MESSAGE]: errorMessage,
+          })
         }
 
         span.setStatus({
@@ -95,6 +117,7 @@ export const openTelemetryMiddleware = createMiddleware()
       }
       finally {
         span.end()
+        traceExporter?.forceFlush()
       }
     })
   })

@@ -6,6 +6,7 @@ import { getProxyRequestHeaders, useSession } from '@tanstack/react-start/server
 import { eq } from 'drizzle-orm'
 import { getContext, setContext } from '../context'
 import { session, user, userWithoutPassword } from '../database/schema'
+import { ATTR_APP_PREFIX } from '../telemetry/semantic-conventions'
 import { getDatabase } from './database'
 import { getTracer, getTracerSpan } from './tracing'
 
@@ -21,10 +22,10 @@ export const authMiddleware = createMiddleware().server(async ({ next }) => {
   async function retireSession() {
     if (cache)
       return cache!
-    return await getTracer().startActiveSpan('Retire Session', async (span) => {
+    return await getTracer().startActiveSpan('auth.retire_session', async (span) => {
       try {
         const headers = await getProxyRequestHeaders()
-        span.setAttribute('headers', JSON.stringify(headers))
+        span.setAttribute(`${ATTR_APP_PREFIX}headers`, JSON.stringify(headers))
 
         if (!sessionData.sessionId || !sessionData.userId) {
           throw new Response('Unauthorized', { status: 401 })
@@ -41,21 +42,14 @@ export const authMiddleware = createMiddleware().server(async ({ next }) => {
         }
 
         getTracerSpan().setAttributes({
-          'auth.session': JSON.stringify(_session),
-          'auth.user': JSON.stringify(_user),
+          [`${ATTR_APP_PREFIX}auth.session`]: JSON.stringify(_session),
+          [`${ATTR_APP_PREFIX}auth.user`]: JSON.stringify(_user),
         })
         span.setStatus({
           code: session ? SpanStatusCode.OK : SpanStatusCode.UNSET,
           message: session ? 'Session found' : 'Session not found',
         })
         return cache = { session: _session, user: _user }
-      }
-      catch (error) {
-        span.setStatus({
-          code: SpanStatusCode.ERROR,
-          message: `${error}`,
-        })
-        throw error
       }
       finally {
         span.end()
