@@ -1,4 +1,4 @@
-import type { Span } from '@opentelemetry/api'
+import type { Span, Tracer } from '@opentelemetry/api'
 import process from 'node:process'
 import { SpanStatusCode, trace } from '@opentelemetry/api'
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node'
@@ -41,31 +41,41 @@ const getSDK = serverOnly(() => {
 })
 
 let started = false
+let tracer: Tracer
+
+function init() {
+  if (started)
+    return
+  const logger = getLogger()
+  const sdk = getSDK()
+  if (Bun.env.OTEL_EXPORTER_OTLP_ENDPOINT) {
+    logger.info({ OTEL_EXPORTER_OTLP_ENDPOINT: Bun.env.OTEL_EXPORTER_OTLP_ENDPOINT }, 'OTLP exporter enabled.')
+  }
+  else {
+    logger.info('OTLP exporter disabled.')
+  }
+  sdk.start()
+  tracer = trace.getTracer('[ReactTemplate]')
+  process.on('SIGTERM', () => {
+    logger.info('Shutting down OpenTelemetry SDK... (SIGTERM)')
+    sdk.shutdown()
+  })
+  process.on('SIGINT', () => {
+    logger.info('Shutting down OpenTelemetry SDK... (SIGINT)')
+    sdk.shutdown()
+  })
+  started = true
+}
 
 export const openTelemetryMiddleware = createMiddleware()
   .server(async ({ next, functionId }) => {
-    const logger = getLogger()
-    if (!started) {
-      const sdk = getSDK()
-      sdk.start()
-      process.on('SIGTERM', () => {
-        logger.info('Shutting down OpenTelemetry SDK... (SIGTERM)')
-        sdk.shutdown()
-      })
-      process.on('SIGINT', () => {
-        logger.info('Shutting down OpenTelemetry SDK... (SIGINT)')
-        sdk.shutdown()
-      })
-      started = true
-    }
+    // const logger = getLogger()
+    init()
 
-    const tracer = trace.getTracer('[ReactTemplate]')
     const request = getWebRequest()
     const url = new URL(request!.url)
 
-    setContext('tracer', tracer)
-
-    return await tracer.startActiveSpan(`[${request?.method}] ${url.pathname}`, async (span) => {
+    const result = await tracer.startActiveSpan(`${request?.method} ${url.pathname}`, async (span) => {
       setContext('tracer-span', span)
       span.setAttributes({
         [`${ATTR_APP_PREFIX}function.id`]: functionId,
@@ -79,25 +89,22 @@ export const openTelemetryMiddleware = createMiddleware()
             tracer,
           },
         })
+
         span.setStatus({
           code: SpanStatusCode.OK,
         })
         return _
       }
       catch (error) {
+        span.setStatus({
+          code: SpanStatusCode.ERROR,
+          message: `${error}`,
+        })
         if (isError(error) || error instanceof Error) {
           span.recordException(error)
           span.setAttributes({
             [ATTR_EXCEPTION_TYPE]: error.constructor.name,
             [ATTR_EXCEPTION_MESSAGE]: error.message,
-          })
-        }
-        else if (typeof error === 'string') {
-          const err = new Error(error)
-          span.recordException(err)
-          span.setAttributes({
-            [ATTR_EXCEPTION_TYPE]: 'StringError',
-            [ATTR_EXCEPTION_MESSAGE]: error,
           })
         }
         else {
@@ -108,11 +115,6 @@ export const openTelemetryMiddleware = createMiddleware()
             [ATTR_EXCEPTION_MESSAGE]: errorMessage,
           })
         }
-
-        span.setStatus({
-          code: SpanStatusCode.ERROR,
-          message: `${error}`,
-        })
         throw error
       }
       finally {
@@ -120,20 +122,19 @@ export const openTelemetryMiddleware = createMiddleware()
         traceExporter?.forceFlush()
       }
     })
-  })
 
-export const getTracer = serverOnly(() => {
-  const tracer = getContext('tracer')
-  if (!tracer)
-    throw new Error('Tracer not initialized. (Please use this function within the request context)')
-  return tracer
-})
+    return result
+  })
 
 export const getTracerSpan = serverOnly(() => {
   const span = getContext('tracer-span')
   if (!span)
     throw new Error('Tracer span not initialized. (Please use this function within the request context)')
   return span
+})
+
+export const getTracer = serverOnly(() => {
+  return tracer
 })
 
 declare module '../context' {

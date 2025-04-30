@@ -1,4 +1,4 @@
-import type { Session, User } from '../database/schema'
+import type { Session, User, UserRole } from '../database/schema'
 import type { SessionData } from '../function/auth'
 import { SpanStatusCode } from '@opentelemetry/api'
 import { createMiddleware, serverOnly } from '@tanstack/react-start'
@@ -22,39 +22,50 @@ export const authMiddleware = createMiddleware().server(async ({ next }) => {
   async function retireSession() {
     if (cache)
       return cache!
-    return await getTracer().startActiveSpan('auth.retire_session', async (span) => {
-      try {
-        const headers = await getProxyRequestHeaders()
-        span.setAttribute(`${ATTR_APP_PREFIX}headers`, JSON.stringify(headers))
+    const span = getTracer().startSpan('auth.retire_session')
 
-        if (!sessionData.sessionId || !sessionData.userId) {
-          throw new Response('Unauthorized', { status: 401 })
-        }
+    try {
+      const headers = await getProxyRequestHeaders()
+      span.setAttribute(`${ATTR_APP_PREFIX}headers`, JSON.stringify(headers))
 
-        const [_user] = await db.select(userWithoutPassword).from(user).where(eq(user.id, sessionData.userId)).limit(1)
-        const [_session] = await db.select().from(session).where(eq(session.id, sessionData.sessionId)).limit(1)
-
-        if (!_user) {
-          throw new Response('User not found', { status: 404 })
-        }
-        if (!_session) {
-          throw new Response('Session expired, please sign in again', { status: 401 })
-        }
-
-        getTracerSpan().setAttributes({
-          [`${ATTR_APP_PREFIX}auth.session`]: JSON.stringify(_session),
-          [`${ATTR_APP_PREFIX}auth.user`]: JSON.stringify(_user),
-        })
-        span.setStatus({
-          code: session ? SpanStatusCode.OK : SpanStatusCode.UNSET,
-          message: session ? 'Session found' : 'Session not found',
-        })
-        return cache = { session: _session, user: _user }
+      if (!sessionData.sessionId || !sessionData.userId) {
+        throw new Response('Unauthorized', { status: 401 })
       }
-      finally {
-        span.end()
+
+      const [_user] = await db.select(userWithoutPassword).from(user).where(eq(user.id, sessionData.userId)).limit(1)
+      const [_session] = await db.select().from(session).where(eq(session.id, sessionData.sessionId)).limit(1)
+
+      if (!_user) {
+        throw new Response('User not found', { status: 404 })
       }
-    })
+      if (!_session) {
+        throw new Response('Session expired, please sign in again', { status: 401 })
+      }
+
+      getTracerSpan().setAttributes({
+        [`${ATTR_APP_PREFIX}auth.session`]: JSON.stringify(_session),
+        [`${ATTR_APP_PREFIX}auth.user`]: JSON.stringify(_user),
+      })
+      span.setStatus({
+        code: session ? SpanStatusCode.OK : SpanStatusCode.UNSET,
+        message: session ? 'Session found' : 'Session not found',
+      })
+      return cache = { session: _session, user: _user }
+    }
+    catch (error) {
+      if (error instanceof Error)
+        span.recordException(error)
+      else
+        span.recordException(new Error(`${error}`))
+      span.setStatus({
+        code: SpanStatusCode.ERROR,
+        message: `${error}`,
+      })
+      throw error
+    }
+    finally {
+      span.end()
+    }
   }
 
   const sessionGetter = async () => {
@@ -97,17 +108,17 @@ export const requireAuthMiddleware = createMiddleware().middleware([authMiddlewa
   })
 })
 
-export function requireRoleMiddleware(requiredRoles: string[]) {
+export function requireOneOfRoleMiddleware(...oneOf: UserRole[]) {
   return createMiddleware().middleware([requireAuthMiddleware]).server(async ({ next, context }) => {
     const role = context.user.role
     const roles = role?.split(',').filter(Boolean)
-    if (!roles || !roles.some(role => requiredRoles.includes(role)))
+    if (!roles || !roles.some(role => (oneOf as string[]).includes(role)))
       throw new Response('Forbidden', { status: 403 })
     return next()
   })
 }
 
-export const requireAdminRoleMiddleware = requireRoleMiddleware(['admin'])
+export const requireAdminRoleMiddleware = requireOneOfRoleMiddleware('admin')
 
 export const getSessionFromContext = serverOnly(async () => {
   const session = getContext('session')
