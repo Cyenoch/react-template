@@ -13,6 +13,5 @@ export class DatabasePinoLogger implements Logger {
       [ATTR_DB_STATEMENT]: query,
       params: SuperJSON.stringify(params),
     })
-    return this.span?.end()
   }
 }
