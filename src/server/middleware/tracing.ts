@@ -75,7 +75,7 @@ export const openTelemetryMiddleware = createMiddleware()
     const request = getWebRequest()
     const url = new URL(request!.url)
 
-    const result = await tracer.startActiveSpan(`[${request?.method}] ${url.pathname}`, async (span) => {
+    const result = await tracer.startActiveSpan(`http.${request?.method}.${url.pathname}`, async (span) => {
       setContext('tracer-span', span)
       span.setAttributes({
         [`${ATTR_APP_PREFIX}function.id`]: functionId,
