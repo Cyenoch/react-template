@@ -1,18 +1,18 @@
 import type { Logger } from 'drizzle-orm'
 import process from 'node:process'
 import { serverOnly } from '@tanstack/react-start'
-import { Database } from 'bun:sqlite'
-import { drizzle } from 'drizzle-orm/bun-sqlite'
+import { SQL } from 'bun'
+import { drizzle } from 'drizzle-orm/bun-sql'
 import { getRootLogger } from '../middleware/logger'
 import * as schema from './schema'
 
-let _sql: Database
+let _sql: SQL
 
 export const getSQLClient = serverOnly(() => {
   console.assert(Bun.env.DATABASE_URL, 'DATABASE_URL is not defined')
   if (_sql)
     return _sql
-  _sql = new Database(Bun.env.DATABASE_URL)
+  _sql = new SQL(Bun.env.DATABASE_URL!)
   getRootLogger().info('Opening database connection...')
   process.on('SIGTERM', () => {
     getRootLogger().info('Closing database connection... (SIGTERM)')
@@ -25,7 +25,7 @@ export const getSQLClient = serverOnly(() => {
   return _sql
 })
 
-export const getDatabaseInstance = serverOnly((client: SQLiteClient = getSQLClient(), logger?: Logger) => {
+export const getDatabaseInstance = serverOnly((client: SQL = getSQLClient(), logger?: Logger) => {
   return drizzle({
     client,
     logger,
@@ -33,5 +33,6 @@ export const getDatabaseInstance = serverOnly((client: SQLiteClient = getSQLClie
   })
 })
 
-export type SQLiteClient = ReturnType<typeof getSQLClient>
+export type SQLClient = ReturnType<typeof getSQLClient>
 export type DatabaseInstance = ReturnType<typeof getDatabaseInstance>
+export type Transaction = Parameters<Parameters<DatabaseInstance['transaction']>[0]>[0]
