@@ -5,7 +5,7 @@ import { v7 } from 'uuid'
 export const userRole = ['user', 'admin'] as const
 export type UserRole = typeof userRole[number]
 
-export const user = sqliteTable('user', {
+export const userTable = sqliteTable('user', {
   id: text().primaryKey().$default(v7),
 
   name: text().notNull(),
@@ -24,29 +24,29 @@ export const user = sqliteTable('user', {
   uniqueIndex('name_idx').on(t.name),
 ])
 
-export const session = sqliteTable('session', {
+export const sessionTable = sqliteTable('session', {
   id: text().primaryKey().$default(v7),
   ipAddress: text(),
   userAgent: text(),
-  userId: text().notNull().references(() => user.id, { onDelete: 'cascade' }),
+  userId: text().notNull().references(() => userTable.id, { onDelete: 'cascade' }),
 
   createdAt: integer({ mode: 'timestamp_ms' }).notNull().default(sql`CURRENT_TIMESTAMP`),
   updatedAt: integer({ mode: 'timestamp_ms' }).notNull().default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => new Date()),
 })
 
-export const userRelation = relations(user, ({ many }) => ({
-  sessions: many(session),
+export const userRelation = relations(userTable, ({ many }) => ({
+  sessions: many(sessionTable),
 }))
 
-export const sessionRelation = relations(session, ({ one }) => ({
-  user: one(user, {
-    fields: [session.userId],
-    references: [user.id],
+export const sessionRelation = relations(sessionTable, ({ one }) => ({
+  user: one(userTable, {
+    fields: [sessionTable.userId],
+    references: [userTable.id],
   }),
 }))
 
-export type Session = typeof session.$inferSelect
-export type User = typeof user.$inferSelect
+export type Session = typeof sessionTable.$inferSelect
+export type User = typeof userTable.$inferSelect
 
-const { password: _, ...userWithoutPassword } = getTableColumns(user)
+const { password: _, ...userWithoutPassword } = getTableColumns(userTable)
 export { userWithoutPassword }

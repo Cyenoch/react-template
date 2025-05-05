@@ -5,7 +5,7 @@ import { createMiddleware, serverOnly } from '@tanstack/react-start'
 import { getProxyRequestHeaders, useSession } from '@tanstack/react-start/server'
 import { eq } from 'drizzle-orm'
 import { getContext, setContext } from '../context'
-import { session, user, userWithoutPassword } from '../database/schema'
+import { sessionTable, userTable, userWithoutPassword } from '../database/schema'
 import { ATTR_APP_PREFIX } from '../telemetry/semantic-conventions'
 import { getDatabase } from './database'
 import { getTracer, getTracerSpan } from './tracing'
@@ -32,8 +32,8 @@ export const authMiddleware = createMiddleware().server(async ({ next }) => {
         throw new Response('Unauthorized', { status: 401 })
       }
 
-      const [_user] = await db.select(userWithoutPassword).from(user).where(eq(user.id, sessionData.userId)).limit(1)
-      const [_session] = await db.select().from(session).where(eq(session.id, sessionData.sessionId)).limit(1)
+      const [_user] = await db.select(userWithoutPassword).from(userTable).where(eq(userTable.id, sessionData.userId)).limit(1)
+      const [_session] = await db.select().from(sessionTable).where(eq(sessionTable.id, sessionData.sessionId)).limit(1)
 
       if (!_user) {
         throw new Response('User not found', { status: 404 })
@@ -47,8 +47,8 @@ export const authMiddleware = createMiddleware().server(async ({ next }) => {
         [`${ATTR_APP_PREFIX}auth.user`]: JSON.stringify(_user),
       })
       span.setStatus({
-        code: session ? SpanStatusCode.OK : SpanStatusCode.UNSET,
-        message: session ? 'Session found' : 'Session not found',
+        code: sessionTable ? SpanStatusCode.OK : SpanStatusCode.UNSET,
+        message: sessionTable ? 'Session found' : 'Session not found',
       })
       return cache = { session: _session, user: _user }
     }

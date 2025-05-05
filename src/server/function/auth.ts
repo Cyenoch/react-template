@@ -2,7 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders, getRequestIP, useSession } from '@tanstack/start-server-core'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
-import { session, user } from '../database/schema'
+import { sessionTable, userTable } from '../database/schema'
 import { requireAuthMiddleware } from '../middleware/auth'
 import { getDatabase } from '../middleware/database'
 import { appMiddlewares } from '../middleware/global'
@@ -34,8 +34,8 @@ export interface SessionData {
 async function requireUserByEmail(email: string) {
   const db = getDatabase()
   const [one] = await db.select()
-    .from(user)
-    .where(eq(user.email, email))
+    .from(userTable)
+    .where(eq(userTable.email, email))
     .limit(1)
 
   if (!one)
@@ -71,15 +71,15 @@ export const signUp = createServerFn({ method: 'POST' })
     })
     return db.transaction(async (tx) => {
       const [one] = await tx.select()
-        .from(user)
-        .where(eq(user.email, data.email))
+        .from(userTable)
+        .where(eq(userTable.email, data.email))
         .limit(1)
 
       if (one) {
         throw new Response('Email already exists', { status: 400 })
       }
 
-      const [newOne] = await tx.insert(user).values([{
+      const [newOne] = await tx.insert(userTable).values([{
         name: data.email,
         email: data.email,
         password: await Bun.password.hash(data.password),
@@ -87,7 +87,7 @@ export const signUp = createServerFn({ method: 'POST' })
         role: 'user',
       }]).returning()
 
-      const [newSession] = await tx.insert(session).values([{
+      const [newSession] = await tx.insert(sessionTable).values([{
         userId: newOne!.id,
         ipAddress: getRequestIP(),
         userAgent: getRequestHeaders()['User-Agent'],
@@ -118,8 +118,8 @@ export const signIn = createServerFn({ method: 'POST' })
     })
     return db.transaction(async (tx) => {
       const [one] = await tx.select()
-        .from(user)
-        .where(eq(user.email, data.email))
+        .from(userTable)
+        .where(eq(userTable.email, data.email))
         .limit(1)
 
       if (!one) {
@@ -130,7 +130,7 @@ export const signIn = createServerFn({ method: 'POST' })
         throw new Response('Password error', { status: 400 })
       }
 
-      const [newSession] = await tx.insert(session).values([{
+      const [newSession] = await tx.insert(sessionTable).values([{
         userId: one.id,
         ipAddress: getRequestIP(),
         userAgent: getRequestHeaders()['User-Agent'],
@@ -160,9 +160,9 @@ export const resetPassword = createServerFn({
       throw new Error('Password error')
     }
 
-    await getDatabase().update(user).set({
+    await getDatabase().update(userTable).set({
       password: await Bun.password.hash(data.newPassword),
-    }).where(eq(user.id, _user.id))
+    }).where(eq(userTable.id, _user.id))
 
     return { ok: true }
   })
@@ -176,6 +176,6 @@ export const signOut = createServerFn({
       password: Bun.env.AUTH_SECRET,
       name: 'auth',
     })
-    await db.delete(session).where(eq(session.id, id))
+    await db.delete(sessionTable).where(eq(sessionTable.id, id))
     await clear()
   })
