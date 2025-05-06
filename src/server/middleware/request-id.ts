@@ -1,14 +1,11 @@
 import { createMiddleware, serverOnly } from '@tanstack/react-start'
 import { v7 } from 'uuid'
 import { getContext, setContext } from '../context'
-import { getTracerSpan } from './tracing'
 
 export const requestIdMiddleware = createMiddleware().server(async ({ next }) => {
   const id = v7()
 
   setContext('requestId', id)
-
-  getTracerSpan().setAttribute('request.id', id)
 
   return next({
     context: {
