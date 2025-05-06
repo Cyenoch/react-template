@@ -65,6 +65,9 @@ export const signUp = createServerFn({ method: 'POST' })
   .middleware([...appMiddlewares])
   .validator(signUpSchema)
   .handler(async ({ context: { db }, data }) => {
+    const ip = getRequestIP()
+    const ua = getRequestHeaders()['User-Agent']
+
     const { update } = await useSession<SessionData>({
       password: Bun.env.AUTH_SECRET,
       name: 'auth',
@@ -89,8 +92,8 @@ export const signUp = createServerFn({ method: 'POST' })
 
       const [newSession] = await tx.insert(sessionTable).values([{
         userId: newOne!.id,
-        ipAddress: getRequestIP(),
-        userAgent: getRequestHeaders()['User-Agent'],
+        ipAddress: ip,
+        userAgent: ua,
       }]).returning()
 
       await update({
