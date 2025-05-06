@@ -15,6 +15,9 @@
     "paths": {
       "@/*": ["src/*"]
     },
+    "types": [
+      "unplugin-icons/types/react"
+    ],
     "allowImportingTsExtensions": true,
     "allowJs": true,
     // Best practices

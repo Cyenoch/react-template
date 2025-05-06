@@ -1,4 +1,5 @@
 import { defineConfig } from '@tanstack/react-start/config'
+import Icons from 'unplugin-icons/vite'
 import tsConfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
@@ -29,7 +30,9 @@ export default defineConfig({
     plugins: [
       tsConfigPaths({
         projects: ['./tsconfig.json'],
-      }),
+      }) as any,
+
+      Icons({ compiler: 'jsx', jsx: 'react' }),
     ],
   },
 })
