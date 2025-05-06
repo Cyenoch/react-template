@@ -25,5 +25,6 @@ export default antfu({
     // Bug: Maximum call stack size exceeded
     'prefer-const': 'off',
     'unused-imports/no-unused-imports': 'off',
+    'no-debugger': 'off',
   },
 })
