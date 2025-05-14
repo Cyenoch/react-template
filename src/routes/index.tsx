@@ -9,7 +9,7 @@ export const Route = createFileRoute('/')({
 
 function RouteComponent() {
   return (
-    <div className="h-dvh grid place-items-center">
+    <div className="h-svh grid place-items-center">
       <div className="grid gap-y-4 place-items-center">
         <h1>
           Hello "/"!

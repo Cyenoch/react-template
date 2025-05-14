@@ -51,7 +51,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
 
-      <body className="min-h-dvh">
+      <body className="min-h-svh">
         {children}
         <Scripts />
       </body>
