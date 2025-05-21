@@ -1,32 +1,20 @@
 import { createMiddleware } from '@tanstack/react-start'
 import SuperJSON from 'superjson'
-import { loggerMiddleware } from './logger'
+import { getLogger, loggerMiddleware } from './logger'
 
 // Constants
 const DEFAULT_TTL = 60 // 1 minutes
 const DEFAULT_LOCK_TTL = 10 // 10 seconds
 const LOCK_POLL_INTERVAL = 100 // ms
-const LOCK_KEY_PREFIX = 'lock:'
 const CACHE_LOCK_SUFFIX = ':lock'
-
-// Types
-interface CacheValue<T> {
-  value: T
-  ttl: number
-}
 
 export interface CacheFunctions {
   getCacheValue: <T>(key: string) => Promise<T | null>
   setCacheValue: <T>(key: string, value: T, ttl?: number) => Promise<void>
   getCacheValueOrSet: <T>(
     key: string,
-    fn: () => Promise<{ value: T, ttl: number }>,
-    options?: { ttl?: number, lockTtl?: number }
-  ) => Promise<T>
-  synchronizedFn: <T>(
-    key: string,
     fn: () => Promise<T>,
-    options?: { lockTtl?: number }
+    options?: { ttl?: number, lockTtl?: number }
   ) => Promise<T>
   cache: typeof Bun.redis
 }
@@ -54,7 +42,7 @@ async function acquireLock(
     return (await Bun.redis.set(key, '1', 'NX', 'EX', ttl.toString())) === 'OK'
   }
   catch (error) {
-    console.error(`Failed to acquire lock for key ${key}:`, error)
+    getLogger().error(error, `Failed to acquire lock for key ${key}:`, error)
     return false
   }
 }
@@ -67,7 +55,7 @@ async function releaseLock(key: string): Promise<void> {
     await Bun.redis.del(key)
   }
   catch (error) {
-    console.error(`Failed to release lock for key ${key}:`, error)
+    getLogger().error(error, `Failed to release lock for key ${key}:`, error)
   }
 }
 
@@ -124,7 +112,7 @@ export const cacheMiddleware = createMiddleware()
      */
     async function getCacheValueOrSet<T>(
       key: string,
-      fn: () => Promise<CacheValue<T>>,
+      fn: () => Promise<T>,
       options: { ttl?: number, lockTtl?: number } = {},
     ): Promise<T> {
       validateKey(key)
@@ -149,35 +137,9 @@ export const cacheMiddleware = createMiddleware()
       }
 
       try {
-        const { value, ttl: valueTtl } = await fn()
-        const ttlToUse = options.ttl ?? valueTtl
-        await setCacheValue(key, value, ttlToUse)
+        const value = await fn()
+        await setCacheValue(key, value, options.ttl ?? DEFAULT_TTL)
         return value
-      }
-      finally {
-        await releaseLock(lockKey)
-      }
-    }
-
-    /**
-     * Ensures only one instance of a function runs at a time for a given key
-     */
-    async function synchronizedFn(
-      key: string,
-      fn: () => Promise<void>,
-      options: { lockTtl?: number } = {},
-    ): Promise<void> {
-      validateKey(key)
-      const lockKey = `${LOCK_KEY_PREFIX}${key}`
-      const lockTtl = options.lockTtl ?? DEFAULT_LOCK_TTL
-
-      // Try to acquire lock
-      if (!(await acquireLock(lockKey, lockTtl))) {
-        return await waitForLockRelease(lockKey)
-      }
-
-      try {
-        await fn()
       }
       finally {
         await releaseLock(lockKey)
@@ -188,7 +150,6 @@ export const cacheMiddleware = createMiddleware()
       getCacheValue,
       setCacheValue,
       getCacheValueOrSet,
-      synchronizedFn,
       cache: Bun.redis,
     }
 
