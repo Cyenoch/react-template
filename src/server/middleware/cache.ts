@@ -1,6 +1,6 @@
-import type { MiddlewareAfterServer } from '@tanstack/react-start'
 import { createMiddleware } from '@tanstack/react-start'
 import SuperJSON from 'superjson'
+import { loggerMiddleware } from './logger'
 
 // Constants
 const DEFAULT_TTL = 60 * 60 // 1 hour in seconds
@@ -15,7 +15,7 @@ interface CacheValue<T> {
   ttl: number
 }
 
-interface CacheFunctions {
+export interface CacheFunctions {
   getCacheValue: <T>(key: string) => Promise<T | null>
   setCacheValue: <T>(key: string, value: T, ttl?: number) => Promise<void>
   getCacheValueOrSet: <T>(
@@ -81,7 +81,8 @@ async function waitForLockRelease(key: string): Promise<void> {
 }
 
 export const cacheMiddleware = createMiddleware()
-  .server(async ({ next }) => {
+  .middleware([loggerMiddleware])
+  .server(async ({ next, context: { logger } }) => {
     /**
      * Retrieves a value from cache
      */
@@ -92,7 +93,7 @@ export const cacheMiddleware = createMiddleware()
         return value ? SuperJSON.parse<T>(value) : null
       }
       catch (error) {
-        console.error(`Failed to get cache value for key ${key}:`, error)
+        logger.error({ error }, `Failed to get cache value for key ${key}:`)
         return null
       }
     }
@@ -108,11 +109,12 @@ export const cacheMiddleware = createMiddleware()
           await Bun.redis.set(key, serialized, 'EX', ttl)
         }
         else {
-          await Bun.redis.set(key, serialized)
+          logger.warn({ key, value, ttl }, 'setCacheValue ttl < 0')
+          await Bun.redis.set(key, serialized, 'EX', DEFAULT_LOCK_TTL)
         }
       }
       catch (error) {
-        console.error(`Failed to set cache value for key ${key}:`, error)
+        logger.error({ error }, `Failed to set cache value for key ${key}`)
         throw error
       }
     }
@@ -160,23 +162,22 @@ export const cacheMiddleware = createMiddleware()
     /**
      * Ensures only one instance of a function runs at a time for a given key
      */
-    async function synchronizedFn<T>(
+    async function synchronizedFn(
       key: string,
-      fn: () => Promise<T>,
+      fn: () => Promise<void>,
       options: { lockTtl?: number } = {},
-    ): Promise<T> {
+    ): Promise<void> {
       validateKey(key)
       const lockKey = `${LOCK_KEY_PREFIX}${key}`
       const lockTtl = options.lockTtl ?? DEFAULT_LOCK_TTL
 
       // Try to acquire lock
       if (!(await acquireLock(lockKey, lockTtl))) {
-        await waitForLockRelease(lockKey)
-        return synchronizedFn(key, fn, options) // Retry after lock is released
+        return await waitForLockRelease(lockKey)
       }
 
       try {
-        return await fn()
+        await fn()
       }
       finally {
         await releaseLock(lockKey)
@@ -195,8 +196,6 @@ export const cacheMiddleware = createMiddleware()
       context,
     })
   })
-
-export type CacheMiddleware = MiddlewareAfterServer<unknown, undefined, CacheFunctions, undefined, undefined, undefined, any>
 
 declare module '@tanstack/react-start' {
   interface Register {
