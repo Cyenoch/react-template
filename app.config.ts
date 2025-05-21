@@ -12,15 +12,20 @@ export default defineConfig({
   vite: {
     optimizeDeps: {
       include: [
-        '@tanstack/react-start',
-        'react-dom/client',
-        '@tanstack/react-router',
-        '@tanstack/react-router-with-query',
-        '@tanstack/react-query',
-        '@radix-ui/react-slot',
-        'class-variance-authority',
         'clsx',
+        'react',
+        'react-dom',
         'tailwind-merge',
+        'core-js/stable',
+        'react-dom/client',
+        '@radix-ui/react-slot',
+        '@tanstack/react-query',
+        '@tanstack/react-start',
+        '@tanstack/react-router',
+        'class-variance-authority',
+        'regenerator-runtime/runtime',
+        '@tanstack/react-router-with-query',
+        '@tanstack/react-start/server-functions-client',
       ],
     },
     plugins: [
@@ -30,5 +35,15 @@ export default defineConfig({
 
       Icons({ compiler: 'jsx', jsx: 'react' }),
     ],
+
+    build: {
+      target: 'ES2020',
+      sourcemap: true,
+    },
+
+    // 定义全局常量替换方式
+    define: {
+      'process.env': {},
+    },
   },
 })

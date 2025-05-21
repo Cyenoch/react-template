@@ -1,10 +1,7 @@
 /* eslint-disable perfectionist/sort-imports */
-import '@ungap/has-own'
-import '@ungap/from-entries'
-import '@ungap/dom-iterable'
-import '@ungap/structured-clone'
-import '@ungap/url-search-params'
-import '@ungap/with-resolvers'
+// Core-js polyfills for better browser compatibility
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 
 import { StartClient } from '@tanstack/react-start'
 import { hydrateRoot } from 'react-dom/client'
