@@ -10,11 +10,10 @@ export default antfu({
     '.vscode/',
     '.output/',
     '.vinxi/',
-    '.db',
     'node_modules/',
     'public/',
+    'src/components/ui/',
     'src/routeTree.gen.ts',
-    'src/types/',
   ],
   rules: {
     'react-hooks-extra/no-direct-set-state-in-use-effect': 'off',

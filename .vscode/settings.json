@@ -1,6 +1,5 @@
 {
   "prettier.enable": false,
-  "oxc.enable": true,
   "biome.enabled": false,
   "eslint.enable": true,
   "files.readonlyInclude": {

@@ -1,7 +1,39 @@
+/* eslint-disable perfectionist/sort-imports */
+import '@ungap/has-own'
+import '@ungap/from-entries'
+import '@ungap/dom-iterable'
+import '@ungap/structured-clone'
+import '@ungap/url-search-params'
+import '@ungap/with-resolvers'
+
 import { StartClient } from '@tanstack/react-start'
 import { hydrateRoot } from 'react-dom/client'
 import { createRouter } from './router'
 
-const router = createRouter()
+import type { StartSsrGlobal } from '@tanstack/react-start'
 
-hydrateRoot(document!, <StartClient router={router} />)
+declare global {
+  interface Window {
+    __TSR_SSR__?: StartSsrGlobal
+  }
+}
+
+// In the Bun environment, random "Invariant Failed" errors may occur. This should be fixed by:
+;(async () => {
+  let times = 0
+  while (true) {
+    if (window.__TSR_SSR__ && 'dehydrated' in window.__TSR_SSR__) {
+      const router = createRouter()
+      hydrateRoot(document!, <StartClient router={router} />)
+      break
+    }
+    else {
+      times++
+      console.warn('(window as any)?.__TSR_SSR__?.dehydrated is undefined', times)
+      if (times > 1000) {
+        window.location.href = '/'
+      }
+    }
+    await new Promise(resolve => setTimeout(resolve, 50))
+  }
+})()
