@@ -24,17 +24,17 @@ export const authMiddleware = createMiddleware().server(async ({ next }) => {
       throw new Response('Unauthorized', { status: 401 })
     }
 
-    const [_user] = await db.select(userWithoutPassword).from(userTable).where(eq(userTable.id, sessionData.userId)).limit(1)
-    const [_session] = await db.select().from(sessionTable).where(eq(sessionTable.id, sessionData.sessionId)).limit(1)
+    const [user] = await db.select(userWithoutPassword).from(userTable).where(eq(userTable.id, sessionData.userId)).limit(1)
+    const [session] = await db.select().from(sessionTable).where(eq(sessionTable.id, sessionData.sessionId)).limit(1)
 
-    if (!_user) {
+    if (!user) {
       throw new Response('User not found', { status: 404 })
     }
-    if (!_session) {
+    if (!session) {
       throw new Response('Session expired, please sign in again', { status: 401 })
     }
 
-    return { user: _user, session: _session }
+    return { user, session }
   }
 
   const sessionGetter = async () => {
