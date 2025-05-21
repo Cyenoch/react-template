@@ -3,7 +3,7 @@ import SuperJSON from 'superjson'
 import { loggerMiddleware } from './logger'
 
 // Constants
-const DEFAULT_TTL = 60 * 60 // 1 hour in seconds
+const DEFAULT_TTL = 60 // 1 minutes
 const DEFAULT_LOCK_TTL = 10 // 10 seconds
 const LOCK_POLL_INTERVAL = 100 // ms
 const LOCK_KEY_PREFIX = 'lock:'
@@ -110,7 +110,7 @@ export const cacheMiddleware = createMiddleware()
         }
         else {
           logger.warn({ key, value, ttl }, 'setCacheValue ttl < 0')
-          await Bun.redis.set(key, serialized, 'EX', DEFAULT_LOCK_TTL)
+          await Bun.redis.set(key, serialized, 'EX', DEFAULT_TTL)
         }
       }
       catch (error) {
