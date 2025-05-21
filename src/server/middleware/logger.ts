@@ -35,7 +35,7 @@ export const loggerMiddleware = createMiddleware().middleware([requestIdMiddlewa
   })
 })
 
-export const logRequestsMiddleware = createMiddleware().middleware([loggerMiddleware]).server(async ({ next, context: { logger } }) => {
+export const httpRequestLoggerMiddleware = createMiddleware().middleware([loggerMiddleware]).server(async ({ next, context: { logger } }) => {
   const now = new Date()
   const request = getWebRequest()
   logger.debug(request, '<<< Request Incoming <<<')

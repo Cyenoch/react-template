@@ -3,10 +3,9 @@ import { getContext, setContext } from '../context'
 import { getDatabaseInstance, getSQLClient } from '../database'
 import { DatabasePinoLogger } from '../database/logger'
 import { loggerMiddleware } from './logger'
-import { getTracerSpan } from './tracing'
 
 export const databaseMiddleware = createMiddleware().middleware([loggerMiddleware]).server(async ({ next, context: { logger } }) => {
-  const db = getDatabaseInstance(getSQLClient(), new DatabasePinoLogger(logger, getTracerSpan()))
+  const db = getDatabaseInstance(getSQLClient(), new DatabasePinoLogger(logger))
 
   setContext('database', db)
 

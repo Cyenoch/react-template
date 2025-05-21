@@ -21,10 +21,6 @@ export default defineConfig({
         'class-variance-authority',
         'clsx',
         'tailwind-merge',
-        '@opentelemetry/auto-instrumentations-node',
-        '@opentelemetry/exporter-trace-otlp-http',
-        '@opentelemetry/sdk-metrics',
-        '@opentelemetry/sdk-node',
       ],
     },
     plugins: [

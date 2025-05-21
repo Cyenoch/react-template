@@ -1,5 +1,4 @@
 import antfu from '@antfu/eslint-config'
-import oxlint from 'eslint-plugin-oxlint'
 
 export default antfu({
   vue: false,
@@ -17,7 +16,6 @@ export default antfu({
     'src/routeTree.gen.ts',
     'src/types/',
   ],
-}, oxlint.buildFromOxlintConfigFile('.oxlintrc.json'), {
   rules: {
     'react-hooks-extra/no-direct-set-state-in-use-effect': 'off',
     'no-console': 'off',
