@@ -1,3 +1,4 @@
+import { Env } from '@/lib/constants'
 import { createMiddleware, serverOnly } from '@tanstack/react-start'
 import { getWebRequest } from '@tanstack/react-start/server'
 import { differenceInMilliseconds } from 'date-fns/differenceInMilliseconds'
@@ -6,7 +7,7 @@ import { getContext, setContext } from '../context'
 import { requestIdMiddleware } from './request-id'
 
 const rootLogger = pino({
-  level: Bun.env.LOG_LEVEL ?? 'trace',
+  level: Env.LOG_LEVEL ?? 'trace',
   // ?? Bun.env.NODE_ENV === 'production'
   // ? 'info'
   // : 'trace',
@@ -49,8 +50,9 @@ export const httpRequestLoggerMiddleware = createMiddleware().middleware([logger
 
 export const getLogger = serverOnly(() => {
   const logger = getContext('logger')
-  if (!logger)
-    throw new Error('Logger not initialized. (Please use this function within the request context)')
+  if (!logger) {
+    return getRootLogger()
+  }
   return logger
 })
 

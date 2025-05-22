@@ -40,10 +40,5 @@ export default defineConfig({
       target: 'ES2020',
       sourcemap: true,
     },
-
-    // 定义全局常量替换方式
-    define: {
-      'process.env': {},
-    },
   },
 })

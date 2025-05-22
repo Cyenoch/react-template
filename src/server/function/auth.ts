@@ -1,4 +1,5 @@
-import { createServerFn } from '@tanstack/react-start'
+import { Env } from '@/lib/constants'
+import { createServerFn, serverOnly } from '@tanstack/react-start'
 import { getRequestHeaders, getRequestIP, useSession } from '@tanstack/start-server-core'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
@@ -61,6 +62,13 @@ export const getCurrentUser = createServerFn({
   return user
 })
 
+export const useAuthSession = serverOnly(async () => {
+  return await useSession<SessionData>({
+    password: Env.AUTH_SECRET,
+    name: 'auth',
+  })
+})
+
 export const signUp = createServerFn({ method: 'POST' })
   .middleware([...appMiddlewares])
   .validator(signUpSchema)
@@ -68,10 +76,7 @@ export const signUp = createServerFn({ method: 'POST' })
     const ip = getRequestIP()
     const ua = getRequestHeaders()['User-Agent']
 
-    const { update } = await useSession<SessionData>({
-      password: Bun.env.AUTH_SECRET,
-      name: 'auth',
-    })
+    const { update } = await useAuthSession()
     return db.transaction(async (tx) => {
       const [one] = await tx.select()
         .from(userTable)
@@ -115,10 +120,7 @@ export const signIn = createServerFn({ method: 'POST' })
     password: z.string().min(8, 'Password length must be at least 8 characters'),
   }))
   .handler(async ({ context: { db }, data }) => {
-    const { update } = await useSession<SessionData>({
-      password: Bun.env.AUTH_SECRET,
-      name: 'auth',
-    })
+    const { update } = await useAuthSession()
     return db.transaction(async (tx) => {
       const [one] = await tx.select()
         .from(userTable)
@@ -175,10 +177,7 @@ export const signOut = createServerFn({
 })
   .middleware([...appMiddlewares, requireAuthMiddleware])
   .handler(async ({ context: { db, session: { id } } }) => {
-    const { clear } = await useSession({
-      password: Bun.env.AUTH_SECRET,
-      name: 'auth',
-    })
+    const { clear } = await useAuthSession()
     await db.delete(sessionTable).where(eq(sessionTable.id, id))
     await clear()
   })

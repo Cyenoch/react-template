@@ -1,7 +1,6 @@
 /* eslint-disable perfectionist/sort-imports */
 // Core-js polyfills for better browser compatibility
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
+import 'core-js/stable'
 
 import { StartClient } from '@tanstack/react-start'
 import { hydrateRoot } from 'react-dom/client'

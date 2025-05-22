@@ -1,5 +1,6 @@
 import type { Session, User, UserRole } from '../database/schema'
 import type { SessionData } from '../function/auth'
+import { Env } from '@/lib/constants'
 import { createMiddleware, serverOnly } from '@tanstack/react-start'
 import { useSession } from '@tanstack/react-start/server'
 import { eq } from 'drizzle-orm'
@@ -10,7 +11,7 @@ import { getDatabase } from './database'
 export const authMiddleware = createMiddleware().server(async ({ next }) => {
   const db = getDatabase()
   const { data: sessionData } = await useSession<SessionData>({
-    password: Bun.env.AUTH_SECRET,
+    password: Env.AUTH_SECRET,
     name: 'auth',
   })
 
