@@ -7,8 +7,4 @@ export const Env = createIsomorphicFn().server(() => {
     DATABASE_URL: z.string().url(),
     AUTH_SECRET: z.string().min(32).max(256),
   }).parse(Bun.env)
-}).client(() => {
-  z.object({
-
-  }).parse(import.meta.env)
-})()
+})()!
