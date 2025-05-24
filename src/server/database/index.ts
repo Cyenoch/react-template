@@ -1,9 +1,8 @@
 import type { Logger } from 'drizzle-orm'
-import process from 'node:process'
-import { Env } from '@/lib/constants'
 import { serverOnly } from '@tanstack/react-start'
 import { SQL } from 'bun'
 import { drizzle } from 'drizzle-orm/bun-sql'
+import { Env } from '@/lib/constants'
 import { getRootLogger } from '../middleware/logger'
 import * as schema from './schema'
 
@@ -15,14 +14,6 @@ export const getSQLClient = serverOnly(() => {
     return _sql
   _sql = new SQL(Env.DATABASE_URL!)
   getRootLogger().info('Opening database connection...')
-  process.on('SIGTERM', () => {
-    getRootLogger().info('Closing database connection... (SIGTERM)')
-    _sql.close()
-  })
-  process.on('SIGINT', () => {
-    getRootLogger().info('Closing database connection... (SIGINT)')
-    _sql.close()
-  })
   return _sql
 })
 
