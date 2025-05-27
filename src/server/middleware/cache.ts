@@ -97,8 +97,7 @@ export const cacheMiddleware = createMiddleware()
           await Bun.redis.set(key, serialized, 'EX', ttl)
         }
         else {
-          logger.warn({ key, value, ttl }, 'setCacheValue ttl < 0')
-          await Bun.redis.set(key, serialized, 'EX', DEFAULT_TTL)
+          await Bun.redis.del(key)
         }
       }
       catch (error) {
@@ -113,7 +112,7 @@ export const cacheMiddleware = createMiddleware()
     async function getCacheValueOrSet<T>(
       key: string,
       fn: () => Promise<T>,
-      options: { ttl?: number, lockTtl?: number } = {},
+      options: { ttl: number, lockTtl?: number } = { ttl: DEFAULT_TTL },
     ): Promise<T> {
       validateKey(key)
 
@@ -138,7 +137,7 @@ export const cacheMiddleware = createMiddleware()
 
       try {
         const value = await fn()
-        await setCacheValue(key, value, options.ttl ?? DEFAULT_TTL)
+        await setCacheValue(key, value, options.ttl)
         return value
       }
       finally {
