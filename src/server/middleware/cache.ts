@@ -3,7 +3,7 @@ import SuperJSON from 'superjson'
 import { getLogger, loggerMiddleware } from './logger'
 
 // Constants
-const DEFAULT_TTL = 60 // 1 minutes
+// const DEFAULT_TTL = 60 // 1 minutes
 const DEFAULT_LOCK_TTL = 10 // 10 seconds
 const LOCK_POLL_INTERVAL = 100 // ms
 const CACHE_LOCK_SUFFIX = ':lock'
@@ -14,7 +14,7 @@ export interface CacheFunctions {
   getCacheValueOrSet: <T>(
     key: string,
     fn: () => Promise<T>,
-    options?: { ttl?: number, lockTtl?: number }
+    options?: { ttl: number, lockTtl?: number }
   ) => Promise<T>
   cache: typeof Bun.redis
 }
@@ -89,11 +89,11 @@ export const cacheMiddleware = createMiddleware()
     /**
      * Sets a value in cache with optional TTL
      */
-    async function setCacheValue<T>(key: string, value: T, ttl: number = DEFAULT_TTL): Promise<void> {
+    async function setCacheValue<T>(key: string, value: T, ttl?: number): Promise<void> {
       validateKey(key)
       try {
         const serialized = SuperJSON.stringify(value)
-        if (ttl > 0) {
+        if (ttl !== undefined && ttl > 0) {
           await Bun.redis.set(key, serialized, 'EX', ttl)
         }
         else {
@@ -112,7 +112,7 @@ export const cacheMiddleware = createMiddleware()
     async function getCacheValueOrSet<T>(
       key: string,
       fn: () => Promise<T>,
-      options: { ttl: number, lockTtl?: number } = { ttl: DEFAULT_TTL },
+      options?: { ttl: number, lockTtl?: number },
     ): Promise<T> {
       validateKey(key)
 
@@ -123,7 +123,7 @@ export const cacheMiddleware = createMiddleware()
       }
 
       const lockKey = `${key}${CACHE_LOCK_SUFFIX}`
-      const lockTtl = options.lockTtl ?? DEFAULT_LOCK_TTL
+      const lockTtl = options?.lockTtl ?? DEFAULT_LOCK_TTL
 
       // Try to acquire lock
       if (!(await acquireLock(lockKey, lockTtl))) {
@@ -137,7 +137,7 @@ export const cacheMiddleware = createMiddleware()
 
       try {
         const value = await fn()
-        await setCacheValue(key, value, options.ttl)
+        await setCacheValue(key, value, options?.ttl)
         return value
       }
       finally {
@@ -150,15 +150,9 @@ export const cacheMiddleware = createMiddleware()
       setCacheValue,
       getCacheValueOrSet,
       cache: Bun.redis,
-    }
+    } satisfies CacheFunctions
 
     return next({
       context,
     })
   })
-
-declare module '@tanstack/react-start' {
-  interface Register {
-    cache: CacheFunctions
-  }
-}
