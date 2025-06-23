@@ -1,4 +1,4 @@
-import { defineConfig } from 'drizzle-kit'
+import { defineConfig } from 'drizzle-kit';
 
 export default defineConfig({
   schema: './src/server/database/schema/index.ts',
@@ -6,4 +6,4 @@ export default defineConfig({
   dbCredentials: {
     url: Bun.env.DATABASE_URL!,
   },
-})
+});

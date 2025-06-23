@@ -1,70 +1,19 @@
 {
   "prettier.enable": false,
-  "biome.enabled": false,
-  "eslint.enable": true,
+  "biome.enabled": true,
+  "oxc.enable": true,
+  "eslint.enable": false,
   "files.readonlyInclude": {
     "app/routeTree.gen.ts": true,
     "bun.lock": true
   },
-  "eslint.format.enable": true,
   "prettier.configPath": ".prettier.json",
-  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-  "editor.codeActionsOnSave": {
-    "source.fixAll.ts": "never",
-    "source.fixAll.oxc": "explicit",
-    "source.fixAll.eslint": "explicit",
-    "source.organizeImports": "never",
-    "source.organizeLinkDefinitions": "never",
-    "source.sortImports": "never",
-    "source.addMissingImports.ts": "never",
-    "source.removeUnused.ts": "never",
-    "source.removeUnusedImports": "never"
-  },
-
-  // Silent the stylistic rules in you IDE, but still auto fix them
-  "eslint.rules.customizations": [
-    { "rule": "style/*", "severity": "off", "fixable": true },
-    { "rule": "format/*", "severity": "off", "fixable": true },
-    { "rule": "*-indent", "severity": "off", "fixable": true },
-    { "rule": "*-spacing", "severity": "off", "fixable": true },
-    { "rule": "*-spaces", "severity": "off", "fixable": true },
-    { "rule": "*-order", "severity": "off", "fixable": true },
-    { "rule": "*-dangle", "severity": "off", "fixable": true },
-    { "rule": "*-newline", "severity": "off", "fixable": true },
-    { "rule": "*quotes", "severity": "off", "fixable": true },
-    { "rule": "*semi", "severity": "off", "fixable": true }
-  ],
-
-  // Enable eslint for all supported languages
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact",
-    "vue",
-    "html",
-    "markdown",
-    "json",
-    "jsonc",
-    "yaml",
-    "toml",
-    "xml",
-    "gql",
-    "graphql",
-    "astro",
-    "svelte",
-    "css",
-    "less",
-    "scss",
-    "pcss",
-    "postcss"
-  ],
-
+  "editor.defaultFormatter": "biomejs.biome",
   "typescript.tsdk": "node_modules/typescript/lib",
   "search.exclude": {
     "**/node_modules": true,
     "**/.vinxi": true,
     "**/.output": true,
-    "bun.lock": true,
+    "bun.lock": true
   }
 }

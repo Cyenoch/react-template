@@ -4,10 +4,10 @@ export function seo({
   keywords,
   image,
 }: {
-  title: string
-  description?: string
-  image?: string
-  keywords?: string
+  title: string;
+  description?: string;
+  image?: string;
+  keywords?: string;
 }) {
   const tags = [
     { title },
@@ -25,7 +25,7 @@ export function seo({
           { name: 'og:image', content: image },
         ]
       : []),
-  ]
+  ];
 
-  return tags
+  return tags;
 }

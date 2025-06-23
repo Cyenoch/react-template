@@ -1,6 +1,5 @@
 declare module '@tanstack/router-core' {
-  interface StaticDataRouteOption {
-  }
+  interface StaticDataRouteOption {}
 }
 
-export {}
+export {};

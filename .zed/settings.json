@@ -1,8 +1,6 @@
 {
   "formatter": {
-    "code_actions": {
-      "source.fixAll.eslint": true
-    }
+    "code_actions": {}
   },
   "inlay_hints": {
     "enabled": true,

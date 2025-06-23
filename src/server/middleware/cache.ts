@@ -1,22 +1,22 @@
-import { createMiddleware } from '@tanstack/react-start'
-import SuperJSON from 'superjson'
-import { getLogger, loggerMiddleware } from './logger'
+import { createMiddleware } from '@tanstack/react-start';
+import SuperJSON from 'superjson';
+import { getLogger, loggerMiddleware } from './logger';
 
 // Constants
 // const DEFAULT_TTL = 60 // 1 minutes
-const DEFAULT_LOCK_TTL = 10 // 10 seconds
-const LOCK_POLL_INTERVAL = 100 // ms
-const CACHE_LOCK_SUFFIX = ':lock'
+const DEFAULT_LOCK_TTL = 10; // 10 seconds
+const LOCK_POLL_INTERVAL = 100; // ms
+const CACHE_LOCK_SUFFIX = ':lock';
 
 export interface CacheFunctions {
-  getCacheValue: <T>(key: string) => Promise<T | null>
-  setCacheValue: <T>(key: string, value: T, ttl?: number) => Promise<void>
+  getCacheValue: <T>(key: string) => Promise<T | null>;
+  setCacheValue: <T>(key: string, value: T, ttl?: number) => Promise<void>;
   getCacheValueOrSet: <T>(
     key: string,
     fn: () => Promise<T>,
-    options?: { ttl: number, lockTtl?: number }
-  ) => Promise<T>
-  cache: typeof Bun.redis
+    options?: { ttl: number; lockTtl?: number },
+  ) => Promise<T>;
+  cache: typeof Bun.redis;
 }
 
 /**
@@ -24,10 +24,10 @@ export interface CacheFunctions {
  */
 function validateKey(key: string): void {
   if (typeof key !== 'string' || key.length === 0) {
-    throw new Error('Cache key must be a non-empty string')
+    throw new Error('Cache key must be a non-empty string');
   }
   if (key.includes('\0') || key.includes('\n') || key.includes('\r')) {
-    throw new Error('Cache key contains invalid characters')
+    throw new Error('Cache key contains invalid characters');
   }
 }
 
@@ -39,11 +39,10 @@ async function acquireLock(
   ttl: number = DEFAULT_LOCK_TTL,
 ): Promise<boolean> {
   try {
-    return (await Bun.redis.set(key, '1', 'NX', 'EX', ttl.toString())) === 'OK'
-  }
-  catch (error) {
-    getLogger().error(error, `Failed to acquire lock for key ${key}:`, error)
-    return false
+    return (await Bun.redis.set(key, '1', 'NX', 'EX', ttl.toString())) === 'OK';
+  } catch (error) {
+    getLogger().error(error, `Failed to acquire lock for key ${key}:`, error);
+    return false;
   }
 }
 
@@ -52,10 +51,9 @@ async function acquireLock(
  */
 async function releaseLock(key: string): Promise<void> {
   try {
-    await Bun.redis.del(key)
-  }
-  catch (error) {
-    getLogger().error(error, `Failed to release lock for key ${key}:`, error)
+    await Bun.redis.del(key);
+  } catch (error) {
+    getLogger().error(error, `Failed to release lock for key ${key}:`, error);
   }
 }
 
@@ -64,7 +62,7 @@ async function releaseLock(key: string): Promise<void> {
  */
 async function waitForLockRelease(key: string): Promise<void> {
   while (await Bun.redis.exists(key)) {
-    await new Promise(resolve => setTimeout(resolve, LOCK_POLL_INTERVAL))
+    await new Promise((resolve) => setTimeout(resolve, LOCK_POLL_INTERVAL));
   }
 }
 
@@ -75,34 +73,35 @@ export const cacheMiddleware = createMiddleware()
      * Retrieves a value from cache
      */
     async function getCacheValue<T>(key: string): Promise<T | null> {
-      validateKey(key)
+      validateKey(key);
       try {
-        const value = await Bun.redis.get(key)
-        return value ? SuperJSON.parse<T>(value) : null
-      }
-      catch (error) {
-        logger.error({ error }, `Failed to get cache value for key ${key}:`)
-        return null
+        const value = await Bun.redis.get(key);
+        return value ? SuperJSON.parse<T>(value) : null;
+      } catch (error) {
+        logger.error({ error }, `Failed to get cache value for key ${key}:`);
+        return null;
       }
     }
 
     /**
      * Sets a value in cache with optional TTL
      */
-    async function setCacheValue<T>(key: string, value: T, ttl?: number): Promise<void> {
-      validateKey(key)
+    async function setCacheValue<T>(
+      key: string,
+      value: T,
+      ttl?: number,
+    ): Promise<void> {
+      validateKey(key);
       try {
-        const serialized = SuperJSON.stringify(value)
+        const serialized = SuperJSON.stringify(value);
         if (ttl !== undefined && ttl > 0) {
-          await Bun.redis.set(key, serialized, 'EX', ttl)
+          await Bun.redis.set(key, serialized, 'EX', ttl);
+        } else {
+          await Bun.redis.del(key);
         }
-        else {
-          await Bun.redis.del(key)
-        }
-      }
-      catch (error) {
-        logger.error({ error }, `Failed to set cache value for key ${key}`)
-        throw error
+      } catch (error) {
+        logger.error({ error }, `Failed to set cache value for key ${key}`);
+        throw error;
       }
     }
 
@@ -112,36 +111,35 @@ export const cacheMiddleware = createMiddleware()
     async function getCacheValueOrSet<T>(
       key: string,
       fn: () => Promise<T>,
-      options?: { ttl: number, lockTtl?: number },
+      options?: { ttl: number; lockTtl?: number },
     ): Promise<T> {
-      validateKey(key)
+      validateKey(key);
 
       // Try to get cached value first
-      const cached = await getCacheValue<T>(key)
+      const cached = await getCacheValue<T>(key);
       if (cached !== null) {
-        return cached
+        return cached;
       }
 
-      const lockKey = `${key}${CACHE_LOCK_SUFFIX}`
-      const lockTtl = options?.lockTtl ?? DEFAULT_LOCK_TTL
+      const lockKey = `${key}${CACHE_LOCK_SUFFIX}`;
+      const lockTtl = options?.lockTtl ?? DEFAULT_LOCK_TTL;
 
       // Try to acquire lock
       if (!(await acquireLock(lockKey, lockTtl))) {
-        await waitForLockRelease(lockKey)
+        await waitForLockRelease(lockKey);
         // After lock is released, try to get from cache again
-        const retryCached = await getCacheValue<T>(key)
+        const retryCached = await getCacheValue<T>(key);
         if (retryCached !== null) {
-          return retryCached
+          return retryCached;
         }
       }
 
       try {
-        const value = await fn()
-        await setCacheValue(key, value, options?.ttl)
-        return value
-      }
-      finally {
-        await releaseLock(lockKey)
+        const value = await fn();
+        await setCacheValue(key, value, options?.ttl);
+        return value;
+      } finally {
+        await releaseLock(lockKey);
       }
     }
 
@@ -150,9 +148,9 @@ export const cacheMiddleware = createMiddleware()
       setCacheValue,
       getCacheValueOrSet,
       cache: Bun.redis,
-    } satisfies CacheFunctions
+    } satisfies CacheFunctions;
 
     return next({
       context,
-    })
-  })
+    });
+  });

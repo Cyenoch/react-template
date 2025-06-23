@@ -1,9 +1,9 @@
-import type { Logger } from 'drizzle-orm'
-import type pino from 'pino'
+import type { Logger } from 'drizzle-orm';
+import type pino from 'pino';
 
 export class DatabasePinoLogger implements Logger {
   constructor(private readonly logger: pino.Logger) {}
   logQuery(query: string, params: unknown[]): void {
-    this.logger.debug({ query, params }, 'Database Query')
+    this.logger.debug({ query, params }, 'Database Query');
   }
 }

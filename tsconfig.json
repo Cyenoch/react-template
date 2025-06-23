@@ -3,11 +3,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "jsx": "react-jsx",
-    "lib": [
-      "ES2022",
-      "DOM.Iterable",
-      "DOM"
-    ],
+    "lib": ["ES2022", "DOM.Iterable", "DOM"],
     "moduleDetection": "force",
     "baseUrl": ".",
     "module": "ES2020",
@@ -15,9 +11,7 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "types": [
-      "unplugin-icons/types/react"
-    ],
+    "types": ["unplugin-icons/types/react"],
     "allowImportingTsExtensions": true,
     "allowJs": true,
     // Best practices
@@ -34,8 +28,5 @@
     "verbatimModuleSyntax": false,
     "skipLibCheck": true
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

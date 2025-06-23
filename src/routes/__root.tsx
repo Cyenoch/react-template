@@ -1,16 +1,16 @@
-import type { QueryClient } from '@tanstack/react-query'
-import { seo } from '@/lib/utils/seo'
+import type { QueryClient } from '@tanstack/react-query';
+import { seo } from '@/lib/utils/seo';
 
-import appCss from '@/styles/global.css?url'
+import appCss from '@/styles/global.css?url';
 import {
   createRootRouteWithContext,
   HeadContent,
   Outlet,
   Scripts,
-} from '@tanstack/react-router'
+} from '@tanstack/react-router';
 
 export const Route = createRootRouteWithContext<{
-  queryClient: QueryClient
+  queryClient: QueryClient;
 }>()({
   head: () => ({
     meta: [
@@ -34,14 +34,14 @@ export const Route = createRootRouteWithContext<{
     ],
   }),
   component: RootComponent,
-})
+});
 
 function RootComponent() {
   return (
     <RootDocument>
       <Outlet />
     </RootDocument>
-  )
+  );
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
@@ -56,5 +56,5 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
-  )
+  );
 }

@@ -1,10 +1,10 @@
-import { Env } from '@/lib/constants'
-import { createMiddleware, serverOnly } from '@tanstack/react-start'
-import { getWebRequest } from '@tanstack/react-start/server'
-import { differenceInMilliseconds } from 'date-fns/differenceInMilliseconds'
-import pino from 'pino'
-import { getContext, setContext } from '../context'
-import { requestIdMiddleware } from './request-id'
+import { Env } from '@/lib/constants';
+import { createMiddleware, serverOnly } from '@tanstack/react-start';
+import { getWebRequest } from '@tanstack/react-start/server';
+import { differenceInMilliseconds } from 'date-fns/differenceInMilliseconds';
+import pino from 'pino';
+import { getContext, setContext } from '../context';
+import { requestIdMiddleware } from './request-id';
 
 const rootLogger = pino({
   level: Env.LOG_LEVEL ?? 'trace',
@@ -17,47 +17,54 @@ const rootLogger = pino({
       colorize: true,
     },
   },
-})
+});
 
-export const getRootLogger = serverOnly(() => rootLogger)
+export const getRootLogger = serverOnly(() => rootLogger);
 
-export const loggerMiddleware = createMiddleware().middleware([requestIdMiddleware]).server(async ({ next, context: { requestId }, functionId }) => {
-  const logger = rootLogger.child({
-    functionId,
-    requestId,
-  })
+export const loggerMiddleware = createMiddleware()
+  .middleware([requestIdMiddleware])
+  .server(async ({ next, context: { requestId }, functionId }) => {
+    const logger = rootLogger.child({
+      functionId,
+      requestId,
+    });
 
-  setContext('logger', logger)
+    setContext('logger', logger);
 
-  return next({
-    context: {
-      logger,
-    },
-  })
-})
+    return next({
+      context: {
+        logger,
+      },
+    });
+  });
 
-export const httpRequestLoggerMiddleware = createMiddleware().middleware([loggerMiddleware]).server(async ({ next, context: { logger } }) => {
-  const now = new Date()
-  const request = getWebRequest()
-  logger.debug(request, '<<< Request Incoming <<<')
-  try {
-    return await next()
-  }
-  finally {
-    logger.debug(request, '>>> Request Completed in %dms >>>', differenceInMilliseconds(new Date(), now))
-  }
-})
+export const httpRequestLoggerMiddleware = createMiddleware()
+  .middleware([loggerMiddleware])
+  .server(async ({ next, context: { logger } }) => {
+    const now = new Date();
+    const request = getWebRequest();
+    logger.debug(request, '<<< Request Incoming <<<');
+    try {
+      return await next();
+    } finally {
+      logger.debug(
+        request,
+        '>>> Request Completed in %dms >>>',
+        differenceInMilliseconds(new Date(), now),
+      );
+    }
+  });
 
 export const getLogger = serverOnly(() => {
-  const logger = getContext('logger')
+  const logger = getContext('logger');
   if (!logger) {
-    return getRootLogger()
+    return getRootLogger();
   }
-  return logger
-})
+  return logger;
+});
 
 declare module '../context' {
   interface ContextMap {
-    logger: pino.Logger
+    logger: pino.Logger;
   }
 }
