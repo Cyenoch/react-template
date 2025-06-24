@@ -8,6 +8,7 @@
     "build": "bun -b vite build",
     "start": "bun -b .output/server/index.mjs",
     "typecheck": "bun -b tsc --noEmit",
+    "up": "bunx taze major -x tailwindcss -x tailwind-merge -w",
     "generate": "bunx -b drizzle-kit generate",
     "migrate": "bun migrate.ts"
   },
@@ -17,7 +18,7 @@
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",
     "@tanstack/react-query": "^5.81.2",
-    "@tanstack/react-query-devtools": "^5.76.1",
+    "@tanstack/react-query-devtools": "^5.81.2",
     "@tanstack/react-router": "^1.121.34",
     "@tanstack/react-router-with-query": "^1.121.34",
     "@tanstack/react-start": "^1.121.34",
@@ -50,8 +51,8 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "autoprefixer": "^10.4.21",
-    "drizzle-kit": "^0.31.1",
-    "oxlint": "^1.2.0",
+    "drizzle-kit": "^0.31.2",
+    "oxlint": "^1.3.0",
     "postcss": "^8.5.6",
     "tailwindcss": "3",
     "unplugin-icons": "^22.1.0",
