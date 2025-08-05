@@ -6,13 +6,15 @@ import { getRootLogger } from '../../server/middleware/logger';
 import * as schema from './schema';
 import { serverEnv } from '../env';
 
-let _sql: SQL;
+declare global {
+  var _sql: SQL;
+}
 
 export const getSQLClient = serverOnly(() => {
   console.assert(serverEnv.DATABASE_URL, 'DATABASE_URL is not defined');
-  if (_sql) return _sql;
-  const sql = (_sql = new SQL(serverEnv.DATABASE_URL!));
-  getRootLogger().info(`Opening database connection...`);
+  if (globalThis._sql) return globalThis._sql;
+  const sql = (globalThis._sql = new SQL(serverEnv.DATABASE_URL!));
+  getRootLogger().info(`Opening database connection...\n${new Error().stack}`);
   sql.connect().then(() => {
     getRootLogger().info('Database connected');
   });
@@ -38,10 +40,10 @@ export type Transaction = Parameters<
 if (import.meta.hot) {
   import.meta.hot.dispose(() => {
     getRootLogger().trace(`Database HMR disposed`);
-    if (_sql) {
+    if (globalThis._sql) {
       getRootLogger().trace('Closing old database connection for HMR...');
-      _sql.close();
-      _sql = undefined as any;
+      globalThis._sql.close();
+      globalThis._sql = undefined as any;
     }
   });
 }
