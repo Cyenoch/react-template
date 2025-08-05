@@ -20,10 +20,11 @@ export const getRootLogger = serverOnly(() => rootLogger);
 
 export const loggerMiddleware = createMiddleware({ type: 'function' })
   .middleware([requestIdMiddleware])
-  .server(async ({ next, context: { requestId }, functionId }) => {
+  .server(async ({ next, context: { requestId, clientIp }, functionId }) => {
     const logger = rootLogger.child({
       functionId,
       requestId,
+      clientIp,
     });
 
     setContext('logger', logger);

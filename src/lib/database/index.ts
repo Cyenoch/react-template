@@ -2,7 +2,7 @@ import type { Logger } from 'drizzle-orm';
 import { serverOnly } from '@tanstack/react-start';
 import { SQL } from 'bun';
 import { drizzle } from 'drizzle-orm/bun-sql';
-import { getRootLogger } from '../../server/middleware/logger';
+import { getRootLogger } from '../middleware/logger';
 import * as schema from './schema';
 import { serverEnv } from '../env';
 

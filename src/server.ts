@@ -7,8 +7,8 @@ import { registerGlobalMiddleware } from '@tanstack/react-start';
 import {
   httpRequestLoggerMiddleware,
   loggerMiddleware,
-} from './server/middleware/logger';
-import { requestIdMiddleware } from './server/middleware/request-id';
+} from './lib/middleware/logger';
+import { requestIdMiddleware } from './lib/middleware/request-id';
 
 export default createStartHandler({
   createRouter,

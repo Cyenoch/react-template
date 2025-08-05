@@ -1,7 +1,7 @@
 import { createMiddleware, serverOnly } from '@tanstack/react-start';
 import { getContext, setContext } from '../context';
-import { getDrizzleInstance, getSQLClient } from '../../lib/database';
-import { DatabasePinoLogger } from '../../lib/database/utils/database-logger';
+import { getDrizzleInstance, getSQLClient } from '../database';
+import { DatabasePinoLogger } from '../database/utils/database-logger';
 import { loggerMiddleware } from './logger';
 
 export const databaseMiddleware = createMiddleware({ type: 'function' })

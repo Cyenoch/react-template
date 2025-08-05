@@ -10,7 +10,7 @@ import {
 import { Toaster } from '@/components/ui/sonner';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
-import { getRequestId } from '@/server/middleware/request-id';
+import { getRequestId } from '@/lib/middleware/request-id';
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
