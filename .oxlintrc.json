@@ -1,6 +1,17 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["unicorn", "import", "typescript", "oxc", "react", "react-perf"],
+  "plugins": [
+    "unicorn",
+    "import",
+    "jsdoc",
+    "jsx-a11y",
+    "promise",
+    "oxc",
+    "regex",
+    "typescript",
+    "react",
+    "react-perf"
+  ],
   "categories": {},
   "rules": {
     "for-direction": "warn",
@@ -91,29 +102,6 @@
     "unicorn/prefer-set-size": "warn",
     "unicorn/prefer-string-starts-ends-with": "warn"
   },
-  "settings": {
-    "jsx-a11y": {
-      "polymorphicPropName": null,
-      "components": {}
-    },
-    "next": {
-      "rootDir": []
-    },
-    "react": {
-      "formComponents": [],
-      "linkComponents": []
-    },
-    "jsdoc": {
-      "ignorePrivate": false,
-      "ignoreInternal": false,
-      "ignoreReplacesDocs": true,
-      "overrideReplacesDocs": true,
-      "augmentsExtendsReplacesDocs": false,
-      "implementsReplacesDocs": false,
-      "exemptDestructuredRootsFromChecks": false,
-      "tagNamePreference": {}
-    }
-  },
   "env": {
     "builtin": true
   },
@@ -123,6 +111,8 @@
     ".output",
     ".tanstack",
     ".github",
-    "bun.lock"
+    "bun.lock",
+    "src/routeTree.gen.ts",
+    "src/lib/database/schema/better-auth.ts"
   ]
 }

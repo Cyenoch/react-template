@@ -1,35 +1,41 @@
-import { createMiddleware, serverOnly } from '@tanstack/react-start';
+import { serverEnv } from '@/lib/env';
+import { createMiddleware, createServerFn } from '@tanstack/react-start';
+import { getRequestHeader, getRequestIP } from '@tanstack/react-start/server';
 import { v7 } from 'uuid';
-import { getContext, setContext } from '../context';
 
-export const requestIdMiddleware = createMiddleware().server(
-  async ({ next }) => {
-    const id = v7();
+export const requestIdMiddleware = createMiddleware({
+  type: 'function',
+})
+  .client(async ({ next }) => {
+    const result = await next();
 
-    setContext('requestId', id);
+    return result;
+  })
+  .server(async ({ next }) => {
+    const requestId = v7();
+    const xForwardedFor = serverEnv.X_FORWARDED_FOR;
+    const clientIp =
+      xForwardedFor === 'X-Forwarded-For'
+        ? getRequestIP({ xForwardedFor: true })
+        : xForwardedFor
+          ? getRequestHeader(xForwardedFor)
+          : getRequestIP();
 
-    return next({
+    const result = await next({
       context: {
-        requestId: id,
+        requestId,
+        clientIp,
       },
       sendContext: {
-        requestId: id,
+        requestId,
       },
     });
-  },
-);
 
-export const getRequestId = serverOnly(() => {
-  const requestId = getContext('requestId');
-  if (!requestId)
-    throw new Error(
-      'Request ID not initialized. (Please use this function within the request context)',
-    );
-  return requestId;
-});
+    return result;
+  });
 
-declare module '../context' {
-  interface ContextMap {
-    requestId: string;
-  }
-}
+export const getRequestId = createServerFn()
+  .middleware([requestIdMiddleware])
+  .handler(({ context: { requestId } }) => {
+    return requestId;
+  });

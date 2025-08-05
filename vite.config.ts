@@ -1,39 +1,42 @@
-import Icons from 'unplugin-icons/vite';
+import icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
 import tsConfigPaths from 'vite-tsconfig-paths';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
+import react from '@vitejs/plugin-react-oxc';
+import autoImport from 'unplugin-auto-import/vite';
 
 export default defineConfig({
-  // server: {
-  //   preset: 'bun',
-  // },
-  optimizeDeps: {
-    include: [
-      'clsx',
-      'react',
-      'react-dom',
-      'tailwind-merge',
-      'core-js/stable',
-      'react-dom/client',
-      '@radix-ui/react-slot',
-      '@tanstack/react-query',
-      '@tanstack/react-start',
-      '@tanstack/react-router',
-      'class-variance-authority',
-      'regenerator-runtime/runtime',
-      '@tanstack/react-router-with-query',
-      '@tanstack/react-start/server-functions-client',
-    ],
+  server: {
+    warmup: {
+      ssrFiles: ['src/server.ts'],
+      clientFiles: ['src/client.tsx'],
+    },
   },
   plugins: [
     tsConfigPaths({
       projects: ['./tsconfig.json'],
     }),
 
-    Icons({ compiler: 'jsx', jsx: 'react' }),
+    icons({ compiler: 'jsx', jsx: 'react' }),
 
     tanstackStart({
       target: 'bun',
+      customViteReactPlugin: true,
+    }),
+
+    react(),
+
+    autoImport({
+      imports: [
+        'react',
+        {
+          '@tanstack/react-router': ['Link', 'useRouter'],
+        },
+      ],
+      dts: 'src/types/auto-imports.d.ts',
+      dirs: ['src/hooks'],
+      biomelintrc: { enabled: true },
+      include: [/\.[jt]sx?$/, /tsr-split/],
     }),
   ],
 

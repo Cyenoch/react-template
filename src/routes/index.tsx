@@ -1,23 +1,149 @@
-import { Button } from '@/components/ui/button';
-import { hello } from '@/server/function/hello';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { createFileRoute } from '@tanstack/react-router';
-import Heart from '~icons/mingcute/heart-line';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import z from 'zod';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { useMutation } from '@tanstack/react-query';
+import { authClient } from '@/lib/auth';
+import { toast } from 'sonner';
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
 });
 
-function RouteComponent() {
-  return (
-    <div className="h-svh grid place-items-center">
-      <div className="grid gap-y-4 place-items-center">
-        <h1>Hello "/"!</h1>
+const signInFormSchema = z.object({
+  email: z.email(),
+  password: z.string().min(8),
+});
 
-        <Button onClick={() => hello()}>
-          <Heart />
-          Hello Button
-        </Button>
-      </div>
+function RouteComponent() {
+  const form = useForm<z.infer<typeof signInFormSchema>>({
+    resolver: zodResolver(signInFormSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const { mutate: signIn } = useMutation({
+    mutationFn: async (values: z.infer<typeof signInFormSchema>) => {
+      const { data, error } = await authClient.signIn.email({
+        ...values,
+        callbackURL: '/user',
+      });
+      if (error) {
+        throw error;
+      }
+      return data;
+    },
+    onError(error) {
+      toast.error(error.message);
+    },
+    onSuccess() {
+      toast.success('Signed in successfully');
+    },
+  });
+
+  const { mutate: signUp } = useMutation({
+    mutationFn: async (values: z.infer<typeof signInFormSchema>) => {
+      const { data, error } = await authClient.signUp.email({
+        ...values,
+        name: values.email,
+        callbackURL: '/user',
+      });
+      if (error) {
+        throw error;
+      }
+      return data;
+    },
+    onError(error) {
+      toast.error(error.message);
+    },
+    onSuccess() {
+      toast.success('Signed up successfully');
+    },
+  });
+
+  return (
+    <div className="min-h-svh grid place-items-center">
+      <Card className="max-w-sm w-full">
+        <CardHeader>
+          <CardTitle>
+            <h1>Sign In</h1>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit((values) => signIn(values))}
+              className="space-y-4"
+            >
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Email" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Enter your email to sign in.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Enter your password to sign in.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" className="w-full">
+                Sign In
+              </Button>
+
+              <Button
+                className="mx-auto block"
+                variant="link"
+                onClick={() => {
+                  signUp(form.getValues());
+                }}
+              >
+                Sign Up
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

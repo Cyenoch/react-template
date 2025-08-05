@@ -1,16 +1,13 @@
-import { Env } from '@/lib/constants';
+import { serverEnv } from '@/lib/env';
 import { createMiddleware, serverOnly } from '@tanstack/react-start';
 import { getWebRequest } from '@tanstack/react-start/server';
 import { differenceInMilliseconds } from 'date-fns/differenceInMilliseconds';
-import pino from 'pino';
 import { getContext, setContext } from '../context';
 import { requestIdMiddleware } from './request-id';
+import pino from 'pino';
 
 const rootLogger = pino({
-  level: Env.LOG_LEVEL ?? 'trace',
-  // ?? Bun.env.NODE_ENV === 'production'
-  // ? 'info'
-  // : 'trace',
+  level: serverEnv.LOG_LEVEL ?? 'trace',
   transport: {
     target: 'pino-pretty',
     options: {
@@ -21,7 +18,7 @@ const rootLogger = pino({
 
 export const getRootLogger = serverOnly(() => rootLogger);
 
-export const loggerMiddleware = createMiddleware()
+export const loggerMiddleware = createMiddleware({ type: 'function' })
   .middleware([requestIdMiddleware])
   .server(async ({ next, context: { requestId }, functionId }) => {
     const logger = rootLogger.child({
@@ -38,7 +35,7 @@ export const loggerMiddleware = createMiddleware()
     });
   });
 
-export const httpRequestLoggerMiddleware = createMiddleware()
+export const httpRequestLoggerMiddleware = createMiddleware({ type: 'function' })
   .middleware([loggerMiddleware])
   .server(async ({ next, context: { logger } }) => {
     const now = new Date();

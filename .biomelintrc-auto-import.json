@@ -1,0 +1,28 @@
+{
+  "javascript": {
+    "globals": [
+      "Link",
+      "createRef",
+      "forwardRef",
+      "lazy",
+      "memo",
+      "startTransition",
+      "useCallback",
+      "useContext",
+      "useDebugValue",
+      "useDeferredValue",
+      "useEffect",
+      "useId",
+      "useImperativeHandle",
+      "useInsertionEffect",
+      "useLayoutEffect",
+      "useMemo",
+      "useReducer",
+      "useRef",
+      "useRouter",
+      "useState",
+      "useSyncExternalStore",
+      "useTransition"
+    ]
+  }
+}

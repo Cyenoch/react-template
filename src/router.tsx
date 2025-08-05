@@ -2,8 +2,9 @@ import { createRouter as createTanStackRouter } from '@tanstack/react-router';
 import { routerWithQueryClient } from '@tanstack/react-router-with-query';
 import ErrorPrint from './components/core/error-print';
 import NotFound from './components/core/not-found';
-import { createQueryClient } from './lib/utils/query-client';
+import { createQueryClient } from './utils/query-client';
 import { routeTree } from './routeTree.gen';
+import { InnerWrap } from './components/core/inner-wrap';
 
 export function createRouter() {
   const queryClient = createQueryClient();
@@ -12,6 +13,7 @@ export function createRouter() {
       routeTree,
       defaultPreload: 'intent',
       context: { queryClient },
+      InnerWrap,
       defaultNotFoundComponent: NotFound,
       defaultErrorComponent: ErrorPrint,
     }),

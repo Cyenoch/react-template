@@ -1,6 +1,5 @@
 import type { QueryClient } from '@tanstack/react-query';
-import { seo } from '@/lib/utils/seo';
-
+import { seo } from '@/utils/seo';
 import appCss from '@/styles/global.css?url';
 import {
   createRootRouteWithContext,
@@ -8,6 +7,10 @@ import {
   Outlet,
   Scripts,
 } from '@tanstack/react-router';
+import { Toaster } from '@/components/ui/sonner';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import { getRequestId } from '@/server/middleware/request-id';
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -34,6 +37,12 @@ export const Route = createRootRouteWithContext<{
     ],
   }),
   component: RootComponent,
+  async loader() {
+    const requestId = await getRequestId();
+    return {
+      requestId,
+    };
+  },
 });
 
 function RootComponent() {
@@ -45,6 +54,8 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const { requestId } = Route.useLoaderData();
+
   return (
     <html lang="en">
       <head>
@@ -53,6 +64,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
       <body className="min-h-svh">
         {children}
+        <Toaster richColors position="top-center" />
+        <ReactQueryDevtools />
+        <TanStackRouterDevtools />
+        <footer className="text-center text-xs p-2">
+          <pre>{requestId}</pre>
+        </footer>
         <Scripts />
       </body>
     </html>

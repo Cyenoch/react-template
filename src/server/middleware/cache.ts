@@ -66,7 +66,7 @@ async function waitForLockRelease(key: string): Promise<void> {
   }
 }
 
-export const cacheMiddleware = createMiddleware()
+export const cacheMiddleware = createMiddleware({ type: 'function' })
   .middleware([loggerMiddleware])
   .server(async ({ next, context: { logger } }) => {
     /**

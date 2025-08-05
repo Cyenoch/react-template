@@ -1,13 +1,13 @@
 import { createMiddleware, serverOnly } from '@tanstack/react-start';
 import { getContext, setContext } from '../context';
-import { getDatabaseInstance, getSQLClient } from '../database';
-import { DatabasePinoLogger } from '../database/logger';
+import { getDrizzleInstance, getSQLClient } from '../../lib/database';
+import { DatabasePinoLogger } from '../../lib/database/utils/database-logger';
 import { loggerMiddleware } from './logger';
 
-export const databaseMiddleware = createMiddleware()
+export const databaseMiddleware = createMiddleware({ type: 'function' })
   .middleware([loggerMiddleware])
   .server(async ({ next, context: { logger } }) => {
-    const db = getDatabaseInstance(
+    const db = getDrizzleInstance(
       getSQLClient(),
       new DatabasePinoLogger(logger),
     );
@@ -32,6 +32,6 @@ export const getDatabase = serverOnly(() => {
 
 declare module '../context' {
   interface ContextMap {
-    database: ReturnType<typeof getDatabaseInstance>;
+    database: ReturnType<typeof getDrizzleInstance>;
   }
 }
