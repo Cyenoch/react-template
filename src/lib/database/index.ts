@@ -14,7 +14,7 @@ export const getSQLClient = serverOnly(() => {
   console.assert(serverEnv.DATABASE_URL, 'DATABASE_URL is not defined');
   if (globalThis._sql) return globalThis._sql;
   const sql = (globalThis._sql = new SQL(serverEnv.DATABASE_URL!));
-  getRootLogger().info(`Opening database connection...\n${new Error().stack}`);
+  getRootLogger().info(`Opening database connection...`);
   sql.connect().then(() => {
     getRootLogger().info('Database connected');
   });
@@ -42,8 +42,13 @@ if (import.meta.hot) {
     getRootLogger().trace(`Database HMR disposed`);
     if (globalThis._sql) {
       getRootLogger().trace('Closing old database connection for HMR...');
-      globalThis._sql.close();
+        globalThis._sql.close();
       globalThis._sql = undefined as any;
     }
+  });
+  
+  // Accept HMR updates
+  import.meta.hot.accept((_) => {
+    getRootLogger().trace('Database module accepted HMR update');
   });
 }
