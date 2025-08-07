@@ -9,10 +9,16 @@ import {
   loggerMiddleware,
 } from './lib/middleware/logger';
 import { requestIdMiddleware } from './lib/middleware/request-id';
+import { initSentryServer, Sentry } from './lib/observability/sentry';
+// Import global middleware to register Sentry middleware
+import './global-middleware';
+
+// Initialize Sentry on the server
+initSentryServer();
 
 export default createStartHandler({
   createRouter,
-})(defaultStreamHandler);
+})(Sentry.wrapStreamHandlerWithSentry(defaultStreamHandler));
 
 registerGlobalMiddleware({
   middleware: [

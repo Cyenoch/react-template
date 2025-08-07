@@ -11,8 +11,10 @@ import { Toaster } from '@/components/ui/sonner';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { getRequestId } from '@/lib/middleware/request-id';
+import { wrapCreateRootRouteWithSentry } from '@sentry/tanstackstart-react';
 
-export const Route = createRootRouteWithContext<{
+// Wrap createRootRouteWithContext with Sentry for SSR tracing
+export const Route = wrapCreateRootRouteWithSentry(createRootRouteWithContext)<{
   queryClient: QueryClient;
 }>()({
   head: () => ({
