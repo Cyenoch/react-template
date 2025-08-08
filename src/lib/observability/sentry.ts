@@ -35,7 +35,7 @@ const commonSentryInit = {
   sendDefaultPii: true,
   integrations: [],
   enableLogs: true,
-  tracesSampleRate: VITE_META_DEV ? 0.1 : 1,
+  tracesSampleRate: VITE_META_DEV ? 1.0 : 0.3,
   environment: VITE_META_MODE,
 } satisfies SentryOptions | BrowserOptions | NodeOptions;
 
@@ -109,13 +109,12 @@ export const sentryTraceMiddleware = createMiddleware({
     async ({ next, functionId, filename, method, context: { requestId } }) => {
       return await startSpan(
         {
-          name: `ClientCall-${functionId}`,
-          op: 'Unnamed OP',
+          name: `Span During Request [${requestId}]`,
+          op: functionId,
           attributes: {
             'tanstack.middleware.sentry-trace.filename': filename,
             'tanstack.middleware.sentry-trace.functionId': functionId,
             'tanstack.middleware.sentry-trace.method': method,
-            'tanstack.middleware.request-id': requestId,
           },
         },
         () => next(),

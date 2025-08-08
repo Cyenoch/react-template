@@ -10,9 +10,9 @@ import { sentryTraceMiddleware } from './lib/observability/sentry';
 registerGlobalMiddleware({
   middleware: [
     requestIdMiddleware,
+    loggerMiddleware,
     sentryMiddleware,
     sentryTraceMiddleware,
-    loggerMiddleware,
     httpRequestLoggerMiddleware,
   ],
 });

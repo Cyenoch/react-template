@@ -32,6 +32,11 @@ export const requestIdMiddleware = createMiddleware({
     return result;
   });
 
+/**
+ * 在页面渲染的是否就会调用
+ * 在服务端生成 RequestID，通过 <ScriptOnce> 注入到页面中，放到 window.__RequestId 中
+ * 然后在客户端从 window.__RequestId 中获取 RequestID，并设置到 Sentry 的 Context 中
+ */
 export const getRequestId = createIsomorphicFn()
   .server(() => {
     const requestId = v7();
