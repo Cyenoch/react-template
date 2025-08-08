@@ -36,7 +36,11 @@ const commonSentryInit = {
   integrations: [],
   enableLogs: true,
   tracesSampleRate: VITE_META_DEV ? 1.0 : 0.3,
+  profilesSampleRate: VITE_META_DEV ? 1.0 : 0.1,
   environment: VITE_META_MODE,
+
+  // Release and distribution tracking
+  release: `${serverEnv.APP_IDENTITY}@${serverEnv.APP_VERSION ?? 'unpublished'}`,
 } satisfies SentryOptions | BrowserOptions | NodeOptions;
 
 function _setTags() {
@@ -56,10 +60,14 @@ export const initSentryIsomorphic = createIsomorphicFn()
       );
     }
 
-    init({
-      dsn: serverEnv.VITE_SENTRY_DSN,
-      ...defu({}, commonSentryInit),
-    });
+    init(
+      defu(
+        {
+          dsn: serverEnv.VITE_SENTRY_DSN,
+        },
+        commonSentryInit,
+      ),
+    );
 
     _setTags();
   })
@@ -70,20 +78,23 @@ export const initSentryIsomorphic = createIsomorphicFn()
       );
     }
 
-    init({
-      dsn: clientEnv.VITE_SENTRY_DSN,
-      ...defu(
+    init(
+      defu(
         {
+          dsn: clientEnv.VITE_SENTRY_DSN,
           integrations: [
             tanstackRouterBrowserTracingIntegration(router),
             replayIntegration(),
           ],
-          replaysSessionSampleRate: 0.1,
+          replaysSessionSampleRate: VITE_META_DEV ? 1.0 : 0.1,
           replaysOnErrorSampleRate: 1.0,
+          // Browser performance tracking
+          trackComponents: true,
+          trackInteractions: true,
         },
         commonSentryInit,
       ),
-    });
+    );
 
     _setTags();
   });

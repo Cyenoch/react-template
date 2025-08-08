@@ -12,13 +12,43 @@ export interface WebVitalsMetric {
 export function trackWebVitals(onMetric: (metric: WebVitalsMetric) => void) {
   if (typeof window === 'undefined') return;
 
+  // Enhanced Web Vitals tracking with Sentry integration
+  const sendMetricToSentry = async (metric: WebVitalsMetric) => {
+    try {
+      const { addBreadcrumb, setMeasurement } = await import('@sentry/core');
+      
+      // Send to Sentry as measurement
+      setMeasurement(metric.name, metric.value, 'millisecond');
+      
+      // Add as breadcrumb for context
+      addBreadcrumb({
+        category: 'web-vitals',
+        message: `${metric.name}: ${metric.value}ms`,
+        level: 'info',
+        data: {
+          name: metric.name,
+          value: metric.value,
+          delta: metric.delta,
+          id: metric.id,
+          navigationType: metric.navigationType,
+        },
+      });
+      
+      // Call the original handler
+      onMetric(metric);
+    } catch (error) {
+      console.warn('Failed to send metric to Sentry:', error);
+      onMetric(metric);
+    }
+  };
+
   // Track Core Web Vitals
   Promise.all([
-    import('web-vitals').then(({ onCLS }) => onCLS(onMetric)),
-    import('web-vitals').then(({ onINP }) => onINP(onMetric)),
-    import('web-vitals').then(({ onFCP }) => onFCP(onMetric)),
-    import('web-vitals').then(({ onLCP }) => onLCP(onMetric)),
-    import('web-vitals').then(({ onTTFB }) => onTTFB(onMetric)),
+    import('web-vitals').then(({ onCLS }) => onCLS(sendMetricToSentry)),
+    import('web-vitals').then(({ onINP }) => onINP(sendMetricToSentry)),
+    import('web-vitals').then(({ onFCP }) => onFCP(sendMetricToSentry)),
+    import('web-vitals').then(({ onLCP }) => onLCP(sendMetricToSentry)),
+    import('web-vitals').then(({ onTTFB }) => onTTFB(sendMetricToSentry)),
   ]).catch((error) => {
     console.warn('Failed to load web-vitals:', error);
   });

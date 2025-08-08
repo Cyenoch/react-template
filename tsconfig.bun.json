@@ -1,0 +1,13 @@
+{
+  "extends": ["./tsconfig.json"],
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["ES2022", "DOM"],
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "composite": true,
+    "types": ["bun"]
+  },
+  "include": ["./vite.config.ts", "./src/lib/env/*.ts"]
+}

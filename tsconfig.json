@@ -9,7 +9,8 @@
     "module": "ES2020",
     "moduleResolution": "Bundler",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@env": ["src/lib/env/index.ts"]
     },
     "types": ["unplugin-icons/types/react"],
     "allowImportingTsExtensions": true,
@@ -28,5 +29,10 @@
     "verbatimModuleSyntax": false,
     "skipLibCheck": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "references": [
+    {
+      "path": "./tsconfig.bun.json"
+    }
+  ]
 }
