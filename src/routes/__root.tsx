@@ -5,17 +5,29 @@ import {
   createRootRouteWithContext,
   HeadContent,
   Outlet,
+  ScriptOnce,
   Scripts,
 } from '@tanstack/react-router';
 import { Toaster } from '@/components/ui/sonner';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
-import { getRequestId } from '@/lib/middleware/request-id';
 import { wrapCreateRootRouteWithSentry } from '@sentry/tanstackstart-react';
+import { getRequestId } from '@/lib/middleware/request-id';
+import { getSessionIsomorphic } from '@/lib/auth';
+import { Session, User } from 'better-auth';
+
+declare global {
+  interface Window {
+    __RequestId: string;
+  }
+}
 
 // Wrap createRootRouteWithContext with Sentry for SSR tracing
 export const Route = wrapCreateRootRouteWithSentry(createRootRouteWithContext)<{
   queryClient: QueryClient;
+  requestId: string;
+  user: User | undefined;
+  session: Session | undefined;
 }>()({
   head: () => ({
     meta: [
@@ -39,10 +51,13 @@ export const Route = wrapCreateRootRouteWithSentry(createRootRouteWithContext)<{
     ],
   }),
   component: RootComponent,
-  async loader() {
-    const requestId = await getRequestId();
+  async beforeLoad() {
+    const requestId = getRequestId();
+    const session = await getSessionIsomorphic();
     return {
       requestId,
+      session: session?.session,
+      user: session?.user,
     };
   },
 });
@@ -56,7 +71,7 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  const { requestId } = Route.useLoaderData();
+  const { requestId } = Route.useRouteContext();
 
   return (
     <html lang="en">
@@ -65,14 +80,22 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
 
       <body className="min-h-svh">
-        {children}
+        {/* Content */}
+        <>
+          {children}
+          <footer className="text-center text-xs p-2">
+            <pre>{requestId}</pre>
+          </footer>
+        </>
+
+        {/* Devtools */}
         <Toaster richColors position="top-center" />
         <ReactQueryDevtools />
         <TanStackRouterDevtools />
-        <footer className="text-center text-xs p-2">
-          <pre>{requestId}</pre>
-        </footer>
+
+        {/* Scripts */}
         <Scripts />
+        <ScriptOnce>{`window.__RequestId = '${requestId}';`}</ScriptOnce>
       </body>
     </html>
   );

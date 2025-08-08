@@ -9,6 +9,7 @@ const serverEnvSchema = z.object({
   BETTER_AUTH_URL: z.url(),
 
   X_FORWARDED_FOR: z.string().optional(),
+  VITE_SENTRY_DSN: z.string().optional(),
 });
 
 export type IServerEnv = z.output<typeof serverEnvSchema>;

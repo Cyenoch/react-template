@@ -1,3 +1,5 @@
+import { VITE_META_DEV } from '../constants';
+
 // Web Vitals tracking
 export interface WebVitalsMetric {
   name: string;
@@ -178,7 +180,7 @@ export function initPerformanceMonitoring() {
   trackResourceTiming();
 
   // Track memory usage periodically in development
-  if (import.meta.env.DEV) {
+  if (VITE_META_DEV) {
     setInterval(() => {
       const memoryInfo = trackMemoryUsage();
       if (memoryInfo && memoryInfo.usagePercentage > 80) {

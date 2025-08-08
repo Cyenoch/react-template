@@ -12,7 +12,12 @@ export function createRouter() {
     createTanStackRouter({
       routeTree,
       defaultPreload: 'intent',
-      context: { queryClient },
+      context: {
+        queryClient,
+        requestId: undefined!,
+        user: undefined!,
+        session: undefined!,
+      },
       InnerWrap,
       defaultNotFoundComponent: NotFound,
       defaultErrorComponent: ErrorPrint,

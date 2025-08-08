@@ -105,7 +105,9 @@
   "env": {
     "builtin": true
   },
-  "globals": {},
+  "globals": {
+    "Link": "readonly"
+  },
   "ignorePatterns": [
     "node_modules",
     ".output",

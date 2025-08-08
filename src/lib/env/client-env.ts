@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const clientEnvSchema = z.object({
-  SENTRY_DSN: z.url().optional(),
+  VITE_SENTRY_DSN: z.string().optional(),
 });
 
 export type IClientEnv = z.output<typeof clientEnvSchema>;

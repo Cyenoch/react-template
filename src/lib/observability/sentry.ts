@@ -1,80 +1,127 @@
-import * as Sentry from '@sentry/tanstackstart-react';
-import { clientEnv } from '@/lib/env';
+import {
+  init,
+  replayIntegration,
+  tanstackRouterBrowserTracingIntegration,
+  sentryGlobalServerMiddlewareHandler,
+  startSpan as sentryStartSpan,
+  type BrowserOptions,
+  type NodeOptions,
+} from '@sentry/tanstackstart-react';
+import {
+  Options as SentryOptions,
+  setTags,
+  Span,
+  StartSpanOptions,
+} from '@sentry/core';
+import { clientEnv, serverEnv } from '@/lib/env';
+import { createIsomorphicFn, createMiddleware } from '@tanstack/react-start';
+import { defu } from 'defu';
+import {
+  VITE_META_DEV,
+  VITE_META_MODE,
+  VITE_META_PROD,
+  VITE_META_SSR,
+} from '../constants';
+import { getRootLogger } from '../middleware/logger';
+import { requestIdMiddleware } from '../middleware/request-id';
+import { authMiddleware } from '../auth';
 
-export function initSentryClient(router: any) {
-  if (!clientEnv.SENTRY_DSN) {
-    console.warn('Sentry DSN not configured, skipping Sentry initialization');
-    return;
-  }
+export {
+  captureException,
+  withErrorBoundary,
+} from '@sentry/tanstackstart-react';
 
-  Sentry.init({
-    dsn: clientEnv.SENTRY_DSN,
+const commonSentryInit = {
+  sendDefaultPii: true,
+  integrations: [],
+  enableLogs: true,
+  tracesSampleRate: VITE_META_DEV ? 0.1 : 1,
+  environment: VITE_META_MODE,
+} satisfies SentryOptions | BrowserOptions | NodeOptions;
 
-    // Adds request headers and IP for users
-    sendDefaultPii: true,
+function _setTags() {
+  setTags({
+    'import.meta.env.DEV': VITE_META_DEV,
+    'import.meta.env.PROD': VITE_META_PROD,
+    'import.meta.env.MODE': VITE_META_MODE,
+    'import.meta.env.SSR': VITE_META_SSR,
+  });
+}
 
-    integrations: [
-      // Performance monitoring for TanStack Router
-      Sentry.tanstackRouterBrowserTracingIntegration(router),
-      // Session replay for debugging
-      Sentry.replayIntegration(),
-      // User feedback widget
-      Sentry.feedbackIntegration({
-        colorScheme: 'system',
-      }),
-    ],
+export const initSentryIsomorphic = createIsomorphicFn()
+  .server((_router: unknown) => {
+    if (!serverEnv.VITE_SENTRY_DSN) {
+      return getRootLogger().trace(
+        'Sentry DSN not configured, skipping server Sentry initialization',
+      );
+    }
 
-    // Enable logs to be sent to Sentry
-    enableLogs: true,
+    init({
+      dsn: serverEnv.VITE_SENTRY_DSN,
+      ...defu({}, commonSentryInit),
+    });
 
-    // Performance Monitoring
-    // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing
-    // We recommend adjusting this value in production
-    tracesSampleRate: import.meta.env.DEV ? 1.0 : 0.1,
+    _setTags();
+  })
+  .client((router: unknown) => {
+    if (!clientEnv.VITE_SENTRY_DSN) {
+      return console.trace(
+        'Sentry DSN not configured, skipping Sentry initialization',
+      );
+    }
 
-    // Session Replay
-    // Capture Replay for 10% of all sessions,
-    // plus for 100% of sessions with an error
-    replaysSessionSampleRate: 0.1,
-    replaysOnErrorSampleRate: 1.0,
+    init({
+      dsn: clientEnv.VITE_SENTRY_DSN,
+      ...defu(
+        {
+          integrations: [
+            tanstackRouterBrowserTracingIntegration(router),
+            replayIntegration(),
+          ],
+          replaysSessionSampleRate: 0.1,
+          replaysOnErrorSampleRate: 1.0,
+        },
+        commonSentryInit,
+      ),
+    });
 
-    environment: import.meta.env.MODE,
+    _setTags();
+  });
 
-    beforeSend(event) {
-      // Filter out development errors in console
-      if (import.meta.env.DEV) {
-        console.group('🚨 Sentry Event');
-        console.error(event);
-        console.groupEnd();
-      }
-      return event;
+export const sentryMiddleware = createMiddleware({ type: 'function' })
+  .middleware([requestIdMiddleware])
+  .server((options) => {
+    return sentryGlobalServerMiddlewareHandler()(options);
+  });
+
+export const startSpan = <T>(
+  options: StartSpanOptions,
+  fn: (span: Span) => T,
+) => {
+  return sentryStartSpan(options, fn);
+};
+
+export const sentryTraceMiddleware = createMiddleware({
+  type: 'function',
+})
+  .middleware([requestIdMiddleware, authMiddleware])
+  .client(
+    async ({ next, functionId, filename, method, context: { requestId } }) => {
+      return await startSpan(
+        {
+          name: `ClientCall-${functionId}`,
+          op: 'Unnamed OP',
+          attributes: {
+            'tanstack.middleware.sentry-trace.filename': filename,
+            'tanstack.middleware.sentry-trace.functionId': functionId,
+            'tanstack.middleware.sentry-trace.method': method,
+            'tanstack.middleware.request-id': requestId,
+          },
+        },
+        () => next(),
+      );
     },
+  )
+  .server(({ next }) => {
+    return next();
   });
-}
-
-export function initSentryServer() {
-  if (!process.env.SENTRY_DSN) {
-    console.warn(
-      'Sentry DSN not configured, skipping server Sentry initialization',
-    );
-    return;
-  }
-
-  Sentry.init({
-    dsn: process.env.SENTRY_DSN,
-
-    // Adds request headers and IP for users
-    sendDefaultPii: true,
-
-    // Enable logs to be sent to Sentry
-    enableLogs: true,
-
-    // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing
-    // We recommend adjusting this value in production
-    tracesSampleRate: process.env.NODE_ENV === 'development' ? 1.0 : 0.1,
-
-    environment: process.env.NODE_ENV,
-  });
-}
-
-export { Sentry };

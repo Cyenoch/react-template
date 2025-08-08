@@ -1,13 +1,18 @@
+import { registerGlobalMiddleware } from '@tanstack/react-start';
+import { requestIdMiddleware } from './lib/middleware/request-id';
 import {
-  createMiddleware,
-  registerGlobalMiddleware,
-} from '@tanstack/react-start';
-import * as Sentry from '@sentry/tanstackstart-react';
+  httpRequestLoggerMiddleware,
+  loggerMiddleware,
+} from './lib/middleware/logger';
+import { sentryMiddleware } from './lib/observability/sentry';
+import { sentryTraceMiddleware } from './lib/observability/sentry';
 
 registerGlobalMiddleware({
   middleware: [
-    createMiddleware({ type: 'function' }).server(
-      Sentry.sentryGlobalServerMiddlewareHandler()
-    ),
+    requestIdMiddleware,
+    sentryMiddleware,
+    sentryTraceMiddleware,
+    loggerMiddleware,
+    httpRequestLoggerMiddleware,
   ],
 });

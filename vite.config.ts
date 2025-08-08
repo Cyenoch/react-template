@@ -2,10 +2,13 @@ import icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
 import tsConfigPaths from 'vite-tsconfig-paths';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
-import react from '@vitejs/plugin-react-oxc';
+import react from '@vitejs/plugin-react';
 import autoImport from 'unplugin-auto-import/vite';
 
 export default defineConfig({
+  optimizeDeps: {
+    exclude: ['@hookform/resolvers/zod', 'better-auth/react'],
+  },
   server: {
     warmup: {
       ssrFiles: ['src/server.ts'],
@@ -43,5 +46,8 @@ export default defineConfig({
   build: {
     target: 'es2020',
     sourcemap: true,
+    rollupOptions: {
+      external: ['bun'],
+    },
   },
 });
