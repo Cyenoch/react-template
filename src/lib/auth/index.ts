@@ -3,45 +3,29 @@ import { createIsomorphicFn } from '@tanstack/react-start';
 import { authClient } from '../auth/client';
 import { auth } from '../auth/server';
 import { getHeaders } from '@tanstack/react-start/server';
-import { setUser, startSpan } from '@sentry/tanstackstart-react';
+import { setUser } from '@sentry/tanstackstart-react';
 
 export const getSessionIsomorphic = createIsomorphicFn()
   .server(async () => {
-    return await startSpan(
-      {
-        name: 'Get Session Isomorphic (Server)',
-        op: 'isomorphic.get-session.execution',
-      },
-      async () => {
-        const session = await auth.api.getSession({
-          headers: new Headers(getHeaders() as HeadersInit),
-        });
-        if (session) {
-          setUser(session.user);
-        }
-        return session;
-      },
-    );
+    const session = await auth.api.getSession({
+      headers: new Headers(getHeaders() as HeadersInit),
+    });
+    if (session) {
+      setUser(session.user);
+    }
+    return session;
   })
   .client(async () => {
-    return await startSpan(
-      {
-        name: 'Get Session Isomorphic (Server)',
-        op: 'isomorphic.get-session.execution',
-      },
-      async () => {
-        const session = await authClient.getSession({});
-        if (session.error) {
-          throw new Error(session.error.message, {
-            cause: session.error,
-          });
-        }
-        if (session.data) {
-          setUser(session.data.user);
-        }
-        return session.data;
-      },
-    );
+    const session = await authClient.getSession({});
+    if (session.error) {
+      throw new Error(session.error.message, {
+        cause: session.error,
+      });
+    }
+    if (session.data) {
+      setUser(session.data.user);
+    }
+    return session.data;
   });
 
 export const authMiddleware = createMiddleware({

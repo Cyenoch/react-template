@@ -12,7 +12,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { wrapCreateRootRouteWithSentry } from '@sentry/tanstackstart-react';
-import { getTraceId } from '@/lib/middleware/request-id';
+import { getPageSessionId } from '@/lib/middleware/request-id';
 import { getSessionIsomorphic } from '@/lib/auth';
 import { Session, User } from 'better-auth';
 
@@ -46,7 +46,7 @@ export const Route = wrapCreateRootRouteWithSentry(createRootRouteWithContext)<{
   }),
   component: RootComponent,
   async beforeLoad() {
-    const requestId = getTraceId();
+    const requestId = getPageSessionId();
     const session = await getSessionIsomorphic();
     return {
       requestId,

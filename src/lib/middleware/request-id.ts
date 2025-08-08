@@ -5,7 +5,7 @@ import { getActiveSpan } from '@sentry/tanstackstart-react';
 
 declare global {
   interface Window {
-    __TraceId: string;
+    __PageSessionID__: string;
   }
 }
 
@@ -15,14 +15,14 @@ export const requestIdMiddleware = createMiddleware({
   .client(async ({ next }) => {
     return next({
       sendContext: {
-        traceId: window.__TraceId,
+        pageSessionId: window.__PageSessionID__,
       },
       context: {
-        traceId: window.__TraceId,
+        pageSessionId: window.__PageSessionID__,
       },
     });
   })
-  .server(async ({ next, context: { traceId } }) => {
+  .server(async ({ next, context: { pageSessionId } }) => {
     const requestId = v7();
     const clientIP = getClientIP();
 
@@ -30,18 +30,18 @@ export const requestIdMiddleware = createMiddleware({
     getActiveSpan()?.setAttributes({
       'x.request-id': requestId,
       'x.client-ip': clientIP,
-      'x.trace-id': traceId,
+      'x.page-session-id': pageSessionId,
     });
 
     const result = await next({
       context: {
         requestId,
-        traceId,
+        pageSessionId,
         clientIP,
       },
       sendContext: {
         requestId,
-        traceId,
+        pageSessionId,
       },
     });
 
@@ -50,15 +50,15 @@ export const requestIdMiddleware = createMiddleware({
 
 /**
  * 在页面渲染的是否就会调用
- * 在服务端生成 TraceID，通过 <ScriptOnce> 注入到页面中，放到 window.__TraceId 中
- * 然后在客户端从 window.__TraceId 中获取 TraceID
+ * 在服务端生成 PageSessionID，通过 <ScriptOnce> 注入到页面中，放到 window.__PageSessionID__ 中
+ * 然后在客户端从 window.__PageSessionID__ 中获取 PageSessionID
  */
-export const getTraceId = createIsomorphicFn()
+export const getPageSessionId = createIsomorphicFn()
   .server(() => {
-    const traceId = v7();
-    return traceId;
+    const pageSessionId = v7();
+    return pageSessionId;
   })
   .client(() => {
-    const traceId = window.__TraceId;
-    return traceId;
+    const pageSessionId = window.__PageSessionID__;
+    return pageSessionId;
   });

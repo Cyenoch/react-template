@@ -2,19 +2,24 @@ import {
   init,
   tanstackRouterBrowserTracingIntegration,
   sentryGlobalServerMiddlewareHandler,
-  startSpan,
   type BrowserOptions,
   type NodeOptions,
 } from '@sentry/tanstackstart-react';
 import {
   captureException,
+  continueTrace,
+  flush,
   Options as SentryOptions,
   setTags,
   SPAN_STATUS_ERROR,
-  continueTrace,
+  startSpan,
 } from '@sentry/core';
 import { clientEnv, serverEnv } from '@/lib/env';
-import { createIsomorphicFn, createMiddleware } from '@tanstack/react-start';
+import {
+  createIsomorphicFn,
+  createMiddleware,
+  serverOnly,
+} from '@tanstack/react-start';
 import { defu } from 'defu';
 import {
   VITE_META_DEV,
@@ -23,7 +28,10 @@ import {
   VITE_META_SSR,
 } from '../constants';
 import { getRootLogger } from '../middleware/logger';
-import { getTraceId, requestIdMiddleware } from '../middleware/request-id';
+import {
+  getPageSessionId,
+  requestIdMiddleware,
+} from '../middleware/request-id';
 import { authMiddleware } from '../auth';
 import { getRequestHeaders } from '@tanstack/react-start/server';
 
@@ -92,9 +100,7 @@ export const initSentryIsomorphic = createIsomorphicFn()
       defu(
         {
           dsn: clientEnv.VITE_SENTRY_DSN,
-          integrations: [
-            tanstackRouterBrowserTracingIntegration(router),
-          ],
+          integrations: [tanstackRouterBrowserTracingIntegration(router)],
           replaysSessionSampleRate: VITE_META_DEV ? 1.0 : 0.1,
           replaysOnErrorSampleRate: 1.0,
           // Browser performance tracking
@@ -104,7 +110,7 @@ export const initSentryIsomorphic = createIsomorphicFn()
           beforeSendSpan(span) {
             span.data = defu(
               {
-                'x.trace-id': getTraceId(),
+                'x.trace-id': getPageSessionId(),
               },
               span.data,
             );
@@ -130,7 +136,7 @@ export const sentryTraceMiddleware = createMiddleware({
   // 确保 Auth Middleware 调用了 setUser (如果已经登录)
   .middleware([authMiddleware])
   .client(async ({ next, functionId, filename, method }) => {
-    return await startSpan(
+    const result = await startSpan(
       {
         name: `Server Function Call [${functionId}]`,
         op: `server.function.${functionId}.call`,
@@ -162,49 +168,55 @@ export const sentryTraceMiddleware = createMiddleware({
         }
       },
     );
+    await flush();
+    return result;
   })
   .server(async ({ next, functionId, filename, method }) => {
-    const headers = getRequestHeaders();
-    const sentryTrace = headers['sentry-trace'];
-    const baggage = headers['baggage'];
-    
-    return continueTrace(
-      {
-        sentryTrace,
-        baggage,
-      },
-      () =>
-        startSpan(
-          {
-            name: `Server Function Execution [${functionId}]`,
-            op: `server.function.${functionId}.execution`,
-            attributes: {
-              'x.middleware.sentry-trace.filename': filename,
-              'x.middleware.sentry-trace.functionId': functionId,
-              'x.middleware.sentry-trace.method': method,
-            },
+    const result = await continueTrace(getContinueTraceOptions(), () =>
+      startSpan(
+        {
+          name: `Server Function Execution [${functionId}]`,
+          op: `server.function.${functionId}.execution`,
+          attributes: {
+            'x.middleware.sentry-trace.filename': filename,
+            'x.middleware.sentry-trace.functionId': functionId,
+            'x.middleware.sentry-trace.method': method,
           },
-          async (span) => {
-            try {
-              return await next();
-            } catch (error) {
-              span.recordException(error);
-              span.setStatus({
-                code: SPAN_STATUS_ERROR,
-                message:
-                  typeof error === 'object' &&
-                  error !== null &&
-                  'message' in error &&
-                  typeof error.message === 'string'
-                    ? error.message
-                    : `${error}`,
-              });
-              captureException(error);
-              throw error;
-            } finally {
-              span.end();
-            }
-          },
-        ),
+        },
+        async (span) => {
+          try {
+            return await next();
+          } catch (error) {
+            span.recordException(error);
+            span.setStatus({
+              code: SPAN_STATUS_ERROR,
+              message:
+                typeof error === 'object' &&
+                error !== null &&
+                'message' in error &&
+                typeof error.message === 'string'
+                  ? error.message
+                  : `${error}`,
+            });
+            captureException(error);
+            throw error;
+          } finally {
+            span.end();
+          }
+        },
+      ),
     );
+    await flush();
+    return result;
   });
+
+export const getContinueTraceOptions = serverOnly(() => {
+  const headers = getRequestHeaders();
+  const sentryTrace = headers['sentry-trace'];
+  const baggage = headers['baggage'];
+
+  return {
+    sentryTrace,
+    baggage,
+  };
+});

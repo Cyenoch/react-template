@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { useMutation } from '@tanstack/react-query';
 import { authClient } from '@/lib/auth/client';
 import { toast } from 'sonner';
+import { createServerFn } from '@tanstack/react-start';
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
@@ -25,6 +26,14 @@ export const Route = createFileRoute('/')({
 const signInFormSchema = z.object({
   email: z.email(),
   password: z.string().min(8),
+});
+
+const fallFn = createServerFn().handler(async () => {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  throw new Error('Test');
+  return {
+    message: 'Hello, world!',
+  };
 });
 
 function RouteComponent() {
@@ -140,6 +149,8 @@ function RouteComponent() {
               >
                 Sign Up
               </Button>
+
+              <Button onClick={() => fallFn()}>Fall</Button>
             </form>
           </Form>
         </CardContent>

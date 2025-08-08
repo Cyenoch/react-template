@@ -5,14 +5,12 @@ import {
   loggerMiddleware,
 } from './lib/middleware/logger';
 import { sentryMiddleware } from './lib/observability/sentry';
-import { sentryTraceMiddleware } from './lib/observability/sentry';
 
 registerGlobalMiddleware({
   middleware: [
     requestIdMiddleware,
     loggerMiddleware,
     sentryMiddleware,
-    sentryTraceMiddleware,
     httpRequestLoggerMiddleware,
   ],
 });
