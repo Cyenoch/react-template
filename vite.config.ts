@@ -32,11 +32,11 @@ logger.debug(
 
 logger.debug(serverEnv, 'Server Env:');
 
-invariant(serverEnv.APP_IDENTITY, 'APP_IDENTITY is required');
+invariant(serverEnv.VITE_APP_IDENTITY, 'VITE_APP_IDENTITY is required');
 invariant(serverEnv.DATABASE_URL, 'DATABASE_URL is required');
 
 if (sentryPluginEnabled) {
-  invariant(serverEnv.APP_VERSION, 'APP_VERSION is required');
+  invariant(serverEnv.VITE_APP_VERSION, 'VITE_APP_VERSION is required');
 }
 
 export default defineConfig({
@@ -51,9 +51,6 @@ export default defineConfig({
       build: {
         target: 'esnext',
         minify: false,
-        rollupOptions: {
-          external: ['bun'],
-        },
       },
     },
   },
@@ -88,7 +85,7 @@ export default defineConfig({
       },
       release: {
         // Make sure to update the release name in the sentry.ts file as well
-        name: `${serverEnv.APP_IDENTITY}@${serverEnv.APP_VERSION ?? 'unpublished'}`,
+        name: `${serverEnv.VITE_APP_IDENTITY}@${serverEnv.VITE_APP_VERSION ?? 'unpublished'}`,
       },
     }),
 
@@ -121,7 +118,14 @@ export default defineConfig({
 
   build: {
     sourcemap: true,
+    rollupOptions: {
+      external: ['bun'],
+    },
   },
+
+  ssr: {
+    external: ['bun'],
+  }
 });
 
 function invariant(condition: any, message: string): asserts condition {

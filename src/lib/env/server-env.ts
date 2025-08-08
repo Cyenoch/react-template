@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 const serverEnvSchema = z.object({
-  APP_IDENTITY: z.string(),
-  APP_VERSION: z.string().optional(),
+  VITE_APP_IDENTITY: z.string(),
+  VITE_APP_VERSION: z.string().optional(),
 
   DATABASE_URL: z.url(),
 

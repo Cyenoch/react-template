@@ -12,15 +12,9 @@ import { Toaster } from '@/components/ui/sonner';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { wrapCreateRootRouteWithSentry } from '@sentry/tanstackstart-react';
-import { getRequestId } from '@/lib/middleware/request-id';
+import { getTraceId } from '@/lib/middleware/request-id';
 import { getSessionIsomorphic } from '@/lib/auth';
 import { Session, User } from 'better-auth';
-
-declare global {
-  interface Window {
-    __RequestId: string;
-  }
-}
 
 // Wrap createRootRouteWithContext with Sentry for SSR tracing
 export const Route = wrapCreateRootRouteWithSentry(createRootRouteWithContext)<{
@@ -52,7 +46,7 @@ export const Route = wrapCreateRootRouteWithSentry(createRootRouteWithContext)<{
   }),
   component: RootComponent,
   async beforeLoad() {
-    const requestId = getRequestId();
+    const requestId = getTraceId();
     const session = await getSessionIsomorphic();
     return {
       requestId,
@@ -95,7 +89,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
         {/* Scripts */}
         <Scripts />
-        <ScriptOnce>{`window.__RequestId = '${requestId}';`}</ScriptOnce>
+        <ScriptOnce>{`window.__TraceId = '${requestId}';`}</ScriptOnce>
       </body>
     </html>
   );

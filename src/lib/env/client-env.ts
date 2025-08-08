@@ -1,6 +1,9 @@
 import { z } from 'zod';
 
 const clientEnvSchema = z.object({
+  VITE_APP_IDENTITY: z.string(),
+  VITE_APP_VERSION: z.string().optional(),
+
   VITE_SENTRY_DSN: z.url().optional(),
 });
 

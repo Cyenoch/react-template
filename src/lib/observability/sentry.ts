@@ -3,15 +3,16 @@ import {
   replayIntegration,
   tanstackRouterBrowserTracingIntegration,
   sentryGlobalServerMiddlewareHandler,
-  startSpan as sentryStartSpan,
+  startSpan,
   type BrowserOptions,
   type NodeOptions,
 } from '@sentry/tanstackstart-react';
 import {
+  captureException,
   Options as SentryOptions,
   setTags,
-  Span,
-  StartSpanOptions,
+  SPAN_STATUS_ERROR,
+  continueTrace,
 } from '@sentry/core';
 import { clientEnv, serverEnv } from '@/lib/env';
 import { createIsomorphicFn, createMiddleware } from '@tanstack/react-start';
@@ -23,13 +24,23 @@ import {
   VITE_META_SSR,
 } from '../constants';
 import { getRootLogger } from '../middleware/logger';
-import { requestIdMiddleware } from '../middleware/request-id';
+import { getTraceId, requestIdMiddleware } from '../middleware/request-id';
 import { authMiddleware } from '../auth';
+import { getRequestHeaders } from '@tanstack/react-start/server';
 
 export {
   captureException,
   withErrorBoundary,
 } from '@sentry/tanstackstart-react';
+
+const appIdentity =
+  typeof window === 'undefined'
+    ? serverEnv.VITE_APP_IDENTITY
+    : clientEnv.VITE_APP_IDENTITY;
+const appVersion =
+  typeof window === 'undefined'
+    ? serverEnv.VITE_APP_VERSION
+    : clientEnv.VITE_APP_VERSION;
 
 const commonSentryInit = {
   sendDefaultPii: true,
@@ -40,7 +51,7 @@ const commonSentryInit = {
   environment: VITE_META_MODE,
 
   // Release and distribution tracking
-  release: `${serverEnv.APP_IDENTITY}@${serverEnv.APP_VERSION ?? 'unpublished'}`,
+  release: `${appIdentity}@${appVersion ?? 'unpublished'}`,
 } satisfies SentryOptions | BrowserOptions | NodeOptions;
 
 function _setTags() {
@@ -91,6 +102,16 @@ export const initSentryIsomorphic = createIsomorphicFn()
           // Browser performance tracking
           trackComponents: true,
           trackInteractions: true,
+          tracePropagationTargets: [window.location.origin],
+          beforeSendSpan(span) {
+            span.data = defu(
+              {
+                'x.trace-id': getTraceId(),
+              },
+              span.data,
+            );
+            return span;
+          },
         },
         commonSentryInit,
       ),
@@ -105,33 +126,86 @@ export const sentryMiddleware = createMiddleware({ type: 'function' })
     return sentryGlobalServerMiddlewareHandler()(options);
   });
 
-export const startSpan = <T>(
-  options: StartSpanOptions,
-  fn: (span: Span) => T,
-) => {
-  return sentryStartSpan(options, fn);
-};
-
 export const sentryTraceMiddleware = createMiddleware({
   type: 'function',
 })
-  .middleware([requestIdMiddleware, authMiddleware])
-  .client(
-    async ({ next, functionId, filename, method, context: { requestId } }) => {
-      return await startSpan(
-        {
-          name: `Span During Request [${requestId}]`,
-          op: functionId,
-          attributes: {
-            'tanstack.middleware.sentry-trace.filename': filename,
-            'tanstack.middleware.sentry-trace.functionId': functionId,
-            'tanstack.middleware.sentry-trace.method': method,
-          },
+  // 确保 Auth Middleware 调用了 setUser (如果已经登录)
+  .middleware([authMiddleware])
+  .client(async ({ next, functionId, filename, method }) => {
+    return await startSpan(
+      {
+        name: `Server Funcation Call [${functionId}]`,
+        op: `server.function.${functionId}.call`,
+        attributes: {
+          'x.middleware.sentry-trace.filename': filename,
+          'x.middleware.sentry-trace.functionId': functionId,
+          'x.middleware.sentry-trace.method': method,
         },
-        () => next(),
-      );
-    },
-  )
-  .server(({ next }) => {
-    return next();
+      },
+      async (span) => {
+        try {
+          return await next();
+        } catch (error) {
+          span.recordException(error);
+          span.setStatus({
+            code: SPAN_STATUS_ERROR,
+            message:
+              typeof error === 'object' &&
+              error !== null &&
+              'message' in error &&
+              typeof error.message === 'string'
+                ? error.message
+                : `${error}`,
+          });
+          captureException(error);
+          throw error;
+        } finally {
+          span.end();
+        }
+      },
+    );
+  })
+  .server(async ({ next, functionId, filename, method }) => {
+    const headers = getRequestHeaders();
+    const sentryTrace = headers['sentry-trace'];
+    const baggage = headers['baggage'];
+    return continueTrace(
+      {
+        sentryTrace,
+        baggage,
+      },
+      () =>
+        startSpan(
+          {
+            name: `Server Funcation Execution [${functionId}]`,
+            op: `server.function.${functionId}.execution`,
+            attributes: {
+              'x.middleware.sentry-trace.filename': filename,
+              'x.middleware.sentry-trace.functionId': functionId,
+              'x.middleware.sentry-trace.method': method,
+            },
+          },
+          async (span) => {
+            try {
+              return await next();
+            } catch (error) {
+              span.recordException(error);
+              span.setStatus({
+                code: SPAN_STATUS_ERROR,
+                message:
+                  typeof error === 'object' &&
+                  error !== null &&
+                  'message' in error &&
+                  typeof error.message === 'string'
+                    ? error.message
+                    : `${error}`,
+              });
+              captureException(error);
+              throw error;
+            } finally {
+              span.end();
+            }
+          },
+        ),
+    );
   });
