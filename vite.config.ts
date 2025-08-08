@@ -8,6 +8,13 @@ import { sentryVitePlugin } from '@sentry/vite-plugin';
 import pino from 'pino';
 import { serverEnv } from './src/lib/env/server-env';
 
+export const VITE_ENVIRONMENT_NAMES = {
+  // 'ssr' is chosen as the name for the server environment to ensure backwards compatibility
+  // with vite plugins that are not compatible with the new vite environment API (e.g. tailwindcss)
+  server: 'ssr',
+  client: 'client',
+} as const;
+
 const logger = pino({
   level: 'info',
 });
@@ -33,14 +40,30 @@ if (sentryPluginEnabled) {
 }
 
 export default defineConfig({
+  environments: {
+    [VITE_ENVIRONMENT_NAMES.client]: {
+      build: {
+        target: 'es2020',
+        chunkSizeWarningLimit: 1024 * 1024,
+      },
+    },
+    [VITE_ENVIRONMENT_NAMES.server]: {
+      build: {
+        target: 'esnext',
+        minify: false,
+        rollupOptions: {
+          external: ['bun'],
+        },
+      },
+    },
+  },
+
   optimizeDeps: {
     exclude: ['@hookform/resolvers/zod', 'better-auth/react'],
     include: [
       'react',
       'react-dom',
       'react-dom/client',
-      '@tanstack/react-query',
-      '@tanstack/react-router',
       'lucide-react',
       'class-variance-authority',
       'clsx',
@@ -50,10 +73,11 @@ export default defineConfig({
 
   server: {
     warmup: {
-      ssrFiles: ['src/server.ts'],
+      ssrFiles: ['src/server.ts', 'src/router.tsx'],
       clientFiles: ['src/client.tsx', 'src/router.tsx'],
     },
   },
+
   plugins: [
     sentryVitePlugin({
       org: Bun.env.SENTRY_ORG,
@@ -96,11 +120,7 @@ export default defineConfig({
   ],
 
   build: {
-    target: 'es2020',
     sourcemap: true,
-    rollupOptions: {
-      external: ['bun'],
-    },
   },
 });
 
