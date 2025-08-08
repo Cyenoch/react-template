@@ -1,6 +1,5 @@
 import {
   init,
-  replayIntegration,
   tanstackRouterBrowserTracingIntegration,
   sentryGlobalServerMiddlewareHandler,
   startSpan,
@@ -95,7 +94,6 @@ export const initSentryIsomorphic = createIsomorphicFn()
           dsn: clientEnv.VITE_SENTRY_DSN,
           integrations: [
             tanstackRouterBrowserTracingIntegration(router),
-            replayIntegration(),
           ],
           replaysSessionSampleRate: VITE_META_DEV ? 1.0 : 0.1,
           replaysOnErrorSampleRate: 1.0,
@@ -134,7 +132,7 @@ export const sentryTraceMiddleware = createMiddleware({
   .client(async ({ next, functionId, filename, method }) => {
     return await startSpan(
       {
-        name: `Server Funcation Call [${functionId}]`,
+        name: `Server Function Call [${functionId}]`,
         op: `server.function.${functionId}.call`,
         attributes: {
           'x.middleware.sentry-trace.filename': filename,
@@ -169,6 +167,7 @@ export const sentryTraceMiddleware = createMiddleware({
     const headers = getRequestHeaders();
     const sentryTrace = headers['sentry-trace'];
     const baggage = headers['baggage'];
+    
     return continueTrace(
       {
         sentryTrace,
@@ -177,7 +176,7 @@ export const sentryTraceMiddleware = createMiddleware({
       () =>
         startSpan(
           {
-            name: `Server Funcation Execution [${functionId}]`,
+            name: `Server Function Execution [${functionId}]`,
             op: `server.function.${functionId}.execution`,
             attributes: {
               'x.middleware.sentry-trace.filename': filename,
