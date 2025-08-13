@@ -42,7 +42,7 @@
         "@biomejs/biome": "2.0.4",
         "@iconify-json/mingcute": "^1.2.5",
         "@iconify-json/svg-spinners": "^1.2.4",
-        "@sentry/vite-plugin": "^4.1.0",
+        "@sentry/vite-plugin": "^4.1.1",
         "@svgr/core": "^8.1.0",
         "@svgr/plugin-jsx": "^8.1.0",
         "@types/bun": "latest",
@@ -551,11 +551,11 @@
 
     "@sentry-internal/replay-canvas": ["@sentry-internal/replay-canvas@10.5.0", "", { "dependencies": { "@sentry-internal/replay": "10.5.0", "@sentry/core": "10.5.0" } }, "sha512-5nrRKd5swefd9+sFXFZ/NeL3bz/VxBls3ubAQ3afak15FikkSyHq3oKRKpMOtDsiYKXE3Bc0y3rF5A+y3OXjIA=="],
 
-    "@sentry/babel-plugin-component-annotate": ["@sentry/babel-plugin-component-annotate@4.1.0", "", {}, "sha512-UkcnqC7Bp9ODyoBN7BKcRotd1jz/I2vyruE/qjNfRC7UnP+jIRItUWYaXxQPON1fTw+N+egKdByk0M1y2OPv/Q=="],
+    "@sentry/babel-plugin-component-annotate": ["@sentry/babel-plugin-component-annotate@4.1.1", "", {}, "sha512-HUpqrCK7zDVojTV6KL6BO9ZZiYrEYQqvYQrscyMsq04z+WCupXaH6YEliiNRvreR8DBJgdsG3lBRpebhUGmvfA=="],
 
     "@sentry/browser": ["@sentry/browser@10.5.0", "", { "dependencies": { "@sentry-internal/browser-utils": "10.5.0", "@sentry-internal/feedback": "10.5.0", "@sentry-internal/replay": "10.5.0", "@sentry-internal/replay-canvas": "10.5.0", "@sentry/core": "10.5.0" } }, "sha512-o5pEJeZ/iZ7Fmaz2sIirThfnmSVNiP5ZYhacvcDi0qc288TmBbikCX3fXxq3xiSkhXfe1o5QIbNyovzfutyuVw=="],
 
-    "@sentry/bundler-plugin-core": ["@sentry/bundler-plugin-core@4.1.0", "", { "dependencies": { "@babel/core": "^7.18.5", "@sentry/babel-plugin-component-annotate": "4.1.0", "@sentry/cli": "^2.51.0", "dotenv": "^16.3.1", "find-up": "^5.0.0", "glob": "^9.3.2", "magic-string": "0.30.8", "unplugin": "1.0.1" } }, "sha512-/5XBtCF6M+9frEXrrvfSWOdOC2q6I1L7oY7qbUVegNkp3kYVGihNZZnJIXGzo9rmwnA0IV7jI3o0pF/HDRqPeA=="],
+    "@sentry/bundler-plugin-core": ["@sentry/bundler-plugin-core@4.1.1", "", { "dependencies": { "@babel/core": "^7.18.5", "@sentry/babel-plugin-component-annotate": "4.1.1", "@sentry/cli": "^2.51.0", "dotenv": "^16.3.1", "find-up": "^5.0.0", "glob": "^9.3.2", "magic-string": "0.30.8", "unplugin": "1.0.1" } }, "sha512-Hx9RgXaD1HEYmL5aYoWwCKkVvPp4iklwfD9mvmdpQtcwLg6b6oLnPVDQaOry1ak6Pxt8smlrWcKy4IiKASlvig=="],
 
     "@sentry/cli": ["@sentry/cli@2.51.0", "", { "dependencies": { "https-proxy-agent": "^5.0.0", "node-fetch": "^2.6.7", "progress": "^2.0.3", "proxy-from-env": "^1.1.0", "which": "^2.0.2" }, "optionalDependencies": { "@sentry/cli-darwin": "2.51.0", "@sentry/cli-linux-arm": "2.51.0", "@sentry/cli-linux-arm64": "2.51.0", "@sentry/cli-linux-i686": "2.51.0", "@sentry/cli-linux-x64": "2.51.0", "@sentry/cli-win32-arm64": "2.51.0", "@sentry/cli-win32-i686": "2.51.0", "@sentry/cli-win32-x64": "2.51.0" }, "bin": { "sentry-cli": "bin/sentry-cli" } }, "sha512-ISpRhC3dTuA+hM3ksYvSC/1TZOPs+3oOaCNViawX4gve9PZxBvter4/v2FSWrdWBEGvzjZz7CuohU5xm9UM96w=="],
 
@@ -587,7 +587,7 @@
 
     "@sentry/tanstackstart-react": ["@sentry/tanstackstart-react@10.5.0", "", { "dependencies": { "@opentelemetry/api": "^1.9.0", "@opentelemetry/semantic-conventions": "^1.34.0", "@sentry-internal/browser-utils": "10.5.0", "@sentry/core": "10.5.0", "@sentry/node": "10.5.0", "@sentry/react": "10.5.0" } }, "sha512-abngYrlsh9/Wxz+soZmV/mpdRw1txKD3nIGRnAcDdMLxl9Dl8jSDYwfxXZU/kRwCI+BvNPJaYZDubTPIGI3+YQ=="],
 
-    "@sentry/vite-plugin": ["@sentry/vite-plugin@4.1.0", "", { "dependencies": { "@sentry/bundler-plugin-core": "4.1.0", "unplugin": "1.0.1" } }, "sha512-uLZxOAW79sOQH77yWiQct8f3i+LUi36wn2fK62cejZfrGaHu5P+9R4f0Es1L70I3MrsPXOvJ0A6r5PkVS9562g=="],
+    "@sentry/vite-plugin": ["@sentry/vite-plugin@4.1.1", "", { "dependencies": { "@sentry/bundler-plugin-core": "4.1.1", "unplugin": "1.0.1" } }, "sha512-kNIZiqRbFHJHzV0QF1RyuwMprwK2Lk354qs98P7DduU1TkzrNG3+2f8liYJaiYCrsjDvJlPHyVFBDF9IRhJGdA=="],
 
     "@simplewebauthn/browser": ["@simplewebauthn/browser@13.1.2", "", {}, "sha512-aZnW0KawAM83fSBUgglP5WofbrLbLyr7CoPqYr66Eppm7zO86YX6rrCjRB3hQKPrL7ATvY4FVXlykZ6w6FwYYw=="],
 
