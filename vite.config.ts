@@ -6,7 +6,27 @@ import react from '@vitejs/plugin-react';
 import autoImport from 'unplugin-auto-import/vite';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import pino from 'pino';
-import { serverEnv } from './src/lib/env/server-env';
+import z from 'zod';
+
+const logger = pino({
+  level: 'info',
+});
+
+const parsedEnv = z
+  .object({
+    VITE_APP_VERSION: z.string().optional(),
+    SENTRY_ORG: z.string().optional(),
+    SENTRY_PROJECT: z.string().optional(),
+    SENTRY_AUTH_TOKEN: z.string().optional(),
+  })
+  .safeParse(Bun.env);
+
+if (!parsedEnv.success) {
+  logger.error(z.treeifyError(parsedEnv.error));
+  throw parsedEnv.error;
+}
+
+const env = parsedEnv.data!;
 
 export const VITE_ENVIRONMENT_NAMES = {
   // 'ssr' is chosen as the name for the server environment to ensure backwards compatibility
@@ -15,14 +35,8 @@ export const VITE_ENVIRONMENT_NAMES = {
   client: 'client',
 } as const;
 
-const logger = pino({
-  level: 'info',
-});
-
 const sentryPluginEnabled =
-  serverEnv.SENTRY_ORG &&
-  serverEnv.SENTRY_PROJECT &&
-  serverEnv.SENTRY_AUTH_TOKEN;
+  env.SENTRY_ORG && env.SENTRY_PROJECT && env.SENTRY_AUTH_TOKEN;
 
 logger.debug(
   sentryPluginEnabled
@@ -30,12 +44,8 @@ logger.debug(
     : 'Sentry plugin is disabled',
 );
 
-logger.debug(serverEnv, 'Server Env:');
-
-invariant(serverEnv.DATABASE_URL, 'DATABASE_URL is required');
-
 if (sentryPluginEnabled) {
-  invariant(serverEnv.VITE_APP_VERSION, 'VITE_APP_VERSION is required');
+  invariant(env.VITE_APP_VERSION, 'VITE_APP_VERSION is required');
 }
 
 export default defineConfig({
@@ -55,7 +65,7 @@ export default defineConfig({
   },
 
   experimental: {
-    enableNativePlugin: true
+    enableNativePlugin: true,
   },
 
   optimizeDeps: {
@@ -88,7 +98,7 @@ export default defineConfig({
       },
       release: {
         // Make sure to update the release name in the sentry.ts file as well
-        name: `${serverEnv.VITE_APP_VERSION ?? 'unpublished'}`,
+        name: `${env.VITE_APP_VERSION ?? 'unpublished'}`,
       },
     }),
 

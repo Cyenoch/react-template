@@ -12,13 +12,10 @@ const serverEnvSchema = z.object({
   BETTER_AUTH_SECRET: z.string().min(32).max(256),
   BETTER_AUTH_URL: z.url(),
 
-  //
+  // Proxy
   X_FORWARDED_FOR: z.string().optional(),
 
   // Sentry
-  SENTRY_ORG: z.string().optional(), 
-  SENTRY_PROJECT: z.string().optional(),
-  SENTRY_AUTH_TOKEN: z.string().optional(),
   VITE_SENTRY_DSN: z.url().optional(),
 });
 
