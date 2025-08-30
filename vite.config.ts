@@ -55,7 +55,7 @@ export default defineConfig({
   },
 
   optimizeDeps: {
-    exclude: ['@hookform/resolvers/zod', 'better-auth/react'],
+    exclude: ['bun', '@hookform/resolvers/zod', 'better-auth/react'],
     include: [
       'react',
       'react-dom',
@@ -117,14 +117,7 @@ export default defineConfig({
 
   build: {
     sourcemap: true,
-    rollupOptions: {
-      external: ['bun'],
-    },
   },
-
-  ssr: {
-    external: ['bun'],
-  }
 });
 
 function invariant(condition: any, message: string): asserts condition {
