@@ -54,6 +54,10 @@ export default defineConfig({
     },
   },
 
+  experimental: {
+    enableNativePlugin: true
+  },
+
   optimizeDeps: {
     exclude: ['bun', '@hookform/resolvers/zod', 'better-auth/react'],
     include: [
