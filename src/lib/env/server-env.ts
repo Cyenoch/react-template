@@ -1,3 +1,4 @@
+import pino from 'pino';
 import { z } from 'zod';
 
 const serverEnvSchema = z.object({
@@ -22,6 +23,14 @@ const serverEnvSchema = z.object({
 });
 
 export type IServerEnv = z.output<typeof serverEnvSchema>;
+
+if (typeof window === 'undefined') {
+  const parsed = serverEnvSchema.safeParse(Bun.env);
+  if (!parsed.success) {
+    pino().error(z.treeifyError(parsed.error), 'Invalid environment variables');
+  }
+}
+
 export const serverEnv: IServerEnv =
   typeof window === 'undefined'
     ? serverEnvSchema.parse(Bun.env)
