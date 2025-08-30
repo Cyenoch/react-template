@@ -29,10 +29,5 @@
     "verbatimModuleSyntax": false,
     "skipLibCheck": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "references": [
-    {
-      "path": "./tsconfig.bun.json"
-    }
-  ]
+  "exclude": ["node_modules", ".output", ".nitro", ".tanstack", ".vscode", ".github", ".zed", "drizzle"]
 }
