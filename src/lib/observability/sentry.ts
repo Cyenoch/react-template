@@ -40,10 +40,6 @@ export {
   withErrorBoundary,
 } from '@sentry/tanstackstart-react';
 
-const appIdentity =
-  typeof window === 'undefined'
-    ? serverEnv.VITE_APP_IDENTITY
-    : clientEnv.VITE_APP_IDENTITY;
 const appVersion =
   typeof window === 'undefined'
     ? serverEnv.VITE_APP_VERSION
@@ -58,7 +54,7 @@ const commonSentryInit = {
   environment: VITE_META_MODE,
 
   // Release and distribution tracking
-  release: `${appIdentity}@${appVersion ?? 'unpublished'}`,
+  release: `${appVersion ?? 'unpublished'}`,
 } satisfies SentryOptions | BrowserOptions | NodeOptions;
 
 function _setTags() {

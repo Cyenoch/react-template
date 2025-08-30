@@ -32,7 +32,6 @@ logger.debug(
 
 logger.debug(serverEnv, 'Server Env:');
 
-invariant(serverEnv.VITE_APP_IDENTITY, 'VITE_APP_IDENTITY is required');
 invariant(serverEnv.DATABASE_URL, 'DATABASE_URL is required');
 
 if (sentryPluginEnabled) {
@@ -85,7 +84,7 @@ export default defineConfig({
       },
       release: {
         // Make sure to update the release name in the sentry.ts file as well
-        name: `${serverEnv.VITE_APP_IDENTITY}@${serverEnv.VITE_APP_VERSION ?? 'unpublished'}`,
+        name: `${serverEnv.VITE_APP_VERSION ?? 'unpublished'}`,
       },
     }),
 

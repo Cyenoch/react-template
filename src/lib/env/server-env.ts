@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
 const serverEnvSchema = z.object({
-  VITE_APP_IDENTITY: z.string(),
   VITE_APP_VERSION: z.string().optional(),
 
   DATABASE_URL: z.url(),
