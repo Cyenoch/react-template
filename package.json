@@ -14,7 +14,7 @@
     "up": "bunx taze major -x tailwindcss -x tailwind-merge -w",
     "generate": "bunx -b drizzle-kit generate",
     "migrate": "bun migrate.ts",
-    "better-auth:generate": "bunx -b @better-auth/cli generate --config src/lib/auth/index.ts --output src/lib/database/schema/better-auth.ts -y"
+    "better-auth:generate": "bunx -b @better-auth/cli generate --config src/lib/auth/server.ts --output src/lib/database/schema/better-auth.ts -y"
   },
   "peerDependencies": {
     "typescript": "^5.8.3"
