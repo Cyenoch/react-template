@@ -2,13 +2,13 @@ import { createMiddleware } from '@tanstack/react-start';
 import { createIsomorphicFn } from '@tanstack/react-start';
 import { authClient } from '../auth/client';
 import { auth } from '../auth/server';
-import { getHeaders } from '@tanstack/react-start/server';
 import { setUser } from '@sentry/tanstackstart-react';
+import { getRequestHeaders } from '@tanstack/react-start/server';
 
 export const getSessionIsomorphic = createIsomorphicFn()
   .server(async () => {
     const session = await auth.api.getSession({
-      headers: new Headers(getHeaders() as HeadersInit),
+      headers: new Headers(getRequestHeaders() as HeadersInit),
     });
     if (session) {
       setUser(session.user);

@@ -81,12 +81,6 @@ export default defineConfig({
     ],
   },
 
-  server: {
-    warmup: {
-      ssrFiles: ['src/server.ts', 'src/router.tsx'],
-      clientFiles: ['src/client.tsx', 'src/router.tsx'],
-    },
-  },
 
   plugins: [
     sentryVitePlugin({
@@ -109,8 +103,10 @@ export default defineConfig({
     icons({ compiler: 'jsx', jsx: 'react' }),
 
     tanstackStart({
-      target: 'bun',
-      customViteReactPlugin: true,
+      srcDirectory: 'src',
+      start: { entry: './start.tsx' },
+      server: { entry: './server.ts' },
+      router: { entry: './start.tsx' },
     }),
 
     react(),

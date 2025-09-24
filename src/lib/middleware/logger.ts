@@ -1,10 +1,9 @@
 import { serverEnv } from '@/lib/env';
-import { createMiddleware, serverOnly } from '@tanstack/react-start';
-import { getWebRequest } from '@tanstack/react-start/server';
+import { createMiddleware, createServerOnlyFn } from '@tanstack/react-start';
 import { differenceInMilliseconds } from 'date-fns/differenceInMilliseconds';
-import { getContext, setContext } from '../context';
 import { requestIdMiddleware } from './request-id';
 import pino from 'pino';
+import { getRequest } from '@tanstack/react-start/server';
 
 const rootLogger = pino({
   level: serverEnv.LOG_LEVEL ?? 'trace',
@@ -16,7 +15,7 @@ const rootLogger = pino({
   },
 });
 
-export const getRootLogger = serverOnly(() => rootLogger);
+export const getRootLogger = createServerOnlyFn(() => rootLogger);
 
 export const loggerMiddleware = createMiddleware({ type: 'function' })
   .middleware([requestIdMiddleware])
@@ -33,8 +32,6 @@ export const loggerMiddleware = createMiddleware({ type: 'function' })
         pageSessionId,
       });
 
-      setContext('logger', logger);
-
       return next({
         context: {
           logger,
@@ -49,7 +46,7 @@ export const httpRequestLoggerMiddleware = createMiddleware({
   .middleware([loggerMiddleware])
   .server(async ({ next, context: { logger } }) => {
     const now = new Date();
-    const request = getWebRequest();
+    const request = getRequest();
     logger.debug(request, '<<< Request Incoming <<<');
     try {
       return await next();
@@ -61,17 +58,3 @@ export const httpRequestLoggerMiddleware = createMiddleware({
       );
     }
   });
-
-export const getLogger = serverOnly(() => {
-  const logger = getContext('logger');
-  if (!logger) {
-    return getRootLogger();
-  }
-  return logger;
-});
-
-declare module '../context' {
-  interface ContextMap {
-    logger: pino.Logger;
-  }
-}

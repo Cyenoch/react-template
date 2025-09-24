@@ -1,5 +1,5 @@
 import type { Logger } from 'drizzle-orm';
-import { createMiddleware, serverOnly } from '@tanstack/react-start';
+import { createMiddleware, createServerOnlyFn } from '@tanstack/react-start';
 import { SQL } from 'bun';
 import { drizzle } from 'drizzle-orm/bun-sql';
 import { getRootLogger, loggerMiddleware } from '../middleware/logger';
@@ -12,7 +12,7 @@ declare global {
   var _sql: SQL;
 }
 
-export const getSQLClient = serverOnly(() => {
+export const getSQLClient = createServerOnlyFn(() => {
   console.assert(serverEnv.DATABASE_URL, 'DATABASE_URL is not defined');
   if (globalThis._sql) return globalThis._sql;
   getRootLogger().info(`Opening database connection...`);
@@ -29,7 +29,7 @@ export const getSQLClient = serverOnly(() => {
   return sql;
 });
 
-export const getDrizzleInstance = serverOnly(
+export const getDrizzleInstance = createServerOnlyFn(
   (client: SQL = getSQLClient(), logger?: Logger) => {
     return drizzle({
       client,

@@ -18,7 +18,7 @@ import { clientEnv, serverEnv } from '@/lib/env';
 import {
   createIsomorphicFn,
   createMiddleware,
-  serverOnly,
+  createServerOnlyFn,
 } from '@tanstack/react-start';
 import { defu } from 'defu';
 import {
@@ -206,10 +206,10 @@ export const sentryTraceMiddleware = createMiddleware({
     return result;
   });
 
-export const getContinueTraceOptions = serverOnly(() => {
+export const getContinueTraceOptions = createServerOnlyFn(() => {
   const headers = getRequestHeaders();
-  const sentryTrace = headers['sentry-trace'];
-  const baggage = headers['baggage'];
+  const sentryTrace = headers.get('sentry-trace') ?? undefined;
+  const baggage = headers.get('baggage') ?? undefined;
 
   return {
     sentryTrace,

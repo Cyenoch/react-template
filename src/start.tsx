@@ -5,8 +5,25 @@ import NotFound from './components/core/not-found';
 import { createQueryClient } from './utils/query-client';
 import { routeTree } from './routeTree.gen';
 import { InnerWrap } from './components/core/inner-wrap';
+import { createStart } from '@tanstack/react-start';
+import { requestIdMiddleware } from './lib/middleware/request-id';
+import {
+  httpRequestLoggerMiddleware,
+  loggerMiddleware,
+} from './lib/middleware/logger';
+import {
+  initSentryIsomorphic,
+  sentryMiddleware,
+} from './lib/observability/sentry';
+import { initPerformanceMonitoring } from './lib/observability/performance';
 
-export function createRouter() {
+declare module '@tanstack/react-start' {
+  interface Register {
+    router: ReturnType<typeof getRouter>;
+  }
+}
+
+export function getRouter() {
   const queryClient = createQueryClient();
   const router = routerWithQueryClient(
     createTanStackRouter({
@@ -25,11 +42,19 @@ export function createRouter() {
     queryClient,
   );
 
+  initSentryIsomorphic(router);
+  initPerformanceMonitoring();
+
   return router;
 }
 
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: ReturnType<typeof createRouter>;
-  }
-}
+export const startInstance = createStart(() => {
+  return {
+    functionMiddleware: [
+      requestIdMiddleware,
+      loggerMiddleware,
+      sentryMiddleware,
+      httpRequestLoggerMiddleware,
+    ],
+  };
+});

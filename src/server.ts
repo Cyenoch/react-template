@@ -2,10 +2,17 @@ import {
   createStartHandler,
   defaultStreamHandler,
 } from '@tanstack/react-start/server';
-import { createRouter } from './router';
 import * as Sentry from '@sentry/tanstackstart-react';
-import './global-middleware';
+import { getRootLogger } from './lib/middleware/logger';
 
-export default createStartHandler({
-  createRouter,
-})(Sentry.wrapStreamHandlerWithSentry(defaultStreamHandler));
+getRootLogger().info('Server started');
+
+const handler = createStartHandler((context) => {
+  return Sentry.wrapStreamHandlerWithSentry(defaultStreamHandler)(context);
+});
+
+export default {
+  async fetch(request: Request): Promise<Response> {
+    return handler(request);
+  },
+};

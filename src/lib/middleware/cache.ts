@@ -12,7 +12,8 @@
 
 import { createMiddleware } from '@tanstack/react-start';
 import SuperJSON from 'superjson';
-import { getLogger, loggerMiddleware } from './logger';
+import { loggerMiddleware } from './logger';
+import type { Logger } from 'pino';
 
 // ==================== 常量配置 ====================
 const DEFAULT_LOCK_TTL = 30; // 分布式锁默认过期时间（秒）
@@ -134,6 +135,7 @@ function validateKey(key: string): void {
 async function acquireLock(
   key: string,
   options: LockOptions = {},
+  logger: Logger,
 ): Promise<boolean> {
   const lockKey = `${key}${CACHE_LOCK_SUFFIX}`; // 添加锁后缀避免与普通缓存键冲突
   const ttl = options.ttl || DEFAULT_LOCK_TTL;
@@ -149,7 +151,7 @@ async function acquireLock(
     );
     return result === 'OK'; // Redis 返回 'OK' 表示获取锁成功
   } catch (error) {
-    getLogger().error({ error, key: lockKey }, 'Failed to acquire lock');
+    logger.error({ error, key: lockKey }, 'Failed to acquire lock');
     return false;
   }
 }
@@ -160,13 +162,13 @@ async function acquireLock(
  * 
  * @param key 锁的标识键
  */
-async function releaseLock(key: string): Promise<void> {
+async function releaseLock(key: string, logger: Logger): Promise<void> {
   const lockKey = `${key}${CACHE_LOCK_SUFFIX}`;
 
   try {
     await Bun.redis.del(lockKey); // 删除锁键即可释放锁
   } catch (error) {
-    getLogger().error({ error, key: lockKey }, 'Failed to release lock');
+    logger.error({ error, key: lockKey }, 'Failed to release lock');
     // 释放锁失败不抛出异常，避免影响业务逻辑
   }
 }
@@ -321,14 +323,14 @@ export const cacheMiddleware = createMiddleware({ type: 'function' })
       key: string,
       options: LockOptions = {},
     ): Promise<boolean> {
-      return await acquireLock(key, options);
+      return await acquireLock(key, options, logger);
     }
 
     /**
      * Release distributed lock
      */
     async function releaseLockFn(key: string): Promise<void> {
-      await releaseLock(key);
+      await releaseLock(key, logger);
     }
 
     /**
@@ -342,11 +344,11 @@ export const cacheMiddleware = createMiddleware({ type: 'function' })
       const maxWait = options.maxWait || LOCK_MAX_WAIT;
 
       // Try to acquire lock
-      if (!(await acquireLock(key, options))) {
+      if (!(await acquireLock(key, options, logger))) {
         await waitForLockRelease(key, maxWait);
 
         // Try one more time after waiting
-        if (!(await acquireLock(key, options))) {
+        if (!(await acquireLock(key, options, logger))) {
           throw new Error(`Failed to acquire lock for key: ${key}`);
         }
       }
@@ -354,7 +356,7 @@ export const cacheMiddleware = createMiddleware({ type: 'function' })
       try {
         return await fn();
       } finally {
-        await releaseLock(key);
+        await releaseLock(key, logger);
       }
     }
 
