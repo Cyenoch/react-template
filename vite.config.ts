@@ -81,7 +81,6 @@ export default defineConfig({
     ],
   },
 
-
   plugins: [
     sentryVitePlugin({
       org: Bun.env.SENTRY_ORG,

@@ -10,9 +10,3 @@ export const VITE_META_DEV = import.meta.env.DEV;
 export const VITE_META_PROD = import.meta.env.PROD;
 export const VITE_META_MODE = import.meta.env.MODE;
 export const VITE_META_SSR = import.meta.env.SSR;
-
-// Vite 环境名称
-export const VITE_ENVIRONMENT_NAMES = {
-  client: 'client',
-  ssr: 'ssr',
-} as const;
