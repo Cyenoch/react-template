@@ -14,9 +14,6 @@ const serverEnvSchema = z.object({
 
   // Proxy
   X_FORWARDED_FOR: z.string().optional(),
-
-  // Sentry
-  VITE_SENTRY_DSN: z.url().optional(),
 });
 
 export type IServerEnv = z.output<typeof serverEnvSchema>;

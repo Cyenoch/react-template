@@ -10,9 +10,9 @@
     "moduleResolution": "Bundler",
     "paths": {
       "@/*": ["src/*"],
-      "@env": ["src/lib/env/index.ts"]
+      "@env": ["src/env/index.ts"]
     },
-    "types": ["unplugin-icons/types/react"],
+    "types": ["unplugin-icons/types/react", "@types/bun"],
     "allowImportingTsExtensions": true,
     "allowJs": true,
     // Best practices

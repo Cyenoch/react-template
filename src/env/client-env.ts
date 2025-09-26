@@ -1,10 +1,6 @@
 import { z } from 'zod';
 
-const clientEnvSchema = z.object({
-  VITE_APP_VERSION: z.string().optional(),
-
-  VITE_SENTRY_DSN: z.url().optional(),
-});
+const clientEnvSchema = z.object({});
 
 export type IClientEnv = z.output<typeof clientEnvSchema>;
 export const clientEnv: IClientEnv =

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect, useRouter } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
@@ -15,12 +15,16 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useMutation } from '@tanstack/react-query';
-import { authClient } from '@/lib/auth/client';
+import { authClient } from '@/auth/client';
 import { toast } from 'sonner';
-import { createServerFn } from '@tanstack/react-start';
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
+  beforeLoad: async ({ context }) => {
+    if (context.session) {
+      throw redirect({ to: '/user' });
+    }
+  },
 });
 
 const signInFormSchema = z.object({
@@ -28,15 +32,8 @@ const signInFormSchema = z.object({
   password: z.string().min(8),
 });
 
-const fallFn = createServerFn().handler(async () => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  throw new Error('Test');
-  return {
-    message: 'Hello, world!',
-  };
-});
-
 function RouteComponent() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
@@ -47,10 +44,7 @@ function RouteComponent() {
 
   const { mutate: signIn } = useMutation({
     mutationFn: async (values: z.infer<typeof signInFormSchema>) => {
-      const { data, error } = await authClient.signIn.email({
-        ...values,
-        callbackURL: '/user',
-      });
+      const { data, error } = await authClient.signIn.email(values);
       if (error) {
         throw error;
       }
@@ -61,6 +55,7 @@ function RouteComponent() {
     },
     onSuccess() {
       toast.success('Signed in successfully');
+      router.invalidate();
     },
   });
 
@@ -69,7 +64,6 @@ function RouteComponent() {
       const { data, error } = await authClient.signUp.email({
         ...values,
         name: values.email,
-        callbackURL: '/user',
       });
       if (error) {
         throw error;
@@ -81,6 +75,7 @@ function RouteComponent() {
     },
     onSuccess() {
       toast.success('Signed up successfully');
+      router.invalidate();
     },
   });
 
@@ -149,8 +144,6 @@ function RouteComponent() {
               >
                 Sign Up
               </Button>
-
-              <Button onClick={() => fallFn()}>Fall</Button>
             </form>
           </Form>
         </CardContent>

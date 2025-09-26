@@ -115,6 +115,6 @@
     ".github",
     "bun.lock",
     "src/routeTree.gen.ts",
-    "src/lib/database/schema/better-auth.ts"
+    "src/database/schema/better-auth.ts"
   ]
 }

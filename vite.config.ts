@@ -4,59 +4,16 @@ import tsConfigPaths from 'vite-tsconfig-paths';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import react from '@vitejs/plugin-react';
 import autoImport from 'unplugin-auto-import/vite';
-import { sentryVitePlugin } from '@sentry/vite-plugin';
-import pino from 'pino';
-import z from 'zod';
-
-const logger = pino({
-  level: 'info',
-});
-
-const parsedEnv = z
-  .object({
-    VITE_APP_VERSION: z.string().optional(),
-    SENTRY_ORG: z.string().optional(),
-    SENTRY_PROJECT: z.string().optional(),
-    SENTRY_AUTH_TOKEN: z.string().optional(),
-  })
-  .safeParse(Bun.env);
-
-if (!parsedEnv.success) {
-  logger.error(z.treeifyError(parsedEnv.error));
-  throw parsedEnv.error;
-}
-
-const env = parsedEnv.data!;
-
-export const VITE_ENVIRONMENT_NAMES = {
-  // 'ssr' is chosen as the name for the server environment to ensure backwards compatibility
-  // with vite plugins that are not compatible with the new vite environment API (e.g. tailwindcss)
-  server: 'ssr',
-  client: 'client',
-} as const;
-
-const sentryPluginEnabled =
-  env.SENTRY_ORG && env.SENTRY_PROJECT && env.SENTRY_AUTH_TOKEN;
-
-logger.debug(
-  sentryPluginEnabled
-    ? 'Sentry plugin is enabled'
-    : 'Sentry plugin is disabled',
-);
-
-if (sentryPluginEnabled) {
-  invariant(env.VITE_APP_VERSION, 'VITE_APP_VERSION is required');
-}
 
 export default defineConfig({
   environments: {
-    [VITE_ENVIRONMENT_NAMES.client]: {
+    client: {
       build: {
         target: 'es2020',
         chunkSizeWarningLimit: 1024 * 1024,
       },
     },
-    [VITE_ENVIRONMENT_NAMES.server]: {
+    ssr: {
       build: {
         target: 'esnext',
         minify: false,
@@ -82,19 +39,6 @@ export default defineConfig({
   },
 
   plugins: [
-    sentryVitePlugin({
-      org: Bun.env.SENTRY_ORG,
-      project: Bun.env.SENTRY_PROJECT,
-      authToken: Bun.env.SENTRY_AUTH_TOKEN,
-      sourcemaps: {
-        filesToDeleteAfterUpload: ['[.output|dist]/**/*.d.ts'],
-      },
-      release: {
-        // Make sure to update the release name in the sentry.ts file as well
-        name: `${env.VITE_APP_VERSION ?? 'unpublished'}`,
-      },
-    }),
-
     tsConfigPaths({
       projects: ['./tsconfig.json'],
     }),
@@ -128,9 +72,3 @@ export default defineConfig({
     sourcemap: true,
   },
 });
-
-function invariant(condition: any, message: string): asserts condition {
-  if (!condition) {
-    throw new Error(message);
-  }
-}

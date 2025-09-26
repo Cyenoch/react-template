@@ -1,9 +1,5 @@
 import type { ErrorComponentProps } from '@tanstack/react-router';
 import {
-  captureException,
-  withErrorBoundary,
-} from '@/lib/observability/sentry';
-import {
   Card,
   CardContent,
   CardDescription,
@@ -11,12 +7,11 @@ import {
   CardTitle,
 } from '../ui/card';
 import { Button } from '../ui/button';
-import { VITE_META_DEV } from '@/lib/constants';
+import { VITE_META_DEV } from '@/constants';
 
 function ErrorPrint({ error, reset }: ErrorComponentProps) {
   useEffect(() => {
     console.error('ErrorPrint', error);
-    captureException(error);
   }, [error]);
 
   return (
@@ -61,10 +56,4 @@ function ErrorPrint({ error, reset }: ErrorComponentProps) {
   );
 }
 
-export default withErrorBoundary(ErrorPrint, {
-  beforeCapture(scope, _error, componentStack) {
-    scope.setContext('errorBoundary', {
-      componentStack,
-    });
-  },
-});
+export default ErrorPrint;

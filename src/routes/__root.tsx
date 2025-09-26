@@ -1,25 +1,20 @@
 import type { QueryClient } from '@tanstack/react-query';
 import { seo } from '@/utils/seo';
-import appCss from '@/styles/global.css?url';
+import appCss from '@/index.css?url';
 import {
   createRootRouteWithContext,
   HeadContent,
   Outlet,
-  ScriptOnce,
   Scripts,
 } from '@tanstack/react-router';
 import { Toaster } from '@/components/ui/sonner';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
-import { wrapCreateRootRouteWithSentry } from '@sentry/tanstackstart-react';
-import { getPageSessionId } from '@/lib/middleware/request-id';
-import { getSessionIsomorphic } from '@/lib/auth';
 import { Session, User } from 'better-auth';
+import { orpcClient } from '@/orpc/client';
 
-// Wrap createRootRouteWithContext with Sentry for SSR tracing
-export const Route = wrapCreateRootRouteWithSentry(createRootRouteWithContext)<{
+export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
-  requestId: string;
   user: User | undefined;
   session: Session | undefined;
 }>()({
@@ -44,29 +39,17 @@ export const Route = wrapCreateRootRouteWithSentry(createRootRouteWithContext)<{
       },
     ],
   }),
-  component: RootComponent,
+  component: RootDocument,
   async beforeLoad() {
-    const requestId = getPageSessionId();
-    const session = await getSessionIsomorphic();
+    const session = await orpcClient.auth.maybeMe();
     return {
-      requestId,
       session: session?.session,
       user: session?.user,
     };
   },
 });
 
-function RootComponent() {
-  return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
-  );
-}
-
-function RootDocument({ children }: { children: React.ReactNode }) {
-  const { requestId } = Route.useRouteContext();
-
+function RootDocument() {
   return (
     <html lang="en">
       <head>
@@ -75,12 +58,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
       <body className="min-h-svh">
         {/* Content */}
-        <>
-          {children}
-          <footer className="text-center text-xs p-2">
-            <pre>{requestId}</pre>
-          </footer>
-        </>
+        <Outlet />
 
         {/* Devtools */}
         <Toaster richColors position="top-center" />
@@ -89,7 +67,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
         {/* Scripts */}
         <Scripts />
-        <ScriptOnce>{`window.__TraceId = '${requestId}';`}</ScriptOnce>
       </body>
     </html>
   );
