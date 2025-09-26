@@ -57,7 +57,7 @@
     "zod": "^4.1.11"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.4",
+    "@biomejs/biome": "2.2.4",
     "@iconify-json/mingcute": "^1.2.5",
     "@iconify-json/svg-spinners": "^1.2.4",
     "@svgr/core": "^8.1.0",
