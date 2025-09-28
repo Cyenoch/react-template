@@ -1,5 +1,6 @@
-import { Button } from '@/components/ui/button';
+
 import { authClient } from '@/auth/client';
+import { Button } from '@heroui/react';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_authed/user')({
@@ -16,7 +17,7 @@ function RouteComponent() {
       <pre>{JSON.stringify(user, null, 2)}</pre>
       <div className="mt-4 flex gap-x-4">
         <Button
-          onClick={async () => {
+          onPress={async () => {
             await authClient.signOut();
             setTimeout(() => {
               router.invalidate();

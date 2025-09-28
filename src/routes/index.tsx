@@ -1,22 +1,39 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React from 'react';
 import { createFileRoute, redirect, useRouter } from '@tanstack/react-router';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import z from 'zod';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { useMutation } from '@tanstack/react-query';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { authClient } from '@/auth/client';
-import { toast } from 'sonner';
+import {
+  addToast,
+  Button,
+  Card,
+  CardBody,
+  Input,
+  Tabs,
+  Tab,
+  CardHeader,
+} from '@heroui/react';
+
+const signInSchema = z.object({
+  email: z.email('Please enter a valid email address'),
+  password: z
+    .string()
+    .min(4, 'Password must be 4 characters or more')
+});
+
+const signUpSchema = signInSchema.extend({
+  name: z
+    .string()
+    .min(1, 'Please enter your name')
+    .refine((val) => val !== 'admin', {
+      message: 'Nice try! Choose a different username',
+    }),
+});
+
+type SignInData = z.infer<typeof signInSchema>;
+type SignUpData = z.infer<typeof signUpSchema>;
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
@@ -27,15 +44,11 @@ export const Route = createFileRoute('/')({
   },
 });
 
-const signInFormSchema = z.object({
-  email: z.email(),
-  password: z.string().min(8),
-});
-
-function RouteComponent() {
+function SignInForm() {
   const router = useRouter();
-  const form = useForm<z.infer<typeof signInFormSchema>>({
-    resolver: zodResolver(signInFormSchema),
+
+  const signInForm = useForm<SignInData>({
+    resolver: zodResolver(signInSchema),
     defaultValues: {
       email: '',
       password: '',
@@ -43,7 +56,7 @@ function RouteComponent() {
   });
 
   const { mutate: signIn } = useMutation({
-    mutationFn: async (values: z.infer<typeof signInFormSchema>) => {
+    mutationFn: async (values: SignInData) => {
       const { data, error } = await authClient.signIn.email(values);
       if (error) {
         throw error;
@@ -51,19 +64,97 @@ function RouteComponent() {
       return data;
     },
     onError(error) {
-      toast.error(error.message);
+      addToast({
+        title: 'Sign in failed',
+        description: error.message,
+        color: 'danger',
+      });
     },
     onSuccess() {
-      toast.success('Signed in successfully');
+      addToast({
+        title: 'Signed in successfully',
+        description: 'Welcome back!',
+        color: 'success',
+      });
       router.invalidate();
     },
   });
 
+  const onSubmit = (data: SignInData) => {
+    signIn(data);
+  };
+
+  return (
+    <form
+      className="w-full space-y-4"
+      onSubmit={signInForm.handleSubmit(onSubmit)}
+    >
+      <div className="flex flex-col gap-4">
+        <Controller
+          name="email"
+          control={signInForm.control}
+          render={({ field, fieldState: { error } }) => (
+            <Input
+              {...field}
+              isRequired
+              type="email"
+              label="Email"
+              labelPlacement="outside"
+              placeholder="Enter your email"
+              isInvalid={!!error}
+              errorMessage={error?.message}
+            />
+          )}
+        />
+
+        <Controller
+          name="password"
+          control={signInForm.control}
+          render={({ field, fieldState: { error } }) => (
+            <Input
+              {...field}
+              isRequired
+              type="password"
+              label="Password"
+              labelPlacement="outside"
+              placeholder="Enter your password"
+              isInvalid={!!error}
+              errorMessage={error?.message}
+            />
+          )}
+        />
+
+        <Button
+          className="w-full"
+          color="primary"
+          type="submit"
+          isLoading={signInForm.formState.isSubmitting}
+        >
+          Sign In
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+function SignUpForm() {
+  const router = useRouter();
+
+  const signUpForm = useForm<SignUpData>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+    },
+  });
+
   const { mutate: signUp } = useMutation({
-    mutationFn: async (values: z.infer<typeof signInFormSchema>) => {
+    mutationFn: async (values: SignUpData) => {
       const { data, error } = await authClient.signUp.email({
-        ...values,
-        name: values.email,
+        email: values.email,
+        password: values.password,
+        name: values.name,
       });
       if (error) {
         throw error;
@@ -71,82 +162,112 @@ function RouteComponent() {
       return data;
     },
     onError(error) {
-      toast.error(error.message);
+      addToast({
+        title: 'Sign up failed',
+        description: error.message,
+        color: 'danger',
+      });
     },
     onSuccess() {
-      toast.success('Signed up successfully');
+      addToast({
+        title: 'Signed up successfully',
+        description: 'Welcome! ',
+        color: 'success',
+      });
       router.invalidate();
     },
   });
 
+  const onSubmit = (data: SignUpData) => {
+    signUp(data);
+  };
+
+  return (
+    <form
+      className="w-full space-y-4"
+      onSubmit={signUpForm.handleSubmit(onSubmit)}
+    >
+      <div className="flex flex-col gap-4">
+        <Controller
+          name="name"
+          control={signUpForm.control}
+          render={({ field, fieldState: { error } }) => (
+            <Input
+              {...field}
+              isRequired
+              label="Name"
+              labelPlacement="outside"
+              placeholder="Enter your name"
+              isInvalid={!!error}
+              errorMessage={error?.message}
+            />
+          )}
+        />
+
+        <Controller
+          name="email"
+          control={signUpForm.control}
+          render={({ field, fieldState: { error } }) => (
+            <Input
+              {...field}
+              isRequired
+              type="email"
+              label="Email"
+              labelPlacement="outside"
+              placeholder="Enter your email"
+              isInvalid={!!error}
+              errorMessage={error?.message}
+            />
+          )}
+        />
+
+        <Controller
+          name="password"
+          control={signUpForm.control}
+          render={({ field, fieldState: { error } }) => (
+            <Input
+              {...field}
+              isRequired
+              type="password"
+              label="Password"
+              labelPlacement="outside"
+              placeholder="Enter your password"
+              isInvalid={!!error}
+              errorMessage={error?.message}
+            />
+          )}
+        />
+
+        <Button
+          className="w-full"
+          color="primary"
+          type="submit"
+          isLoading={signUpForm.formState.isSubmitting}
+        >
+          Sign Up
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+function RouteComponent() {
   return (
     <div className="min-h-svh grid place-items-center">
-      <Card className="max-w-sm w-full">
+      <Card className="max-w-md w-full">
         <CardHeader>
-          <CardTitle>
-            <h1>Sign In</h1>
-          </CardTitle>
+          <h1 className="text-2xl font-bold">Authentication</h1>
         </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit((values) => signIn(values))}
-              className="space-y-4"
-            >
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Email" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Enter your email to sign in.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Password"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Enter your password to sign in.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button type="submit" className="w-full">
-                Sign In
-              </Button>
-
-              <Button
-                className="mx-auto block"
-                variant="link"
-                onClick={() => {
-                  signUp(form.getValues());
-                }}
-              >
-                Sign Up
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
+        <CardBody>
+          <Tabs aria-label="Authentication Tabs">
+            <Tab key="sign-in" title="Sign In">
+              <SignInForm />
+            </Tab>
+            <Tab key="sign-up" title="Sign Up">
+              <SignUpForm />
+            </Tab>
+          </Tabs>
+        </CardBody>
       </Card>
     </div>
   );

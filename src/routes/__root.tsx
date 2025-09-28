@@ -7,11 +7,12 @@ import {
   Outlet,
   Scripts,
 } from '@tanstack/react-router';
-import { Toaster } from '@/components/ui/sonner';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { Session, User } from 'better-auth';
 import { orpcClient } from '@/orpc/client';
+import { AppProviders } from '@/components/providers';
+import { ToastProvider } from '@heroui/react';
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -57,17 +58,24 @@ function RootDocument() {
       </head>
 
       <body className="min-h-svh">
-        {/* Content */}
-        <Outlet />
+        <AppProviders>
+          {/* Content */}
+          <RootContent />
 
-        {/* Devtools */}
-        <Toaster richColors position="top-center" />
-        <ReactQueryDevtools />
-        <TanStackRouterDevtools />
+          <ToastProvider placement={'top-center'} toastOffset={60} />
+
+          {/* Devtools */}
+          <ReactQueryDevtools />
+          <TanStackRouterDevtools />
+        </AppProviders>
 
         {/* Scripts */}
         <Scripts />
       </body>
     </html>
   );
+}
+
+function RootContent() {
+  return <Outlet />;
 }

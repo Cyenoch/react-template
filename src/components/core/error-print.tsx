@@ -1,13 +1,6 @@
 import type { ErrorComponentProps } from '@tanstack/react-router';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '../ui/card';
-import { Button } from '../ui/button';
 import { VITE_META_DEV } from '@/constants';
+import {Card, CardHeader, CardBody, Button} from '@heroui/react'
 
 function ErrorPrint({ error, reset }: ErrorComponentProps) {
   useEffect(() => {
@@ -18,15 +11,11 @@ function ErrorPrint({ error, reset }: ErrorComponentProps) {
     <div className="min-h-svh grid place-items-center p-4">
       <Card className="max-w-lg w-full">
         <CardHeader>
-          <CardTitle className="text-destructive">
-            Something went wrong
-          </CardTitle>
-          <CardDescription>
+            <h1>Something went wrong</h1>
             An unexpected error occurred. The error has been reported and we're
             working to fix it.
-          </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardBody className="space-y-4">
           {VITE_META_DEV && error && (
             <details className="text-sm bg-muted p-4 rounded-md">
               <summary className="cursor-pointer font-medium">
@@ -43,14 +32,14 @@ function ErrorPrint({ error, reset }: ErrorComponentProps) {
             </details>
           )}
           <div className="flex gap-2">
-            <Button onClick={reset} variant="outline">
+            <Button onPress={reset} variant="bordered">
               Try Again
             </Button>
-            <Button onClick={() => window.location.reload()}>
+            <Button onPress={() => window.location.reload()}>
               Reload Page
             </Button>
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
     </div>
   );

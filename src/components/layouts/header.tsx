@@ -1,7 +1,6 @@
-import React from 'react';
 import { Link } from '@tanstack/react-router';
-import { Button } from '@/components/ui/button';
 import { ThemeToggle } from './theme-toggle';
+import { Button } from '@heroui/react';
 
 export function Header() {
   return (
@@ -10,7 +9,7 @@ export function Header() {
         <Link to="/" className="font-bold text-xl">
           React Template
         </Link>
-        
+
         <nav className="flex items-center gap-4">
           <Link to="/" className="[&.active]:font-medium">
             Home
@@ -22,7 +21,7 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Button variant="outline" size="sm">
+          <Button variant="bordered" size="sm">
             Sign Out
           </Button>
         </div>

@@ -4,7 +4,6 @@ import ErrorPrint from './components/core/error-print';
 import NotFound from './components/core/not-found';
 import { createQueryClient } from './utils/query-client';
 import { routeTree } from './routeTree.gen';
-import { InnerWrap } from './components/core/inner-wrap';
 import { createStart } from '@tanstack/react-start';
 
 declare module '@tanstack/react-router' {
@@ -24,7 +23,6 @@ export function getRouter() {
         user: undefined!,
         session: undefined!,
       },
-      InnerWrap,
       defaultNotFoundComponent: NotFound,
       defaultErrorComponent: ErrorPrint,
     }),
