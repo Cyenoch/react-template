@@ -3,10 +3,7 @@ import { SpanStatusCode, trace } from '@opentelemetry/api';
 import { getClientIPFromRequest } from './server-utils';
 
 export const getTracer = () => {
-  return trace.getTracer(
-    serverEnv.ORPC_OTEL_PACKAGE_NAME ?? serverEnv.OTEL_SERVICE_NAME ?? 'Server',
-    serverEnv.ORPC_OTEL_PACKAGE_VERSION,
-  );
+  return trace.getTracer(serverEnv.OTEL_SERVICE_NAME ?? 'Server');
 };
 
 export const getSpanAttributesFromRequest = (request: Request) => {
