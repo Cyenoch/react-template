@@ -4,8 +4,8 @@ import {
 } from '@tanstack/react-start/server';
 import { getRootLogger } from './utils/server-utils';
 import process from 'node:process';
-import './instrumentation';
 import { traceFetch } from './utils/trace';
+import './instrumentation';
 
 const logger = getRootLogger().child({
   module: 'ServerRoot',

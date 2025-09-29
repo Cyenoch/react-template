@@ -2,8 +2,6 @@ import pino from 'pino';
 import { z } from 'zod';
 
 const serverEnvSchema = z.object({
-  VITE_APP_VERSION: z.string().optional(),
-
   DATABASE_URL: z.url(),
 
   LOG_LEVEL: z.string().min(3).max(10).default('trace'),

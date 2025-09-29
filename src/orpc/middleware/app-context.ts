@@ -16,6 +16,8 @@ export const appContextMiddleware = os
       path,
     });
 
+    activeSpan.updateName(`ORPC ${path}`);
+
     return await next({
       context: {
         headers: headers,

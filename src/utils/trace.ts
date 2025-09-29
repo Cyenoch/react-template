@@ -1,5 +1,5 @@
 import { serverEnv } from '@/env';
-import { SpanStatusCode, trace } from '@opentelemetry/api';
+import { SpanKind, SpanStatusCode, trace } from '@opentelemetry/api';
 import { getClientIPFromRequest } from './server-utils';
 
 export const getTracer = () => {
@@ -53,7 +53,10 @@ export const traceFetch = (
 
     return tracer.startActiveSpan(
       `Request ${uri.pathname}`,
-      { attributes: getSpanAttributesFromRequest(request) },
+      {
+        kind: SpanKind.SERVER,
+        attributes: getSpanAttributesFromRequest(request),
+      },
       async (span) => {
         try {
           const response = await handler(request);
@@ -88,19 +91,23 @@ export function runWithSpan<Args extends any[], R>(
     const spanName = options?.name ?? fn.name ?? 'anonymous';
     const attributes = options?.attributes ?? {};
 
-    return tracer.startActiveSpan(spanName, { attributes }, async (span) => {
-      try {
-        return await fn(...args);
-      } catch (error: any) {
-        span.recordException(error);
-        span.setStatus({
-          code: SpanStatusCode.ERROR,
-          message: error?.message ?? error?.toString() ?? 'Unknown error',
-        });
-        throw error;
-      } finally {
-        span.end();
-      }
-    }) as R;
+    return tracer.startActiveSpan(
+      spanName,
+      { kind: SpanKind.SERVER, attributes },
+      async (span) => {
+        try {
+          return await fn(...args);
+        } catch (error: any) {
+          span.recordException(error);
+          span.setStatus({
+            code: SpanStatusCode.ERROR,
+            message: error?.message ?? error?.toString() ?? 'Unknown error',
+          });
+          throw error;
+        } finally {
+          span.end();
+        }
+      },
+    ) as R;
   };
 }

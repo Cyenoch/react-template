@@ -9,7 +9,16 @@ const logger = getRootLogger().child({
 });
 
 const sdk = new NodeSDK({
-  instrumentations: [getNodeAutoInstrumentations(), new ORPCInstrumentation()],
+  instrumentations: [
+    getNodeAutoInstrumentations({
+      '@opentelemetry/instrumentation-pg': {
+        enhancedDatabaseReporting: true,
+        addSqlCommenterCommentToQueries: true,
+        requireParentSpan: true,
+      },
+    }),
+    new ORPCInstrumentation(),
+  ],
 });
 
 sdk.start();
