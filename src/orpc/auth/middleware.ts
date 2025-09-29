@@ -33,3 +33,11 @@ export const requiredAuthMiddleware = os
       },
     });
   });
+
+Object.defineProperty(authMiddleware, 'name', {
+  value: 'auth',
+});
+
+Object.defineProperty(requiredAuthMiddleware, 'name', {
+  value: 'requiredAuth',
+});

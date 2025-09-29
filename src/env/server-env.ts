@@ -14,6 +14,11 @@ const serverEnvSchema = z.object({
 
   // Proxy
   X_FORWARDED_FOR: z.string().optional(),
+
+  // OpenTelemetry
+  OTEL_SERVICE_NAME: z.string().optional(),
+  OTEL_EXPORTER_OTLP_ENDPOINT: z.string().optional(),
+  OTEL_EXPORTER_OTLP_INSECURE: z.string().optional(),
 });
 
 export type IServerEnv = z.output<typeof serverEnvSchema>;

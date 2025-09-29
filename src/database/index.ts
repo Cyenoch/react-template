@@ -18,7 +18,7 @@ const rootLogger = getRootLogger().child({
 export const getSQLClient = createServerOnlyFn(() => {
   console.assert(serverEnv.DATABASE_URL, 'DATABASE_URL is not defined');
   if (globalThis._pool) return globalThis._pool;
-  rootLogger.info(`Opening database connection...`);
+  rootLogger.info(`Opening database connection`);
   const pool = (globalThis._pool = new Pool({
     connectionString: serverEnv.DATABASE_URL!,
     max: VITE_META_DEV ? 1 : undefined,

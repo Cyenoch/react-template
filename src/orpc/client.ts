@@ -1,21 +1,34 @@
 import { RPCLink } from '@orpc/client/fetch';
 import { createIsomorphicFn } from '@tanstack/react-start';
-import { getRequestHeaders } from '@tanstack/react-start/server';
+import { getRequest, getRequestHeaders } from '@tanstack/react-start/server';
 import { orpcRootRouter } from '.';
 import { createRouterClient, type RouterClient } from '@orpc/server';
 import { createORPCClient } from '@orpc/client';
-import { getClientIP } from '../utils/server-utils';
+import { getClientIP, getRootLogger } from '../utils/server-utils';
+import { trace } from '@opentelemetry/api';
 
 const getORPCClient = createIsomorphicFn()
-  .server(() =>
-    createRouterClient(orpcRootRouter, {
+  .server(() => {
+    const request = getRequest();
+    const headers = getRequestHeaders();
+    const clientIP = getClientIP();
+    const uri = new URL(request.url);
+    const path = uri.pathname.split('/').filter(Boolean).join('/');
+    const activeSpan = trace.getActiveSpan();
+
+    const logger = getRootLogger().child({
+      name: 'ORPC' + ':' + path,
+    });
+
+    return createRouterClient(orpcRootRouter, {
       context: {
-        headers: new Headers(getRequestHeaders())!,
-        logger: undefined!,
-        clientIP: getClientIP() ?? '',
+        headers: new Headers(headers)!,
+        logger: logger,
+        clientIP: clientIP ?? '',
+        activeSpan: activeSpan!,
       },
-    }),
-  )
+    });
+  })
   .client((): RouterClient<typeof orpcRootRouter> => {
     const link = new RPCLink({
       url: `${window.location.origin}/api/rpc`,
