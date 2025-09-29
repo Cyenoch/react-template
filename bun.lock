@@ -13,7 +13,7 @@
         "@opentelemetry/sdk-trace-node": "^2.1.0",
         "@opentelemetry/semantic-conventions": "^1.37.0",
         "@orpc/client": "^1.9.1",
-        "@orpc/otel": "^1.9.1",
+        "@orpc/otel": "^1.9.2",
         "@orpc/server": "^1.9.1",
         "@tanstack/react-query": "^5.90.2",
         "@tanstack/react-query-devtools": "^5.90.2",
@@ -608,7 +608,7 @@
 
     "@orpc/interop": ["@orpc/interop@1.9.1", "", {}, "sha512-pcskPBV9Mj/VydtKPVjZ2FnIHs9ZLVqHaXg/CKgprJ1VuCXEYKkzIizsjnrGrOhuFCHlhMUSmNUugJltZ7oGIA=="],
 
-    "@orpc/otel": ["@orpc/otel@1.9.1", "", { "dependencies": { "@orpc/shared": "1.9.1" }, "peerDependencies": { "@opentelemetry/api": ">=1.9.0", "@opentelemetry/instrumentation": ">=0.203.0" } }, "sha512-FuJDFoUamZ6GCur53dnn3SxQdatfXCJko5wQpWD/kIeKLpsAiErwGYotiB0gxHnugIZoLgL7b5Gp269BcAhNvA=="],
+    "@orpc/otel": ["@orpc/otel@1.9.2", "", { "dependencies": { "@orpc/shared": "1.9.2" }, "peerDependencies": { "@opentelemetry/api": ">=1.9.0", "@opentelemetry/instrumentation": ">=0.203.0" } }, "sha512-7n9iZW0h4QXu2tMOMpjgjgRbejHGqKeXDG3/m2IuaQkknlgFVaouMczYDT8gJXxDvH0Caekr6rMy+WDhccvu+w=="],
 
     "@orpc/server": ["@orpc/server@1.9.1", "", { "dependencies": { "@orpc/client": "1.9.1", "@orpc/contract": "1.9.1", "@orpc/interop": "1.9.1", "@orpc/shared": "1.9.1", "@orpc/standard-server": "1.9.1", "@orpc/standard-server-aws-lambda": "1.9.1", "@orpc/standard-server-fetch": "1.9.1", "@orpc/standard-server-node": "1.9.1", "@orpc/standard-server-peer": "1.9.1", "cookie": "^1.0.2" }, "peerDependencies": { "crossws": ">=0.3.4", "ws": ">=8.18.1" }, "optionalPeers": ["crossws", "ws"] }, "sha512-2F2SA8TE4newiHzFr/cSrg0ooS5LNxoagpGphSltsPiPdDefr2vL0lpa1rA9NH0TspFP0fmUDrT8cj0hTQ8cDA=="],
 
@@ -1727,6 +1727,8 @@
     "@jridgewell/remapping/@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.29", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-uw6guiW/gcAGPDhLmd77/6lW8QLeiV5RUTsAX46Db6oLhGaVj4lhnPwb184s1bkc8kdVg/+h988dro8GRDpmYQ=="],
 
     "@jridgewell/trace-mapping/@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.0", "", {}, "sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ=="],
+
+    "@orpc/otel/@orpc/shared": ["@orpc/shared@1.9.2", "", { "dependencies": { "radash": "^12.1.1", "type-fest": "^5.0.1" }, "peerDependencies": { "@opentelemetry/api": ">=1.9.0" }, "optionalPeers": ["@opentelemetry/api"] }, "sha512-AdxNCmEOMQ+nwX7M6WhuEqPX+ddRGff92H7RSGzA6xMfMppope+QKL325BQV3zkVjPCub4yw5M17vVqnVkcL5Q=="],
 
     "@react-aria/focus/clsx": ["clsx@2.1.1", "", {}, "sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA=="],
 
