@@ -17,7 +17,8 @@ const getORPCClient = createIsomorphicFn()
     const activeSpan = trace.getActiveSpan();
 
     const logger = getRootLogger().child({
-      name: 'ORPC' + ':' + path,
+      module: 'ORPC',
+      path,
     });
 
     return createRouterClient(orpcRootRouter, {
