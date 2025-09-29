@@ -30,7 +30,7 @@
     "@opentelemetry/semantic-conventions": "^1.37.0",
     "@orpc/client": "^1.9.1",
     "@orpc/otel": "^1.9.1",
-    "@orpc/server": "^1.9.1",
+    "@orpc/server": "^1.9.2",
     "@tanstack/react-query": "^5.90.2",
     "@tanstack/react-query-devtools": "^5.90.2",
     "@tanstack/react-router": "^1.132.23",
