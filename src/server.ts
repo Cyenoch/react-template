@@ -3,23 +3,24 @@ import {
   defaultStreamHandler,
 } from '@tanstack/react-start/server';
 import { getRootLogger } from './utils/server-utils';
+import process from 'node:process';
+import './instrumentation';
+import { traceFetch } from './utils/trace';
 
 const logger = getRootLogger().child({
   module: 'ServerRoot',
 });
 
-logger.info('Server starting...');
+const handler = createStartHandler(defaultStreamHandler);
 
-import './instrumentation';
+export default { fetch: traceFetch(handler) };
 
-const handler = createStartHandler((context) => {
-  return defaultStreamHandler(context);
+process.on('uncaughtException', (err) => {
+  logger.error({ err }, 'Uncaught Exception');
 });
 
-export default {
-  async fetch(request: Request): Promise<Response> {
-    return handler(request);
-  },
-};
+process.on('unhandledRejection', (reason) => {
+  logger.error({ reason }, 'Unhandled Rejection');
+});
 
 logger.info('Server started successfully');

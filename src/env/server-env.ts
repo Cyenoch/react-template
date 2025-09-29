@@ -17,6 +17,8 @@ const serverEnvSchema = z.object({
 
   // OpenTelemetry
   OTEL_SERVICE_NAME: z.string().optional(),
+  ORPC_OTEL_PACKAGE_NAME: z.string().optional(),
+  ORPC_OTEL_PACKAGE_VERSION: z.string().optional(),
   OTEL_EXPORTER_OTLP_ENDPOINT: z.string().optional(),
   OTEL_EXPORTER_OTLP_INSECURE: z.string().optional(),
 });

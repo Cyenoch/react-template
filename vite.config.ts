@@ -26,7 +26,7 @@ export default defineConfig({
 
     tailwindcss(),
 
-    imagemin(imageminOptions),
+    // imagemin(imageminOptions),
   ],
 
   environments,

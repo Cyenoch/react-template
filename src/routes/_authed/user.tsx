@@ -1,7 +1,6 @@
-
 import { authClient } from '@/auth/client';
 import { Button } from '@heroui/react';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useRouter } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_authed/user')({
   component: RouteComponent,
@@ -25,6 +24,14 @@ function RouteComponent() {
           }}
         >
           Sign Out
+        </Button>
+
+        <Button
+          onPress={() => {
+            router.invalidate();
+          }}
+        >
+          Refresh
         </Button>
       </div>
     </div>
