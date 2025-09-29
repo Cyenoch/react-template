@@ -1,5 +1,4 @@
 import { Link } from '@tanstack/react-router';
-import { ThemeToggle } from './theme-toggle';
 import { Button } from '@heroui/react';
 
 export function Header() {
@@ -20,7 +19,6 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           <Button variant="bordered" size="sm">
             Sign Out
           </Button>

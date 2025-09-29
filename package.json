@@ -11,7 +11,7 @@
     "format": "biome format --write",
     "lint": "oxlint --fix",
     "typecheck": "bun -b tsc --noEmit",
-    "up": "bunx taze major -x tailwindcss -x tailwind-merge -w",
+    "up": "bunx taze major -w",
     "generate": "bunx -b drizzle-kit generate",
     "migrate": "bunx -b drizzle-kit migrate",
     "better-auth:generate": "bunx -b @better-auth/cli generate --config src/auth/server.ts --output src/database/schema/better-auth.ts -y"
@@ -50,6 +50,7 @@
     "react-dom": "^19.1.1",
     "react-hook-form": "^7.63.0",
     "superjson": "^2.2.2",
+    "tailwind-merge": "^3.3.1",
     "uuid": "^13.0.0",
     "zod": "^4.1.11"
   },
