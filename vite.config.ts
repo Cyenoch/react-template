@@ -4,6 +4,7 @@ import tsConfigPaths from 'vite-tsconfig-paths';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import react from '@vitejs/plugin-react';
 import autoImport from 'unplugin-auto-import/vite';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   environments: {
@@ -65,6 +66,8 @@ export default defineConfig({
       biomelintrc: { enabled: true },
       include: [/\.[jt]sx?$/, /tsr-split/],
     }),
+
+    tailwindcss(),
   ],
 
   build: {
