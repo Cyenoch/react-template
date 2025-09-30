@@ -12,11 +12,11 @@ export const appContextMiddleware = os
     const clientIP = getClientIP() ?? '';
     const activeSpan = trace.getActiveSpan()!;
     const logger = getRootLogger().child({
-      module: 'ORPC',
+      module: `ORPC ${path.join('/')}`,
       path,
     });
 
-    activeSpan.updateName(`ORPC ${path}`);
+    activeSpan.updateName(`middleware.appContext ${path.join('/')}`);
 
     return await next({
       context: {
