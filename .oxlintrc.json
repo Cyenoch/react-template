@@ -117,6 +117,7 @@
     "CardContent": "readonly",
     "CardFooter": "readonly",
     "CardAction": "readonly",
+    "Spinner": "readonly",
     "toast": "readonly",
     "z": "readonly"
   },

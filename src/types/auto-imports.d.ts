@@ -17,6 +17,7 @@ declare global {
   const Input: typeof import('@/components/ui/input')['Input']
   const Label: typeof import('@/components/ui/label')['Label']
   const Link: typeof import('@tanstack/react-router')['Link']
+  const Spinner: typeof import('@/components/ui/spinner')['Spinner']
   const createRef: typeof import('react')['createRef']
   const forwardRef: typeof import('react')['forwardRef']
   const lazy: typeof import('react')['lazy']

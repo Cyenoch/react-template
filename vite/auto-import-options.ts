@@ -17,6 +17,7 @@ export const autoImportOptions: Parameters<typeof autoImport>[0] = {
         'CardFooter',
         'CardAction',
       ],
+      '@/components/ui/spinner': ['Spinner'],
       sonner: ['toast'],
     },
     {

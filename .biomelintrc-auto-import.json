@@ -12,6 +12,7 @@
       "Input",
       "Label",
       "Link",
+      "Spinner",
       "createRef",
       "forwardRef",
       "lazy",
