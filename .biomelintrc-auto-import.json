@@ -1,12 +1,23 @@
 {
   "javascript": {
     "globals": [
+      "Button",
+      "Card",
+      "CardAction",
+      "CardContent",
+      "CardDescription",
+      "CardFooter",
+      "CardHeader",
+      "CardTitle",
+      "Input",
+      "Label",
       "Link",
       "createRef",
       "forwardRef",
       "lazy",
       "memo",
       "startTransition",
+      "toast",
       "useCallback",
       "useContext",
       "useDebugValue",
@@ -15,6 +26,7 @@
       "useId",
       "useImperativeHandle",
       "useInsertionEffect",
+      "useIsMobile",
       "useLayoutEffect",
       "useMemo",
       "useReducer",
@@ -22,7 +34,8 @@
       "useRouter",
       "useState",
       "useSyncExternalStore",
-      "useTransition"
+      "useTransition",
+      "z"
     ]
   }
 }

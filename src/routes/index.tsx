@@ -1,26 +1,14 @@
-import React from 'react';
 import { createFileRoute, redirect, useRouter } from '@tanstack/react-router';
 import { useMutation } from '@tanstack/react-query';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { authClient } from '@/auth/client';
-import {
-  addToast,
-  Button,
-  Card,
-  CardBody,
-  Input,
-  Tabs,
-  Tab,
-  CardHeader,
-} from '@heroui/react';
+import { authClient } from '@/lib/auth/client';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { toast } from 'sonner';
 
 const signInSchema = z.object({
   email: z.email('Please enter a valid email address'),
-  password: z
-    .string()
-    .min(4, 'Password must be 4 characters or more')
+  password: z.string().min(4, 'Password must be 4 characters or more'),
 });
 
 const signUpSchema = signInSchema.extend({
@@ -64,17 +52,13 @@ function SignInForm() {
       return data;
     },
     onError(error) {
-      addToast({
-        title: 'Sign in failed',
+      toast.error('Sign in failed', {
         description: error.message,
-        color: 'danger',
       });
     },
     onSuccess() {
-      addToast({
-        title: 'Signed in successfully',
+      toast.success('Signed in successfully', {
         description: 'Welcome back!',
-        color: 'success',
       });
       router.invalidate();
     },
@@ -94,16 +78,19 @@ function SignInForm() {
           name="email"
           control={signInForm.control}
           render={({ field, fieldState: { error } }) => (
-            <Input
-              {...field}
-              isRequired
-              type="email"
-              label="Email"
-              labelPlacement="outside"
-              placeholder="Enter your email"
-              isInvalid={!!error}
-              errorMessage={error?.message}
-            />
+            <div className="space-y-2">
+              <Label htmlFor="email">Email *</Label>
+              <Input
+                {...field}
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                className={error ? 'border-destructive' : ''}
+              />
+              {error && (
+                <p className="text-sm text-destructive">{error.message}</p>
+              )}
+            </div>
           )}
         />
 
@@ -111,26 +98,28 @@ function SignInForm() {
           name="password"
           control={signInForm.control}
           render={({ field, fieldState: { error } }) => (
-            <Input
-              {...field}
-              isRequired
-              type="password"
-              label="Password"
-              labelPlacement="outside"
-              placeholder="Enter your password"
-              isInvalid={!!error}
-              errorMessage={error?.message}
-            />
+            <div className="space-y-2">
+              <Label htmlFor="password">Password *</Label>
+              <Input
+                {...field}
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                className={error ? 'border-destructive' : ''}
+              />
+              {error && (
+                <p className="text-sm text-destructive">{error.message}</p>
+              )}
+            </div>
           )}
         />
 
         <Button
           className="w-full"
-          color="primary"
           type="submit"
-          isLoading={signInForm.formState.isSubmitting}
+          disabled={signInForm.formState.isSubmitting}
         >
-          Sign In
+          {signInForm.formState.isSubmitting ? 'Signing In...' : 'Sign In'}
         </Button>
       </div>
     </form>
@@ -162,17 +151,13 @@ function SignUpForm() {
       return data;
     },
     onError(error) {
-      addToast({
-        title: 'Sign up failed',
+      toast.error('Sign up failed', {
         description: error.message,
-        color: 'danger',
       });
     },
     onSuccess() {
-      addToast({
-        title: 'Signed up successfully',
-        description: 'Welcome! ',
-        color: 'success',
+      toast.success('Signed up successfully', {
+        description: 'Welcome!',
       });
       router.invalidate();
     },
@@ -192,15 +177,18 @@ function SignUpForm() {
           name="name"
           control={signUpForm.control}
           render={({ field, fieldState: { error } }) => (
-            <Input
-              {...field}
-              isRequired
-              label="Name"
-              labelPlacement="outside"
-              placeholder="Enter your name"
-              isInvalid={!!error}
-              errorMessage={error?.message}
-            />
+            <div className="space-y-2">
+              <Label htmlFor="name">Name *</Label>
+              <Input
+                {...field}
+                id="name"
+                placeholder="Enter your name"
+                className={error ? 'border-destructive' : ''}
+              />
+              {error && (
+                <p className="text-sm text-destructive">{error.message}</p>
+              )}
+            </div>
           )}
         />
 
@@ -208,16 +196,19 @@ function SignUpForm() {
           name="email"
           control={signUpForm.control}
           render={({ field, fieldState: { error } }) => (
-            <Input
-              {...field}
-              isRequired
-              type="email"
-              label="Email"
-              labelPlacement="outside"
-              placeholder="Enter your email"
-              isInvalid={!!error}
-              errorMessage={error?.message}
-            />
+            <div className="space-y-2">
+              <Label htmlFor="signup-email">Email *</Label>
+              <Input
+                {...field}
+                id="signup-email"
+                type="email"
+                placeholder="Enter your email"
+                className={error ? 'border-destructive' : ''}
+              />
+              {error && (
+                <p className="text-sm text-destructive">{error.message}</p>
+              )}
+            </div>
           )}
         />
 
@@ -225,26 +216,28 @@ function SignUpForm() {
           name="password"
           control={signUpForm.control}
           render={({ field, fieldState: { error } }) => (
-            <Input
-              {...field}
-              isRequired
-              type="password"
-              label="Password"
-              labelPlacement="outside"
-              placeholder="Enter your password"
-              isInvalid={!!error}
-              errorMessage={error?.message}
-            />
+            <div className="space-y-2">
+              <Label htmlFor="signup-password">Password *</Label>
+              <Input
+                {...field}
+                id="signup-password"
+                type="password"
+                placeholder="Enter your password"
+                className={error ? 'border-destructive' : ''}
+              />
+              {error && (
+                <p className="text-sm text-destructive">{error.message}</p>
+              )}
+            </div>
           )}
         />
 
         <Button
           className="w-full"
-          color="primary"
           type="submit"
-          isLoading={signUpForm.formState.isSubmitting}
+          disabled={signUpForm.formState.isSubmitting}
         >
-          Sign Up
+          {signUpForm.formState.isSubmitting ? 'Signing Up...' : 'Sign Up'}
         </Button>
       </div>
     </form>
@@ -253,21 +246,27 @@ function SignUpForm() {
 
 function RouteComponent() {
   return (
-    <div className="min-h-svh grid place-items-center">
+    <div className="min-h-svh grid place-items-center p-4">
       <Card className="max-w-md w-full">
         <CardHeader>
-          <h1 className="text-2xl font-bold">Authentication</h1>
+          <CardTitle className="text-2xl font-bold text-center">
+            Authentication
+          </CardTitle>
         </CardHeader>
-        <CardBody>
-          <Tabs aria-label="Authentication Tabs">
-            <Tab key="sign-in" title="Sign In">
+        <CardContent>
+          <Tabs defaultValue="sign-in" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="sign-in">Sign In</TabsTrigger>
+              <TabsTrigger value="sign-up">Sign Up</TabsTrigger>
+            </TabsList>
+            <TabsContent value="sign-in" className="mt-6">
               <SignInForm />
-            </Tab>
-            <Tab key="sign-up" title="Sign Up">
+            </TabsContent>
+            <TabsContent value="sign-up" className="mt-6">
               <SignUpForm />
-            </Tab>
+            </TabsContent>
           </Tabs>
-        </CardBody>
+        </CardContent>
       </Card>
     </div>
   );

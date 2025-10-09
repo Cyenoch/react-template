@@ -1,26 +1,35 @@
-import { format, formatDistanceToNow, isToday, isYesterday, parseISO } from 'date-fns';
+import {
+  format,
+  formatDistanceToNow,
+  isToday,
+  isYesterday,
+  parseISO,
+} from 'date-fns';
 
 export function formatDate(date: Date | string, formatStr = 'PPP'): string {
   const dateObj = typeof date === 'string' ? parseISO(date) : date;
   return format(dateObj, formatStr);
 }
 
-export function formatDateTime(date: Date | string, formatStr = 'PPP p'): string {
+export function formatDateTime(
+  date: Date | string,
+  formatStr = 'PPP p',
+): string {
   const dateObj = typeof date === 'string' ? parseISO(date) : date;
   return format(dateObj, formatStr);
 }
 
 export function formatRelativeTime(date: Date | string): string {
   const dateObj = typeof date === 'string' ? parseISO(date) : date;
-  
+
   if (isToday(dateObj)) {
     return `Today at ${format(dateObj, 'p')}`;
   }
-  
+
   if (isYesterday(dateObj)) {
     return `Yesterday at ${format(dateObj, 'p')}`;
   }
-  
+
   return formatDistanceToNow(dateObj, { addSuffix: true });
 }
 
@@ -40,7 +49,11 @@ export function formatNumber(num: number, locale = 'en-US'): string {
   return new Intl.NumberFormat(locale).format(num);
 }
 
-export function formatCurrency(amount: number, currency = 'USD', locale = 'en-US'): string {
+export function formatCurrency(
+  amount: number,
+  currency = 'USD',
+  locale = 'en-US',
+): string {
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,

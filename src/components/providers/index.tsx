@@ -1,6 +1,6 @@
 import React from 'react';
 import { QueryProvider } from './query-provider';
-import { AppHeroUIProvider } from './heroui-provider';
+import { AppUIProvider } from './ui-provider';
 
 interface AppProvidersProps {
   children: React.ReactNode;
@@ -9,7 +9,7 @@ interface AppProvidersProps {
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <QueryProvider>
-      <AppHeroUIProvider>{children}</AppHeroUIProvider>
+      <AppUIProvider>{children}</AppUIProvider>
     </QueryProvider>
   );
 }

@@ -1,5 +1,5 @@
 import type { QueryClient } from '@tanstack/react-query';
-import { seo } from '@/utils/seo';
+import { seo } from '@/lib/utils/seo';
 import appCss from '@/index.css?url';
 import {
   createRootRouteWithContext,
@@ -10,9 +10,8 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { Session, User } from 'better-auth';
-import { orpcClient } from '@/orpc/client';
+import { orpcClient } from '@/lib/orpc/client';
 import { AppProviders } from '@/components/providers';
-import { ToastProvider } from '@heroui/react';
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -61,8 +60,6 @@ function RootDocument() {
         <AppProviders>
           {/* Content */}
           <RootContent />
-
-          <ToastProvider placement={'top-center'} toastOffset={60} />
 
           {/* Devtools */}
           <ReactQueryDevtools />

@@ -27,7 +27,7 @@ This is a full-stack React application built with:
 ### Core Stack
 - **Runtime**: Bun
 - **Frontend**: React 19 + TanStack Router + TanStack Start (full-stack React framework) + oRPC
-- **UI Library**: HeroUI
+- **UI Library**: Shadcn UI
 - **Styling**: Tailwind CSS v4
 - **Database**: PostgreSQL with Drizzle ORM
 - **Authentication**: Better Auth

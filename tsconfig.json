@@ -10,7 +10,7 @@
     "moduleResolution": "Bundler",
     "paths": {
       "@/*": ["src/*"],
-      "@env": ["src/env/index.ts"]
+      "@env": ["src/lib/env/index.ts"]
     },
     "types": ["unplugin-icons/types/react", "@types/bun"],
     "allowImportingTsExtensions": true,
@@ -29,5 +29,14 @@
     "verbatimModuleSyntax": false,
     "skipLibCheck": true
   },
-  "exclude": ["node_modules", ".output", ".nitro", ".tanstack", ".vscode", ".github", ".zed", "drizzle"]
+  "exclude": [
+    "node_modules",
+    ".output",
+    ".nitro",
+    ".tanstack",
+    ".vscode",
+    ".github",
+    ".zed",
+    "drizzle"
+  ]
 }

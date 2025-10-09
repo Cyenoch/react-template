@@ -5,7 +5,25 @@ export const autoImportOptions: Parameters<typeof autoImport>[0] = {
     'react',
     {
       '@tanstack/react-router': ['Link', 'useRouter'],
+      '@/components/ui/button': ['Button'],
+      '@/components/ui/input': ['Input'],
+      '@/components/ui/label': ['Label'],
+      '@/components/ui/card': [
+        'Card',
+        'CardHeader',
+        'CardTitle',
+        'CardDescription',
+        'CardContent',
+        'CardFooter',
+        'CardAction',
+      ],
+      sonner: ['toast'],
     },
+    {
+      from: 'zod',
+      type: true,
+      imports: ['z'],
+    }
   ],
   dts: 'src/types/auto-imports.d.ts',
   dirs: ['src/hooks'],

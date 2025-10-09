@@ -1,4 +1,4 @@
-import { getRootLogger } from './utils/server-utils';
+import { getRootLogger } from './lib/utils/server-utils';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
 import { ORPCInstrumentation } from '@orpc/otel';

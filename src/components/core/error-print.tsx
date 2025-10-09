@@ -1,17 +1,10 @@
 import { type ErrorComponentProps } from '@tanstack/react-router';
-import { VITE_META_DEV } from '@/constants';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
-  HeroUIProvider,
-} from '@heroui/react';
+import { VITE_META_DEV } from '@/lib/constants';
 import appCss from '@/index.css?url';
 
 function ErrorPrint({ error, reset }: ErrorComponentProps) {
   return (
-    <HeroUIProvider>
+    <>
       <script>
         {`
           const link = document.createElement('link');
@@ -23,11 +16,13 @@ function ErrorPrint({ error, reset }: ErrorComponentProps) {
       <div className="min-h-svh grid place-items-center p-4">
         <Card className="max-w-lg w-full">
           <CardHeader>
-            <h1>Something went wrong</h1>
-            An unexpected error occurred. The error has been reported and we're
-            working to fix it.
+            <CardTitle>Something went wrong</CardTitle>
+            <CardDescription>
+              An unexpected error occurred. The error has been reported and
+              we're working to fix it.
+            </CardDescription>
           </CardHeader>
-          <CardBody className="space-y-4">
+          <CardContent className="space-y-4">
             {VITE_META_DEV && error && (
               <details className="text-sm bg-muted p-4 rounded-md">
                 <summary className="cursor-pointer font-medium">
@@ -44,17 +39,17 @@ function ErrorPrint({ error, reset }: ErrorComponentProps) {
               </details>
             )}
             <div className="flex gap-2">
-              <Button onPress={reset} variant="bordered">
+              <Button onClick={reset} variant="outline">
                 Try Again
               </Button>
-              <Button onPress={() => window.location.reload()}>
+              <Button onClick={() => window.location.reload()}>
                 Reload Page
               </Button>
             </div>
-          </CardBody>
+          </CardContent>
         </Card>
       </div>
-    </HeroUIProvider>
+    </>
   );
 }
 

@@ -1,6 +1,3 @@
-import { Link } from '@tanstack/react-router';
-import { Button } from '@heroui/react';
-
 export function Header() {
   return (
     <header className="border-b">
@@ -19,7 +16,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button variant="bordered" size="sm">
+          <Button variant="outline" size="sm">
             Sign Out
           </Button>
         </div>

@@ -1,4 +1,4 @@
-import { serverEnv } from '@/env';
+import { serverEnv } from '@/lib/env';
 import { SpanKind, SpanStatusCode, trace } from '@opentelemetry/api';
 import { getClientIPFromRequest } from './server-utils';
 

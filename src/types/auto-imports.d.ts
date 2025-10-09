@@ -6,12 +6,23 @@
 // biome-ignore lint: disable
 export {}
 declare global {
+  const Button: typeof import('@/components/ui/button')['Button']
+  const Card: typeof import('@/components/ui/card')['Card']
+  const CardAction: typeof import('@/components/ui/card')['CardAction']
+  const CardContent: typeof import('@/components/ui/card')['CardContent']
+  const CardDescription: typeof import('@/components/ui/card')['CardDescription']
+  const CardFooter: typeof import('@/components/ui/card')['CardFooter']
+  const CardHeader: typeof import('@/components/ui/card')['CardHeader']
+  const CardTitle: typeof import('@/components/ui/card')['CardTitle']
+  const Input: typeof import('@/components/ui/input')['Input']
+  const Label: typeof import('@/components/ui/label')['Label']
   const Link: typeof import('@tanstack/react-router')['Link']
   const createRef: typeof import('react')['createRef']
   const forwardRef: typeof import('react')['forwardRef']
   const lazy: typeof import('react')['lazy']
   const memo: typeof import('react')['memo']
   const startTransition: typeof import('react')['startTransition']
+  const toast: typeof import('sonner')['toast']
   const useCallback: typeof import('react')['useCallback']
   const useContext: typeof import('react')['useContext']
   const useDebugValue: typeof import('react')['useDebugValue']
@@ -20,6 +31,7 @@ declare global {
   const useId: typeof import('react')['useId']
   const useImperativeHandle: typeof import('react')['useImperativeHandle']
   const useInsertionEffect: typeof import('react')['useInsertionEffect']
+  const useIsMobile: typeof import('../hooks/use-mobile')['useIsMobile']
   const useLayoutEffect: typeof import('react')['useLayoutEffect']
   const useMemo: typeof import('react')['useMemo']
   const useReducer: typeof import('react')['useReducer']
@@ -28,4 +40,11 @@ declare global {
   const useState: typeof import('react')['useState']
   const useSyncExternalStore: typeof import('react')['useSyncExternalStore']
   const useTransition: typeof import('react')['useTransition']
+  const z: typeof import('zod')['default']
+}
+// for type re-export
+declare global {
+  // @ts-ignore
+  export type { z } from 'zod'
+  import('zod')
 }

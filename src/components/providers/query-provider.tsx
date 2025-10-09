@@ -7,7 +7,7 @@ interface QueryProviderProps {
 }
 
 export function QueryProvider({ children }: QueryProviderProps) {
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <QueryClientProvider client={router.options.context.queryClient}>

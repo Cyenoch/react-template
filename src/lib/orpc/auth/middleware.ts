@@ -1,4 +1,4 @@
-import { auth } from '@/auth/server';
+import { auth } from '@/lib/auth/server';
 import { ORPCError, os } from '@orpc/server';
 import type { Session, User } from 'better-auth';
 

@@ -106,7 +106,19 @@
     "builtin": true
   },
   "globals": {
-    "Link": "readonly"
+    "Link": "readonly",
+    "Button": "readonly",
+    "Input": "readonly",
+    "Label": "readonly",
+    "Card": "readonly",
+    "CardHeader": "readonly",
+    "CardTitle": "readonly",
+    "CardDescription": "readonly",
+    "CardContent": "readonly",
+    "CardFooter": "readonly",
+    "CardAction": "readonly",
+    "toast": "readonly",
+    "z": "readonly"
   },
   "ignorePatterns": [
     "node_modules",
@@ -115,6 +127,7 @@
     ".github",
     "bun.lock",
     "src/routeTree.gen.ts",
-    "src/database/schema/better-auth.ts"
+    "src/components/ui",
+    "src/lib/database/schema/better-auth.ts"
   ]
 }

@@ -13,17 +13,8 @@ export const advancedChunks: RolldownOptions['advancedChunks'] = {
       priority: 20,
     },
     {
-      test: /node_modules[\\/]@heroui[\\/]/,
-      name(module) {
-        const libName = module?.split('@heroui/')[1]?.split('/')[0];
-        if (!libName) return 'heroui-components';
-        return `heroui-${libName}`;
-      },
-      priority: 15,
-    },
-    {
-      test: /node_modules[\\/]@heroui[\\/]react/,
-      name: 'heroui-core',
+      test: /node_modules[\\/]@radix-ui[\\/]react/,
+      name: 'radix-ui',
       priority: 14,
     },
     {
