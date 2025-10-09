@@ -27,7 +27,7 @@
     "@opentelemetry/sdk-node": "^0.205.0",
     "@opentelemetry/sdk-trace-node": "^2.1.0",
     "@opentelemetry/semantic-conventions": "^1.37.0",
-    "@orpc/client": "^1.9.2",
+    "@orpc/client": "^1.9.3",
     "@orpc/otel": "^1.9.2",
     "@orpc/server": "^1.9.2",
     "@radix-ui/react-accordion": "^1.2.12",
