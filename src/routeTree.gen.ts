@@ -8,146 +8,146 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthedRouteImport } from './routes/_authed'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthedUserRouteImport } from './routes/_authed/user'
-import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc.$'
-import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as rootRouteImport } from './routes/__root';
+import { Route as AuthedRouteImport } from './routes/_authed';
+import { Route as IndexRouteImport } from './routes/index';
+import { Route as AuthedUserRouteImport } from './routes/_authed/user';
+import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc.$';
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$';
 
 const AuthedRoute = AuthedRouteImport.update({
   id: '/_authed',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AuthedUserRoute = AuthedUserRouteImport.update({
   id: '/user',
   path: '/user',
   getParentRoute: () => AuthedRoute,
-} as any)
+} as any);
 const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
   id: '/api/rpc/$',
   path: '/api/rpc/$',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/user': typeof AuthedUserRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/': typeof IndexRoute;
+  '/user': typeof AuthedUserRoute;
+  '/api/auth/$': typeof ApiAuthSplatRoute;
+  '/api/rpc/$': typeof ApiRpcSplatRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/user': typeof AuthedUserRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/': typeof IndexRoute;
+  '/user': typeof AuthedUserRoute;
+  '/api/auth/$': typeof ApiAuthSplatRoute;
+  '/api/rpc/$': typeof ApiRpcSplatRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/_authed': typeof AuthedRouteWithChildren
-  '/_authed/user': typeof AuthedUserRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/rpc/$': typeof ApiRpcSplatRoute
+  __root__: typeof rootRouteImport;
+  '/': typeof IndexRoute;
+  '/_authed': typeof AuthedRouteWithChildren;
+  '/_authed/user': typeof AuthedUserRoute;
+  '/api/auth/$': typeof ApiAuthSplatRoute;
+  '/api/rpc/$': typeof ApiRpcSplatRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/user' | '/api/auth/$' | '/api/rpc/$'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/user' | '/api/auth/$' | '/api/rpc/$'
+  fileRoutesByFullPath: FileRoutesByFullPath;
+  fullPaths: '/' | '/user' | '/api/auth/$' | '/api/rpc/$';
+  fileRoutesByTo: FileRoutesByTo;
+  to: '/' | '/user' | '/api/auth/$' | '/api/rpc/$';
   id:
     | '__root__'
     | '/'
     | '/_authed'
     | '/_authed/user'
     | '/api/auth/$'
-    | '/api/rpc/$'
-  fileRoutesById: FileRoutesById
+    | '/api/rpc/$';
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AuthedRoute: typeof AuthedRouteWithChildren
-  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  ApiRpcSplatRoute: typeof ApiRpcSplatRoute
+  IndexRoute: typeof IndexRoute;
+  AuthedRoute: typeof AuthedRouteWithChildren;
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute;
+  ApiRpcSplatRoute: typeof ApiRpcSplatRoute;
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/_authed': {
-      id: '/_authed'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/_authed';
+      path: '';
+      fullPath: '';
+      preLoaderRoute: typeof AuthedRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/';
+      path: '/';
+      fullPath: '/';
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/_authed/user': {
-      id: '/_authed/user'
-      path: '/user'
-      fullPath: '/user'
-      preLoaderRoute: typeof AuthedUserRouteImport
-      parentRoute: typeof AuthedRoute
-    }
+      id: '/_authed/user';
+      path: '/user';
+      fullPath: '/user';
+      preLoaderRoute: typeof AuthedUserRouteImport;
+      parentRoute: typeof AuthedRoute;
+    };
     '/api/rpc/$': {
-      id: '/api/rpc/$'
-      path: '/api/rpc/$'
-      fullPath: '/api/rpc/$'
-      preLoaderRoute: typeof ApiRpcSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/api/rpc/$';
+      path: '/api/rpc/$';
+      fullPath: '/api/rpc/$';
+      preLoaderRoute: typeof ApiRpcSplatRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/api/auth/$': {
-      id: '/api/auth/$'
-      path: '/api/auth/$'
-      fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/api/auth/$';
+      path: '/api/auth/$';
+      fullPath: '/api/auth/$';
+      preLoaderRoute: typeof ApiAuthSplatRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
   }
 }
 
 interface AuthedRouteChildren {
-  AuthedUserRoute: typeof AuthedUserRoute
+  AuthedUserRoute: typeof AuthedUserRoute;
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedUserRoute: AuthedUserRoute,
-}
+};
 
 const AuthedRouteWithChildren =
-  AuthedRoute._addFileChildren(AuthedRouteChildren)
+  AuthedRoute._addFileChildren(AuthedRouteChildren);
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthedRoute: AuthedRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
-import type { getRouter } from './router.ts'
-import type { startInstance } from './start.tsx'
+import type { getRouter } from './router.ts';
+import type { startInstance } from './start.tsx';
 declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+    ssr: true;
+    router: Awaited<ReturnType<typeof getRouter>>;
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>;
   }
 }

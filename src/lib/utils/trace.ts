@@ -1,5 +1,5 @@
-import { serverEnv } from '@/lib/env';
 import { SpanKind, SpanStatusCode, trace } from '@opentelemetry/api';
+import { serverEnv } from '@/lib/env';
 import { getClientIPFromRequest } from './server-utils';
 
 export const getTracer = () => {

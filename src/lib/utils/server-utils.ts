@@ -1,7 +1,7 @@
 import { createServerOnlyFn } from '@tanstack/react-start';
-import { serverEnv } from '../env';
 import { getRequestHeader, getRequestIP } from '@tanstack/react-start/server';
 import pino from 'pino';
+import { serverEnv } from '../env';
 
 const rootLogger = pino({
   level: serverEnv.LOG_LEVEL ?? 'trace',

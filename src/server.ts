@@ -1,9 +1,9 @@
+import process from 'node:process';
 import {
   createStartHandler,
   defaultStreamHandler,
 } from '@tanstack/react-start/server';
 import { getRootLogger } from './lib/utils/server-utils';
-import process from 'node:process';
 import { traceFetch } from './lib/utils/trace';
 import './instrumentation';
 

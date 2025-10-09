@@ -24,7 +24,7 @@ export const autoImportOptions: Parameters<typeof autoImport>[0] = {
       from: 'zod',
       type: true,
       imports: ['z'],
-    }
+    },
   ],
   dts: 'src/types/auto-imports.d.ts',
   dirs: ['src/hooks'],

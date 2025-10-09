@@ -1,7 +1,7 @@
-import { getClientIP, getRootLogger } from '@/lib/utils/server-utils';
+import { trace } from '@opentelemetry/api';
 import { os } from '@orpc/server';
 import { getRequestHeaders } from '@tanstack/react-start/server';
-import { trace } from '@opentelemetry/api';
+import { getClientIP, getRootLogger } from '@/lib/utils/server-utils';
 
 export const appContextMiddleware = os
   .$context<{

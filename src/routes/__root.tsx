@@ -1,17 +1,17 @@
 import type { QueryClient } from '@tanstack/react-query';
-import { seo } from '@/lib/utils/seo';
-import appCss from '@/index.css?url';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
   createRootRouteWithContext,
   HeadContent,
   Outlet,
   Scripts,
 } from '@tanstack/react-router';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { Session, User } from 'better-auth';
-import { orpcClient } from '@/lib/orpc/client';
 import { AppProviders } from '@/components/providers';
+import appCss from '@/index.css?url';
+import { orpcClient } from '@/lib/orpc/client';
+import { seo } from '@/lib/utils/seo';
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;

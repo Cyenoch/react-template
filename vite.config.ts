@@ -1,14 +1,13 @@
+import tailwindcss from '@tailwindcss/vite';
+import { tanstackStart } from '@tanstack/react-start/plugin/vite';
+import react from '@vitejs/plugin-react';
+import autoImport from 'unplugin-auto-import/vite';
 import icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
 import tsConfigPaths from 'vite-tsconfig-paths';
-import { tanstackStart } from '@tanstack/react-start/plugin/vite';
-import react from '@vitejs/plugin-react';
-import tailwindcss from '@tailwindcss/vite';
-import autoImport from 'unplugin-auto-import/vite';
-
-import { optimizeDeps } from './vite/optimize-deps';
-import { environments } from './vite/environments';
 import { autoImportOptions } from './vite/auto-import-options';
+import { environments } from './vite/environments';
+import { optimizeDeps } from './vite/optimize-deps';
 
 export default defineConfig({
   plugins: [

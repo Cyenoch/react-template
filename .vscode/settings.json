@@ -15,5 +15,8 @@
     "**/.vinxi": true,
     "**/.output": true,
     "bun.lock": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.biome": "explicit"
   }
 }

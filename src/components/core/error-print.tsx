@@ -1,6 +1,6 @@
 import { type ErrorComponentProps } from '@tanstack/react-router';
-import { VITE_META_DEV } from '@/lib/constants';
 import appCss from '@/index.css?url';
+import { VITE_META_DEV } from '@/lib/constants';
 
 function ErrorPrint({ error, reset }: ErrorComponentProps) {
   return (

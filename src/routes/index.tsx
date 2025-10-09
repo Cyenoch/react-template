@@ -1,10 +1,10 @@
-import { createFileRoute, redirect, useRouter } from '@tanstack/react-router';
-import { useMutation } from '@tanstack/react-query';
-import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { authClient } from '@/lib/auth/client';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useMutation } from '@tanstack/react-query';
+import { createFileRoute, redirect, useRouter } from '@tanstack/react-router';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { authClient } from '@/lib/auth/client';
 
 const signInSchema = z.object({
   email: z.email('Please enter a valid email address'),

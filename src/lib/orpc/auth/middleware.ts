@@ -1,6 +1,6 @@
-import { auth } from '@/lib/auth/server';
 import { ORPCError, os } from '@orpc/server';
 import type { Session, User } from 'better-auth';
+import { auth } from '@/lib/auth/server';
 
 export type AuthSession = Session;
 export type AuthUser = User;

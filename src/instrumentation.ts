@@ -1,8 +1,8 @@
-import { getRootLogger } from './lib/utils/server-utils';
-import { NodeSDK } from '@opentelemetry/sdk-node';
-import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
-import { ORPCInstrumentation } from '@orpc/otel';
 import process from 'node:process';
+import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
+import { NodeSDK } from '@opentelemetry/sdk-node';
+import { ORPCInstrumentation } from '@orpc/otel';
+import { getRootLogger } from './lib/utils/server-utils';
 
 const logger = getRootLogger().child({
   module: 'Instrumentation',

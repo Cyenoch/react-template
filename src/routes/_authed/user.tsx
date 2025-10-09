@@ -1,7 +1,7 @@
-import { authClient } from '@/lib/auth/client';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { authClient } from '@/lib/auth/client';
 
 export const Route = createFileRoute('/_authed/user')({
   component: RouteComponent,

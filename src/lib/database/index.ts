@@ -1,11 +1,11 @@
-import type { Logger } from 'drizzle-orm';
 import { createServerOnlyFn } from '@tanstack/react-start';
+import type { Logger } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
-import * as schema from './schema';
-import { serverEnv } from '../env';
 import { VITE_META_DEV } from '../constants';
+import { serverEnv } from '../env';
 import { getRootLogger } from '../utils/server-utils';
+import * as schema from './schema';
 
 declare global {
   var _pool: Pool;
