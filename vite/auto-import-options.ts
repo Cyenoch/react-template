@@ -19,12 +19,7 @@ export const autoImportOptions: Parameters<typeof autoImport>[0] = {
       ],
       '@/components/ui/spinner': ['Spinner'],
       sonner: ['toast'],
-    },
-    {
-      from: 'zod',
-      type: true,
-      imports: ['z'],
-    },
+    }
   ],
   dts: 'src/types/auto-imports.d.ts',
   dirs: ['src/hooks'],

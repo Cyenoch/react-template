@@ -8,15 +8,19 @@ import {
 } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { Session, User } from 'better-auth';
+import { MainLayout } from '@/components/layouts/main-layout';
 import { AppProviders } from '@/components/providers';
 import appCss from '@/index.css?url';
 import { orpcClient } from '@/lib/orpc/client';
+import { cn } from '@/lib/utils';
 import { seo } from '@/lib/utils/seo';
+import { getTheme } from '@/lib/utils/theme';
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   user: User | undefined;
   session: Session | undefined;
+  theme: string;
 }>()({
   head: () => ({
     meta: [
@@ -45,21 +49,26 @@ export const Route = createRootRouteWithContext<{
     return {
       session: session?.session,
       user: session?.user,
+      theme: getTheme(),
     };
   },
 });
 
 function RootDocument() {
+  const { theme } = Route.useRouteContext();
+
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
 
-      <body className="min-h-svh">
+      <body className={cn('min-h-svh', theme)}>
         <AppProviders>
           {/* Content */}
-          <RootContent />
+          <MainLayout>
+            <RootContent />
+          </MainLayout>
 
           {/* Devtools */}
           <ReactQueryDevtools />

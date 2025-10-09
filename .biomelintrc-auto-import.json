@@ -35,8 +35,7 @@
       "useRouter",
       "useState",
       "useSyncExternalStore",
-      "useTransition",
-      "z"
+      "useTransition"
     ]
   }
 }

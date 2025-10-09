@@ -3,6 +3,7 @@ import { routerWithQueryClient } from '@tanstack/react-router-with-query';
 import ErrorPrint from './components/core/error-print';
 import NotFound from './components/core/not-found';
 import { createQueryClient } from './lib/utils/query-client';
+import { getTheme } from './lib/utils/theme';
 import { routeTree } from './routeTree.gen';
 
 declare module '@tanstack/react-router' {
@@ -19,6 +20,7 @@ export function getRouter() {
     defaultPreload: 'intent',
     context: {
       queryClient,
+      theme: getTheme() || 'light',
       user: undefined!,
       session: undefined!,
     },

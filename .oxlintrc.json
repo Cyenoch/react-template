@@ -118,8 +118,7 @@
     "CardFooter": "readonly",
     "CardAction": "readonly",
     "Spinner": "readonly",
-    "toast": "readonly",
-    "z": "readonly"
+    "toast": "readonly"
   },
   "ignorePatterns": [
     "node_modules",
