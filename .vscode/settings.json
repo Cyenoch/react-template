@@ -11,6 +11,7 @@
   "editor.defaultFormatter": "biomejs.biome",
   "typescript.tsdk": "node_modules/typescript/lib",
   "search.exclude": {
+    "**/routeTree.gen.ts": true,
     "**/node_modules": true,
     "**/.vinxi": true,
     "**/.output": true,
@@ -18,5 +19,8 @@
   },
   "editor.codeActionsOnSave": {
     "source.fixAll.biome": "explicit"
+  },
+  "files.watcherExclude": {
+    "**/routeTree.gen.ts": true
   }
 }
