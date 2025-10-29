@@ -96,6 +96,7 @@
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
     "@tailwindcss/vite": "^4.1.14",
+    "@tanstack/nitro-v2-vite-plugin": "^1.133.19",
     "@types/bun": "^1.2.23",
     "@types/pg": "^8.15.5",
     "@types/react": "^19.2.2",

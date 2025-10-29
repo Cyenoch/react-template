@@ -1,4 +1,5 @@
 import tailwindcss from '@tailwindcss/vite';
+import { nitroV2Plugin } from '@tanstack/nitro-v2-vite-plugin';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import react from '@vitejs/plugin-react';
 import autoImport from 'unplugin-auto-import/vite';
@@ -16,6 +17,8 @@ export default defineConfig({
     icons({ compiler: 'jsx', jsx: 'react' }),
 
     tanstackStart({ router: { entry: 'router.ts' } }),
+
+    nitroV2Plugin({ preset: 'bun' }),
 
     react(),
 
