@@ -1,4 +1,3 @@
-import process from 'node:process';
 import {
   createStartHandler,
   defaultStreamHandler,
@@ -14,13 +13,5 @@ const logger = getRootLogger().child({
 const handler = createStartHandler(defaultStreamHandler);
 
 export default { fetch: traceFetch(handler) };
-
-process.on('uncaughtException', (err) => {
-  logger.error({ err }, 'Uncaught Exception');
-});
-
-process.on('unhandledRejection', (reason) => {
-  logger.error({ reason }, 'Unhandled Rejection');
-});
 
 logger.info('Server started successfully');
