@@ -1,7 +1,4 @@
 {
-  "formatter": {
-    "code_actions": {}
-  },
   "inlay_hints": {
     "enabled": true,
     "show_type_hints": false,
