@@ -1,17 +1,17 @@
-import process from 'node:process';
-import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
-import { NodeSDK } from '@opentelemetry/sdk-node';
-import { ORPCInstrumentation } from '@orpc/otel';
-import { getRootLogger } from './lib/utils/server-utils';
+import process from "node:process";
+import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
+import { NodeSDK } from "@opentelemetry/sdk-node";
+import { ORPCInstrumentation } from "@orpc/otel";
+import { getRootLogger } from "./lib/utils/server-utils";
 
 const logger = getRootLogger().child({
-  module: 'Instrumentation',
+  module: "Instrumentation",
 });
 
 const sdk = new NodeSDK({
   instrumentations: [
     getNodeAutoInstrumentations({
-      '@opentelemetry/instrumentation-pg': {
+      "@opentelemetry/instrumentation-pg": {
         enhancedDatabaseReporting: true,
         addSqlCommenterCommentToQueries: true,
         requireParentSpan: true,
@@ -23,12 +23,12 @@ const sdk = new NodeSDK({
 
 sdk.start();
 
-process.on('SIGTERM', () => {
+process.on("SIGTERM", () => {
   sdk.shutdown();
 });
 
-process.on('SIGINT', () => {
+process.on("SIGINT", () => {
   sdk.shutdown();
 });
 
-logger.info('Instrumentations registered');
+logger.info("Instrumentations registered");

@@ -1,45 +1,45 @@
-import type { OutputOptions as RolldownOptions } from 'rolldown';
+import type { OutputOptions as RolldownOptions } from "rolldown";
 
-export const advancedChunks: RolldownOptions['advancedChunks'] = {
+export const advancedChunks: RolldownOptions["advancedChunks"] = {
   groups: [
     {
       test: /node_modules[\\/]react/,
-      name: 'react',
+      name: "react",
       priority: 20,
     },
     {
       test: /node_modules[\\/]react-dom/,
-      name: 'react-dom',
+      name: "react-dom",
       priority: 20,
     },
     {
       test: /node_modules[\\/]@radix-ui[\\/]react/,
-      name: 'radix-ui',
+      name: "radix-ui",
       priority: 14,
     },
     {
       test: /node_modules[\\/]@tanstack[\\/]react-query/,
-      name: 'query',
+      name: "query",
       priority: 15,
     },
     {
       test: /node_modules[\\/]@tanstack[\\/]react-router/,
-      name: 'router',
+      name: "router",
       priority: 15,
     },
     {
       test: /node_modules[\\/]framer-motion/,
-      name: 'animation',
+      name: "animation",
       priority: 10,
     },
     {
       test: /node_modules[\\/](zod|superjson)/,
-      name: 'validation',
+      name: "validation",
       priority: 10,
     },
     {
       test: /node_modules[\\/](date-fns|uuid)/,
-      name: 'utils',
+      name: "utils",
       priority: 5,
     },
   ],

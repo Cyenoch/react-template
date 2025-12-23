@@ -1,7 +1,7 @@
-import { trace } from '@opentelemetry/api';
-import { os } from '@orpc/server';
-import { getRequestHeaders } from '@tanstack/react-start/server';
-import { getClientIP, getRootLogger } from '@/lib/utils/server-utils';
+import { trace } from "@opentelemetry/api";
+import { os } from "@orpc/server";
+import { getRequestHeaders } from "@tanstack/react-start/server";
+import { getClientIP, getRootLogger } from "@/lib/utils/server-utils";
 
 export const appContextMiddleware = os
   .$context<{
@@ -9,14 +9,14 @@ export const appContextMiddleware = os
   }>()
   .middleware(async ({ next, context, path }) => {
     const headers = context.headers ?? new Headers(getRequestHeaders());
-    const clientIP = getClientIP() ?? '';
+    const clientIP = getClientIP() ?? "";
     const activeSpan = trace.getActiveSpan()!;
     const logger = getRootLogger().child({
-      module: `ORPC ${path.join('/')}`,
+      module: `ORPC ${path.join("/")}`,
       path,
     });
 
-    activeSpan.updateName(`middleware.appContext ${path.join('/')}`);
+    activeSpan.updateName(`middleware.appContext ${path.join("/")}`);
 
     return await next({
       context: {

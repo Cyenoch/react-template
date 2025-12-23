@@ -1,20 +1,15 @@
-import type { QueryClient } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import {
-  createRootRouteWithContext,
-  HeadContent,
-  Outlet,
-  Scripts,
-} from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
-import { Session, User } from 'better-auth';
-import { MainLayout } from '@/components/layouts/main-layout';
-import { AppProviders } from '@/components/providers';
-import appCss from '@/index.css?url';
-import { orpcClient } from '@/lib/orpc/client';
-import { cn } from '@/lib/utils';
-import { seo } from '@/lib/utils/seo';
-import { getTheme } from '@/lib/utils/theme';
+import type { QueryClient } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { Session, User } from "better-auth";
+import { MainLayout } from "@/components/layouts/main-layout";
+import { AppProviders } from "@/components/providers";
+import appCss from "@/index.css?url";
+import { orpcClient } from "@/lib/orpc/client";
+import { cn } from "@/lib/utils";
+import { seo } from "@/lib/utils/seo";
+import { getTheme } from "@/lib/utils/theme";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -25,20 +20,20 @@ export const Route = createRootRouteWithContext<{
   head: () => ({
     meta: [
       {
-        charSet: 'utf-8',
+        charSet: "utf-8",
       },
       {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1, user-scalable=no',
+        name: "viewport",
+        content: "width=device-width, initial-scale=1, user-scalable=no",
       },
       ...seo({
-        title: '[ReactTemplate]',
-        description: '[ReactTemplate]',
+        title: "[ReactTemplate]",
+        description: "[ReactTemplate]",
       }),
     ],
     links: [
       {
-        rel: 'stylesheet',
+        rel: "stylesheet",
         href: appCss,
       },
     ],
@@ -63,7 +58,7 @@ function RootDocument() {
         <HeadContent />
       </head>
 
-      <body className={cn('min-h-svh', theme)}>
+      <body className={cn("min-h-svh", theme)}>
         <AppProviders>
           {/* Content */}
           <MainLayout>

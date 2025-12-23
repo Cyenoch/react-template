@@ -8,7 +8,7 @@ The project uses Bun as the runtime and package manager. Key commands:
 
 - `bun dev` - Start development server on port 3000
 - `bun build` - Build for production
-- `bun format` - Format code with Biome
+- `bun format` - Format code with oxfmt
 - `bun lint` - Lint code with oxlint
 - `bun typecheck` - Type check with TypeScript
 - `bun analyzer` - Analyze bundle size
@@ -25,6 +25,7 @@ The project uses Bun as the runtime and package manager. Key commands:
 This is a full-stack React application built with:
 
 ### Core Stack
+
 - **Runtime**: Bun
 - **Frontend**: React 19 + TanStack Router + TanStack Start (full-stack React framework) + oRPC
 - **UI Library**: Shadcn UI
@@ -48,6 +49,7 @@ This is a full-stack React application built with:
 ### API Architecture
 
 The project uses oRPC for type-safe APIs:
+
 - Base router configured in `src/orpc/base.ts`
 - Auth middleware in `src/orpc/auth/middleware.ts`
 - Client setup in `src/orpc/client.ts`
@@ -62,7 +64,7 @@ The project uses oRPC for type-safe APIs:
 
 - **Vite**: Uses experimental Rolldown bundler via `rolldown-vite`
 - **TypeScript**: Full type checking enabled
-- **Biome**: Code formatting (linting disabled, uses oxlint instead)
+- **oxfmt**: Code formatting
 - **oxlint**: Fast linting
 - **Auto-imports**: Configured for React and common utilities
 

@@ -1,34 +1,34 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import { createFileRoute, redirect, useRouter } from '@tanstack/react-router';
-import { Controller, useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import z from 'zod';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { authClient } from '@/lib/auth/client';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { authClient } from "@/lib/auth/client";
 
 const signInSchema = z.object({
-  email: z.email('Please enter a valid email address'),
-  password: z.string().min(4, 'Password must be 4 characters or more'),
+  email: z.email("Please enter a valid email address"),
+  password: z.string().min(4, "Password must be 4 characters or more"),
 });
 
 const signUpSchema = signInSchema.extend({
   name: z
     .string()
-    .min(1, 'Please enter your name')
-    .refine((val) => val !== 'admin', {
-      message: 'Nice try! Choose a different username',
+    .min(1, "Please enter your name")
+    .refine((val) => val !== "admin", {
+      message: "Nice try! Choose a different username",
     }),
 });
 
 type SignInData = z.infer<typeof signInSchema>;
 type SignUpData = z.infer<typeof signUpSchema>;
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute("/")({
   component: RouteComponent,
   beforeLoad: async ({ context }) => {
     if (context.session) {
-      throw redirect({ to: '/user' });
+      throw redirect({ to: "/user" });
     }
   },
 });
@@ -39,8 +39,8 @@ function SignInForm() {
   const signInForm = useForm<SignInData>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
@@ -53,13 +53,13 @@ function SignInForm() {
       return data;
     },
     onError(error) {
-      toast.error('Sign in failed', {
+      toast.error("Sign in failed", {
         description: error.message,
       });
     },
     onSuccess() {
-      toast.success('Signed in successfully', {
-        description: 'Welcome back!',
+      toast.success("Signed in successfully", {
+        description: "Welcome back!",
       });
       router.invalidate();
     },
@@ -70,10 +70,7 @@ function SignInForm() {
   };
 
   return (
-    <form
-      className="w-full space-y-4"
-      onSubmit={signInForm.handleSubmit(onSubmit)}
-    >
+    <form className="w-full space-y-4" onSubmit={signInForm.handleSubmit(onSubmit)}>
       <div className="flex flex-col gap-4">
         <Controller
           name="email"
@@ -86,11 +83,9 @@ function SignInForm() {
                 id="email"
                 type="email"
                 placeholder="Enter your email"
-                className={error ? 'border-destructive' : ''}
+                className={error ? "border-destructive" : ""}
               />
-              {error && (
-                <p className="text-sm text-destructive">{error.message}</p>
-              )}
+              {error && <p className="text-sm text-destructive">{error.message}</p>}
             </div>
           )}
         />
@@ -106,21 +101,15 @@ function SignInForm() {
                 id="password"
                 type="password"
                 placeholder="Enter your password"
-                className={error ? 'border-destructive' : ''}
+                className={error ? "border-destructive" : ""}
               />
-              {error && (
-                <p className="text-sm text-destructive">{error.message}</p>
-              )}
+              {error && <p className="text-sm text-destructive">{error.message}</p>}
             </div>
           )}
         />
 
-        <Button
-          className="w-full"
-          type="submit"
-          disabled={signInForm.formState.isSubmitting}
-        >
-          {signInForm.formState.isSubmitting ? 'Signing In...' : 'Sign In'}
+        <Button className="w-full" type="submit" disabled={signInForm.formState.isSubmitting}>
+          {signInForm.formState.isSubmitting ? "Signing In..." : "Sign In"}
         </Button>
       </div>
     </form>
@@ -133,9 +122,9 @@ function SignUpForm() {
   const signUpForm = useForm<SignUpData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      password: '',
+      name: "",
+      email: "",
+      password: "",
     },
   });
 
@@ -152,13 +141,13 @@ function SignUpForm() {
       return data;
     },
     onError(error) {
-      toast.error('Sign up failed', {
+      toast.error("Sign up failed", {
         description: error.message,
       });
     },
     onSuccess() {
-      toast.success('Signed up successfully', {
-        description: 'Welcome!',
+      toast.success("Signed up successfully", {
+        description: "Welcome!",
       });
       router.invalidate();
     },
@@ -169,10 +158,7 @@ function SignUpForm() {
   };
 
   return (
-    <form
-      className="w-full space-y-4"
-      onSubmit={signUpForm.handleSubmit(onSubmit)}
-    >
+    <form className="w-full space-y-4" onSubmit={signUpForm.handleSubmit(onSubmit)}>
       <div className="flex flex-col gap-4">
         <Controller
           name="name"
@@ -184,11 +170,9 @@ function SignUpForm() {
                 {...field}
                 id="name"
                 placeholder="Enter your name"
-                className={error ? 'border-destructive' : ''}
+                className={error ? "border-destructive" : ""}
               />
-              {error && (
-                <p className="text-sm text-destructive">{error.message}</p>
-              )}
+              {error && <p className="text-sm text-destructive">{error.message}</p>}
             </div>
           )}
         />
@@ -204,11 +188,9 @@ function SignUpForm() {
                 id="signup-email"
                 type="email"
                 placeholder="Enter your email"
-                className={error ? 'border-destructive' : ''}
+                className={error ? "border-destructive" : ""}
               />
-              {error && (
-                <p className="text-sm text-destructive">{error.message}</p>
-              )}
+              {error && <p className="text-sm text-destructive">{error.message}</p>}
             </div>
           )}
         />
@@ -224,21 +206,15 @@ function SignUpForm() {
                 id="signup-password"
                 type="password"
                 placeholder="Enter your password"
-                className={error ? 'border-destructive' : ''}
+                className={error ? "border-destructive" : ""}
               />
-              {error && (
-                <p className="text-sm text-destructive">{error.message}</p>
-              )}
+              {error && <p className="text-sm text-destructive">{error.message}</p>}
             </div>
           )}
         />
 
-        <Button
-          className="w-full"
-          type="submit"
-          disabled={signUpForm.formState.isSubmitting}
-        >
-          {signUpForm.formState.isSubmitting ? 'Signing Up...' : 'Sign Up'}
+        <Button className="w-full" type="submit" disabled={signUpForm.formState.isSubmitting}>
+          {signUpForm.formState.isSubmitting ? "Signing Up..." : "Sign Up"}
         </Button>
       </div>
     </form>
@@ -250,9 +226,7 @@ function RouteComponent() {
     <div className="min-h-svh grid place-items-center p-4">
       <Card className="max-w-md w-full">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">
-            Authentication
-          </CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">Authentication</CardTitle>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="sign-in" className="w-full">

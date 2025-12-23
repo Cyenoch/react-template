@@ -1,6 +1,6 @@
 {
   "prettier.enable": false,
-  "biome.enabled": true,
+  "biome.enabled": false,
   "oxc.enable": true,
   "eslint.enable": false,
   "files.readonlyInclude": {
@@ -8,7 +8,7 @@
     "bun.lock": true
   },
   "prettier.configPath": ".prettier.json",
-  "editor.defaultFormatter": "biomejs.biome",
+  "editor.defaultFormatter": "oxc.oxc-vscode",
   "typescript.tsdk": "node_modules/typescript/lib",
   "search.exclude": {
     "**/routeTree.gen.ts": true,
@@ -18,7 +18,7 @@
     "bun.lock": true
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll.biome": "explicit"
+    "source.fixAll.oxfmt": "explicit"
   },
   "files.watcherExclude": {
     "**/routeTree.gen.ts": true

@@ -1,10 +1,10 @@
-import pino from 'pino';
-import { z } from 'zod';
+import pino from "pino";
+import { z } from "zod";
 
 const serverEnvSchema = z.object({
   DATABASE_URL: z.url(),
 
-  LOG_LEVEL: z.string().min(3).max(10).default('trace'),
+  LOG_LEVEL: z.string().min(3).max(10).default("trace"),
 
   // Better Auth
   BETTER_AUTH_SECRET: z.string().min(32).max(256),
@@ -21,14 +21,12 @@ const serverEnvSchema = z.object({
 
 export type IServerEnv = z.output<typeof serverEnvSchema>;
 
-if (typeof window === 'undefined') {
+if (typeof window === "undefined") {
   const parsed = serverEnvSchema.safeParse(Bun.env);
   if (!parsed.success) {
-    pino().error(z.treeifyError(parsed.error), 'Invalid environment variables');
+    pino().error(z.treeifyError(parsed.error), "Invalid environment variables");
   }
 }
 
 export const serverEnv: IServerEnv =
-  typeof window === 'undefined'
-    ? serverEnvSchema.parse(Bun.env)
-    : ({} as IServerEnv);
+  typeof window === "undefined" ? serverEnvSchema.parse(Bun.env) : ({} as IServerEnv);

@@ -1,12 +1,12 @@
-import { RPCHandler } from '@orpc/server/fetch';
-import { createFileRoute } from '@tanstack/react-router';
-import { orpcRootRouter } from '@/lib/orpc';
+import { RPCHandler } from "@orpc/server/fetch";
+import { createFileRoute } from "@tanstack/react-router";
+import { orpcRootRouter } from "@/lib/orpc";
 
 const handler = new RPCHandler(orpcRootRouter);
 
 async function handle({ request }: { request: Request }) {
   const { response } = await handler.handle(request, {
-    prefix: '/api/rpc',
+    prefix: "/api/rpc",
     context: {
       headers: request.headers,
     } as any,
@@ -14,7 +14,7 @@ async function handle({ request }: { request: Request }) {
   return response;
 }
 
-export const Route = createFileRoute('/api/rpc/$')({
+export const Route = createFileRoute("/api/rpc/$")({
   server: {
     handlers: {
       HEAD: handle,

@@ -1,6 +1,6 @@
-import { ORPCError, os } from '@orpc/server';
-import type { Session, User } from 'better-auth';
-import { auth } from '@/lib/auth/server';
+import { ORPCError, os } from "@orpc/server";
+import type { Session, User } from "better-auth";
+import { auth } from "@/lib/auth/server";
 
 export type AuthSession = Session;
 export type AuthUser = User;
@@ -25,7 +25,7 @@ export const requiredAuthMiddleware = os
   .$context<AuthContext>()
   .middleware(async ({ next, context }) => {
     if (!context.auth) {
-      throw new ORPCError('UNAUTHORIZED');
+      throw new ORPCError("UNAUTHORIZED");
     }
     return await next({
       context: {
@@ -34,10 +34,10 @@ export const requiredAuthMiddleware = os
     });
   });
 
-Object.defineProperty(authMiddleware, 'name', {
-  value: 'auth',
+Object.defineProperty(authMiddleware, "name", {
+  value: "auth",
 });
 
-Object.defineProperty(requiredAuthMiddleware, 'name', {
-  value: 'requiredAuth',
+Object.defineProperty(requiredAuthMiddleware, "name", {
+  value: "requiredAuth",
 });

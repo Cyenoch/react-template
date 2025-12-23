@@ -1,4 +1,4 @@
-import { Toaster } from 'sonner';
+import { Toaster } from "sonner";
 
 export function AppUIProvider({ children }: React.PropsWithChildren) {
   return (
