@@ -4,8 +4,8 @@
   "type": "module",
   "module": "index.ts",
   "scripts": {
-    "dev": "vite -b dev --port 3000",
-    "build": "vite build",
+    "dev": "bun -b vite dev --port 3000",
+    "build": "bun -b vite build",
     "analyzer": "bunx -b vite-bundle-analyzer",
     "start": "bun -b .output/server/index.mjs",
     "format": "oxfmt",
