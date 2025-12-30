@@ -5,9 +5,8 @@
   "eslint.enable": false,
   "files.readonlyInclude": {
     "app/routeTree.gen.ts": true,
-    "bun.lock": true
+    "bun.lock": true,
   },
-  "prettier.configPath": ".prettier.json",
   "editor.defaultFormatter": "oxc.oxc-vscode",
   "typescript.tsdk": "node_modules/typescript/lib",
   "search.exclude": {
@@ -15,12 +14,12 @@
     "**/node_modules": true,
     "**/.vinxi": true,
     "**/.output": true,
-    "bun.lock": true
+    "bun.lock": true,
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll.oxfmt": "explicit"
+    "source.fixAll.oxfmt": "explicit",
   },
   "files.watcherExclude": {
-    "**/routeTree.gen.ts": true
-  }
+    "**/routeTree.gen.ts": true,
+  },
 }
