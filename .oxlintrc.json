@@ -7,7 +7,6 @@
     "jsx-a11y",
     "promise",
     "oxc",
-    "regex",
     "typescript",
     "react",
     "react-perf"
