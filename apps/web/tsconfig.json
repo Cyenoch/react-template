@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "rootDir": ".",
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@env": ["src/lib/env/index.ts"]
+    },
+    "types": ["unplugin-icons/types/react", "@types/bun"]
+  },
+  "include": ["src/**/*", "vite/**/*", "vite.config.ts"],
+  "exclude": ["node_modules", "dist", ".output", ".nitro", ".tanstack"]
+}

@@ -4,81 +4,170 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-The project uses Bun as the runtime and package manager. Key commands:
+This is a Bun monorepo using Turborepo for task orchestration. Key commands:
 
-- `bun dev` - Start development server on port 3000
-- `bun build` - Build for production
-- `bun format` - Format code with oxfmt
-- `bun lint` - Lint code with oxlint
-- `bun typecheck` - Type check with TypeScript
-- `bun analyzer` - Analyze bundle size
-- `bun up` - Update dependencies to latest versions
+```bash
+bun dev          # Start all development servers
+bun build        # Build all packages
+bun typecheck    # Type check all packages
+bun lint         # Lint all packages
+bun format       # Format all packages
+bun up           # Update dependencies to latest versions
+```
 
-## Database Commands
+### Database Commands
 
-- `bun generate` - Generate Drizzle migrations
-- `bun migrate` - Run Drizzle migrations
-- `bun better-auth:generate` - Generate Better Auth schema
+```bash
+bun db:generate  # Generate Drizzle migrations
+bun db:migrate   # Run Drizzle migrations
+```
 
-## Architecture Overview
+### Package-specific Commands
 
-This is a full-stack React application built with:
+```bash
+bun --cwd apps/web dev        # Run web app only
+bun --cwd packages/ui build   # Build UI package only
+```
 
-### Core Stack
+## Monorepo Structure
+
+```
+react-template/
+├── apps/
+│   └── web/                    # TanStack Start application
+│       ├── src/
+│       │   ├── routes/         # File-based routing
+│       │   ├── components/     # App-specific components
+│       │   └── lib/            # App utilities
+│       └── vite.config.ts
+├── packages/
+│   ├── api/                    # @workspace/api - oRPC server & client
+│   │   ├── src/
+│   │   │   ├── router.ts       # Root router
+│   │   │   ├── client.ts       # Client setup
+│   │   │   ├── middleware/     # Auth & context middleware
+│   │   │   └── routers/        # API route handlers
+│   │   └── package.json
+│   ├── auth/                   # @workspace/auth - Better Auth
+│   │   ├── src/
+│   │   │   ├── server.ts       # Server-side auth
+│   │   │   └── client.ts       # Client-side auth
+│   │   └── package.json
+│   ├── database/               # @workspace/database - Drizzle ORM
+│   │   ├── src/
+│   │   │   ├── client.ts       # Database client
+│   │   │   └── schema/         # Database schema
+│   │   ├── drizzle.config.ts
+│   │   └── package.json
+│   ├── schema/                 # @workspace/schema - Zod schemas
+│   │   ├── src/
+│   │   │   ├── auth.ts         # Auth validation schemas
+│   │   │   ├── types.ts        # Shared types
+│   │   │   └── constants.ts    # Constants
+│   │   └── package.json
+│   ├── ui/                     # @workspace/ui - Shadcn components
+│   │   ├── src/
+│   │   │   ├── button.tsx
+│   │   │   ├── card.tsx
+│   │   │   └── ...
+│   │   └── package.json
+│   └── utils/                  # @workspace/utils - Shared utilities
+│       ├── src/
+│       │   ├── cn.ts           # className utility
+│       │   ├── format.ts       # Date formatting
+│       │   └── ...
+│       └── package.json
+├── package.json                # Root with Bun catalog
+├── turbo.json                  # Turborepo config
+└── tsconfig.base.json          # Shared TS config
+```
+
+## Core Stack
 
 - **Runtime**: Bun
-- **Frontend**: React 19 + TanStack Router + TanStack Start (full-stack React framework) + oRPC
-- **UI Library**: Shadcn UI
+- **Monorepo**: Bun Workspaces + Turborepo
+- **Frontend**: React 19 + TanStack Router + TanStack Start
+- **UI Library**: Shadcn UI (Base UI)
 - **Styling**: Tailwind CSS v4
-- **Database**: PostgreSQL with Drizzle ORM
+- **Database**: PostgreSQL + Drizzle ORM
 - **Authentication**: Better Auth
-- **API**: oRPC (OpenAPI-compatible RPC framework)
+- **API**: oRPC (type-safe RPC)
 - **State Management**: TanStack Query
 - **Bundler**: Vite (Rolldown)
 
-### Key Directories
+## Package Dependencies
 
-- `src/routes/` - File-based routing with TanStack Router
-- `src/orpc/` - API endpoints and client configuration
-- `src/auth/` - Authentication setup (Better Auth)
-- `src/database/` - Database schema and utilities
-- `src/components/` - React components organized by type
-- `src/utils/` - Shared utilities
-- `src/env/` - Environment variable validation
+```
+apps/web
+  └── @workspace/api
+        ├── @workspace/auth
+        │     └── @workspace/database
+        └── @workspace/database
+  └── @workspace/ui
+        └── @workspace/utils
+  └── @workspace/schema
+  └── @workspace/utils
+```
 
-### API Architecture
+## Bun Catalog
 
-The project uses oRPC for type-safe APIs:
+Common dependencies are managed via Bun catalog in root `package.json`:
 
-- Base router configured in `src/orpc/base.ts`
-- Auth middleware in `src/orpc/auth/middleware.ts`
-- Client setup in `src/orpc/client.ts`
-- API routes served at `/api/rpc`
+```json
+"catalog": {
+  "typescript": "^5.8.3",
+  "zod": "^4.3.5",
+  "react": "^19.2.3",
+  "react-dom": "^19.2.3",
+  ...
+}
+```
 
-### Authentication Flow
+Packages reference these with `"dependency": "catalog:"`.
 
-- Database adapter uses Drizzle with PostgreSQL
-- Auth state managed through TanStack Router context
+## Key Patterns
 
-### Build Tools
+### Imports
 
-- **Vite**: Uses experimental Rolldown bundler via `rolldown-vite`
-- **TypeScript**: Full type checking enabled
-- **oxfmt**: Code formatting
-- **oxlint**: Fast linting
-- **Auto-imports**: Configured for React and common utilities
+```typescript
+// Workspace packages
+import { cn } from "@workspace/utils";
+import { Button } from "@workspace/ui/button";
+import { auth } from "@workspace/auth/server";
+import { orpcClient } from "@workspace/api/client";
 
-### Database Setup
+// App-local imports (in apps/web)
+import { MainLayout } from "@/components/layouts/main-layout";
+```
 
-- PostgreSQL database required
-- Drizzle ORM with schema in `src/database/schema/`
-- Better Auth tables auto-generated
-- Connection via `DATABASE_URL` environment variable
+### API Routes
 
-### Development Notes
+- oRPC endpoints: `/api/rpc/*`
+- Auth endpoints: `/api/auth/*`
 
-- Uses experimental Vite features and native plugins
-- OpenTelemetry instrumentation configured for observability
-- Docker setup available with `docker-compose.yaml`
-- Icons from Iconify with unplugin-icons
-- Image optimization with unplugin-imagemin
+### Adding UI Components
+
+```bash
+bunx shadcn@latest add button
+```
+
+Components are added to `packages/ui/src/`.
+
+## Environment Variables
+
+Required in `.env.local`:
+
+```
+DATABASE_URL=postgresql://...
+BETTER_AUTH_SECRET=...
+BETTER_AUTH_URL=http://localhost:3000
+```
+
+## Modular Design
+
+Packages are designed to be removable:
+
+- **Remove API**: Delete `packages/api`, update `apps/web` routes
+- **Remove Auth**: Delete `packages/auth`, remove auth middleware
+- **Remove Database**: Delete `packages/database`, use different storage
+- **Pure SPA**: Remove server-side packages, keep `ui`, `utils`, `schema`
