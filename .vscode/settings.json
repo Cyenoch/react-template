@@ -7,13 +7,12 @@
     "app/routeTree.gen.ts": true,
     "bun.lock": true
   },
-  "prettier.configPath": ".prettier.json",
   "editor.defaultFormatter": "oxc.oxc-vscode",
   "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.experimental.useTsgo": true,
   "search.exclude": {
     "**/routeTree.gen.ts": true,
     "**/node_modules": true,
-    "**/.vinxi": true,
     "**/.output": true,
     "bun.lock": true
   },
