@@ -9,7 +9,9 @@
     "./client": "./src/client.ts"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "auth:generate": "bunx @better-auth/cli generate --config ./src/server.ts --output ../database/src/schema/better-auth.ts -y",
+    "auth:migrate": "bunx @better-auth/cli migrate --config ./src/server.ts -y"
   },
   "dependencies": {
     "@workspace/database": "workspace:*",

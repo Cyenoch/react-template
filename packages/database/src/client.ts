@@ -13,7 +13,8 @@ const dbLogger = rootLogger.child({
   module: "Database",
 });
 
-const isDev = typeof Bun !== "undefined" && Bun.env.NODE_ENV !== "production";
+const getEnv = () => (typeof Bun !== "undefined" ? Bun.env : process.env);
+const isDev = getEnv().NODE_ENV !== "production";
 
 export function getSQLClient(): Pool {
   console.assert(!!databaseEnv.DATABASE_URL, "DATABASE_URL is not defined");

@@ -1,9 +1,17 @@
 import type { Logger } from "drizzle-orm";
 import pino from "pino";
-import { databaseEnv } from "./env";
+
+const getLogLevel = (): string => {
+  try {
+    const env = typeof Bun !== "undefined" ? Bun.env : process.env;
+    return env.LOG_LEVEL ?? "trace";
+  } catch {
+    return "trace";
+  }
+};
 
 export const rootLogger = pino({
-  level: databaseEnv.LOG_LEVEL ?? "trace",
+  level: getLogLevel(),
   transport: {
     target: "pino-pretty",
     options: {

@@ -41,6 +41,16 @@
     },
     "migrate": {
       "cache": false
+    },
+    "auth:generate": {
+      "cache": false,
+      "inputs": ["src/**"],
+      "outputs": [],
+      "passThroughEnv": ["DATABASE_URL", "BETTER_AUTH_SECRET", "BETTER_AUTH_URL"]
+    },
+    "auth:migrate": {
+      "cache": false,
+      "passThroughEnv": ["DATABASE_URL", "BETTER_AUTH_SECRET", "BETTER_AUTH_URL"]
     }
   }
 }

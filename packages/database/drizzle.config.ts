@@ -1,9 +1,11 @@
 import { defineConfig } from "drizzle-kit";
 
+const getEnv = () => (typeof Bun !== "undefined" ? Bun.env : process.env);
+
 export default defineConfig({
   schema: "./src/schema/index.ts",
   dialect: "postgresql",
   dbCredentials: {
-    url: Bun.env.DATABASE_URL!,
+    url: getEnv().DATABASE_URL!,
   },
 });

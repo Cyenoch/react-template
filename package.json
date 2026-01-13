@@ -5,15 +5,15 @@
   "packageManager": "bun@1.3.5",
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
-    "dev": "turbo dev",
-    "build": "turbo build",
+    "dev": "dotenv -c -- turbo dev",
+    "build": "dotenv -c -- turbo build",
     "typecheck": "turbo typecheck",
     "lint": "turbo lint",
     "format": "turbo format",
-    "db:generate": "bun --filter=@workspace/database generate",
-    "db:migrate": "bun --filter=@workspace/database migrate",
-    "auth:generate": "bun --filter=@workspace/auth bunx better-auth generate",
-    "auth:migrate": "bun --filter=@workspace/auth bunx better-auth migrate",
+    "db:generate": "dotenv -c -- bun --filter=@workspace/database generate",
+    "db:migrate": "dotenv -c -- bun --filter=@workspace/database migrate",
+    "auth:generate": "dotenv -c -- bun --filter=@workspace/auth auth:generate",
+    "auth:migrate": "dotenv -c -- bun --filter=@workspace/auth auth:migrate",
     "up": "bunx -b taze major -w"
   },
   "catalog": {
@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@types/bun": "^1.3.5",
+    "dotenv-cli": "^11.0.0",
     "oxfmt": "^0.24.0",
     "oxlint": "^1.39.0",
     "turbo": "^2.5.4",

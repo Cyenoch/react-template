@@ -8,12 +8,28 @@ const databaseEnvSchema = z.object({
 
 export type IDatabaseEnv = z.output<typeof databaseEnvSchema>;
 
-if (typeof window === "undefined") {
-  const parsed = databaseEnvSchema.safeParse(Bun.env);
+const getEnv = () => (typeof Bun !== "undefined" ? Bun.env : process.env);
+
+let _databaseEnv: IDatabaseEnv | undefined;
+
+export function getDatabaseEnv(): IDatabaseEnv {
+  if (typeof window !== "undefined") {
+    return {} as IDatabaseEnv;
+  }
+  if (_databaseEnv) return _databaseEnv;
+
+  const parsed = databaseEnvSchema.safeParse(getEnv());
   if (!parsed.success) {
     pino().error(z.treeifyError(parsed.error), "Invalid database environment variables");
+    throw parsed.error;
   }
+  _databaseEnv = parsed.data;
+  return _databaseEnv;
 }
 
-export const databaseEnv: IDatabaseEnv =
-  typeof window === "undefined" ? databaseEnvSchema.parse(Bun.env) : ({} as IDatabaseEnv);
+/** @deprecated Use getDatabaseEnv() instead for lazy loading */
+export const databaseEnv: IDatabaseEnv = new Proxy({} as IDatabaseEnv, {
+  get(_, prop: keyof IDatabaseEnv) {
+    return getDatabaseEnv()[prop];
+  },
+});
