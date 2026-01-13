@@ -13,8 +13,8 @@ export const advancedChunks: RolldownOptions["advancedChunks"] = {
       priority: 20,
     },
     {
-      test: /node_modules[\\/]@radix-ui[\\/]react/,
-      name: "radix-ui",
+      test: /node_modules[\\/]@base-ui[\\/]react/,
+      name: "base-ui",
       priority: 14,
     },
     {
