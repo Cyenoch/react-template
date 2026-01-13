@@ -1,76 +1,62 @@
-"use client";
+import * as React from "react"
+import { Slider as SliderPrimitive } from "@base-ui/react/slider"
 
-import { Slider as SliderPrimitive } from "@base-ui/react/slider";
-import * as React from "react";
-
-import { cn } from "@/lib/utils/index";
+import { cn } from "@/lib/utils/index"
 
 function Slider({
   className,
-  children,
   defaultValue,
   value,
   min = 0,
   max = 100,
   ...props
 }: SliderPrimitive.Root.Props) {
-  const _values = React.useMemo(() => {
-    if (value !== undefined) {
-      return Array.isArray(value) ? value : [value];
-    }
-    if (defaultValue !== undefined) {
-      return Array.isArray(defaultValue) ? defaultValue : [defaultValue];
-    }
-    return [min];
-  }, [value, defaultValue, min]);
+  const _values = React.useMemo(
+    () =>
+      Array.isArray(value)
+        ? value
+        : Array.isArray(defaultValue)
+          ? defaultValue
+          : [min, max],
+    [value, defaultValue, min, max]
+  )
 
   return (
     <SliderPrimitive.Root
-      className="data-[orientation=horizontal]:w-full"
+      className="data-horizontal:w-full data-vertical:h-full"
+      data-slot="slider"
       defaultValue={defaultValue}
-      max={max}
-      min={min}
-      thumbAlignment="edge"
       value={value}
+      min={min}
+      max={max}
+      thumbAlignment="edge"
       {...props}
     >
-      {children}
       <SliderPrimitive.Control
         className={cn(
-          "flex touch-none select-none data-disabled:pointer-events-none data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=horizontal]:w-full data-[orientation=horizontal]:min-w-44 data-[orientation=vertical]:flex-col data-disabled:opacity-64",
-          className,
+          "data-vertical:min-h-40 relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col",
+          className
         )}
-        data-slot="slider-control"
       >
         <SliderPrimitive.Track
-          className="relative grow select-none before:absolute before:rounded-full before:bg-input data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-full data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-1 data-[orientation=horizontal]:before:inset-x-0.5 data-[orientation=vertical]:before:inset-x-0 data-[orientation=horizontal]:before:inset-y-0 data-[orientation=vertical]:before:inset-y-0.5"
           data-slot="slider-track"
+          className="bg-muted rounded-full data-horizontal:h-1 data-horizontal:w-full data-vertical:h-full data-vertical:w-1 relative overflow-hidden select-none"
         >
           <SliderPrimitive.Indicator
-            className="select-none rounded-full bg-primary data-[orientation=horizontal]:ms-0.5 data-[orientation=vertical]:mb-0.5"
-            data-slot="slider-indicator"
+            data-slot="slider-range"
+            className="bg-primary select-none data-horizontal:h-full data-vertical:w-full"
           />
-          {Array.from({ length: _values.length }, (_, index) => (
-            <SliderPrimitive.Thumb
-              className="block size-5 shrink-0 select-none rounded-full border border-input bg-white bg-clip-padding shadow-xs outline-none transition-shadow before:absolute before:inset-0 before:rounded-full before:shadow-[0_1px_--theme(--color-black/4%)] focus-visible:ring-[3px] focus-visible:ring-ring/24 has-focus-visible:ring-[3px] has-focus-visible:ring-ring/24 data-dragging:ring-[3px] data-dragging:ring-ring/24 sm:size-4 dark:border-background dark:bg-clip-border dark:data-dragging:ring-ring/48 dark:focus-visible:ring-ring/48 [:focus-visible,[data-dragging]]:shadow-none"
-              data-slot="slider-thumb"
-              key={String(index)}
-            />
-          ))}
         </SliderPrimitive.Track>
+        {Array.from({ length: _values.length }, (_, index) => (
+          <SliderPrimitive.Thumb
+            data-slot="slider-thumb"
+            key={index}
+            className="border-ring ring-ring/50 relative size-3 rounded-full border bg-white transition-[color,box-shadow] after:absolute after:-inset-2 hover:ring-[3px] focus-visible:ring-[3px] focus-visible:outline-hidden active:ring-[3px] block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50"
+          />
+        ))}
       </SliderPrimitive.Control>
     </SliderPrimitive.Root>
-  );
+  )
 }
 
-function SliderValue({ className, ...props }: SliderPrimitive.Value.Props) {
-  return (
-    <SliderPrimitive.Value
-      className={cn("flex justify-end text-sm", className)}
-      data-slot="slider-value"
-      {...props}
-    />
-  );
-}
-
-export { Slider, SliderValue };
+export { Slider }

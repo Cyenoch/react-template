@@ -37,6 +37,7 @@
     ".vscode",
     ".github",
     ".zed",
-    "drizzle"
+    "drizzle",
+    "tmp"
   ]
 }
