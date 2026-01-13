@@ -2,6 +2,19 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Important Rules
+
+**After making any changes, you MUST update the relevant documentation:**
+
+- Modified package structure → Update `Monorepo Structure` section in this file
+- Changed commands/scripts → Update `Development Commands` section
+- Added/removed dependencies → Update `Bun Catalog` or package descriptions
+- Changed environment variables → Update `Environment Variables` section
+- Modified API routes → Update `API Routes` section
+- Any significant changes → Update `README.md` accordingly
+
+Keep documentation in sync with code at all times.
+
 ## Development Commands
 
 This is a Bun monorepo using Turborepo for task orchestration. Key commands:
@@ -26,19 +39,21 @@ bun db:migrate   # Run Drizzle migrations
 
 ```bash
 bun --cwd apps/web dev        # Run web app only
-bun --cwd packages/ui build   # Build UI package only
 ```
 
 ## Monorepo Structure
 
 ```
-react-template/
+<project-root>/
 ├── apps/
 │   └── web/                    # TanStack Start application
 │       ├── src/
 │       │   ├── routes/         # File-based routing
 │       │   ├── components/     # App-specific components
+│       │   │   └── ui/         # Shadcn UI components
+│       │   ├── hooks/          # Custom React hooks
 │       │   └── lib/            # App utilities
+│       ├── components.json     # Shadcn configuration
 │       └── vite.config.ts
 ├── packages/
 │   ├── api/                    # @workspace/api - oRPC server & client
@@ -64,12 +79,6 @@ react-template/
 │   │   │   ├── auth.ts         # Auth validation schemas
 │   │   │   ├── types.ts        # Shared types
 │   │   │   └── constants.ts    # Constants
-│   │   └── package.json
-│   ├── ui/                     # @workspace/ui - Shadcn components
-│   │   ├── src/
-│   │   │   ├── button.tsx
-│   │   │   ├── card.tsx
-│   │   │   └── ...
 │   │   └── package.json
 │   └── utils/                  # @workspace/utils - Shared utilities
 │       ├── src/
@@ -103,8 +112,6 @@ apps/web
         ├── @workspace/auth
         │     └── @workspace/database
         └── @workspace/database
-  └── @workspace/ui
-        └── @workspace/utils
   └── @workspace/schema
   └── @workspace/utils
 ```
@@ -132,11 +139,11 @@ Packages reference these with `"dependency": "catalog:"`.
 ```typescript
 // Workspace packages
 import { cn } from "@workspace/utils";
-import { Button } from "@workspace/ui/button";
 import { auth } from "@workspace/auth/server";
 import { orpcClient } from "@workspace/api/client";
 
 // App-local imports (in apps/web)
+import { Button } from "@/components/ui/button";
 import { MainLayout } from "@/components/layouts/main-layout";
 ```
 
@@ -148,10 +155,10 @@ import { MainLayout } from "@/components/layouts/main-layout";
 ### Adding UI Components
 
 ```bash
-bunx shadcn@latest add button
+cd apps/web && bunx shadcn@latest add button
 ```
 
-Components are added to `packages/ui/src/`.
+Components are added to `apps/web/src/components/ui/`.
 
 ## Environment Variables
 
@@ -170,4 +177,4 @@ Packages are designed to be removable:
 - **Remove API**: Delete `packages/api`, update `apps/web` routes
 - **Remove Auth**: Delete `packages/auth`, remove auth middleware
 - **Remove Database**: Delete `packages/database`, use different storage
-- **Pure SPA**: Remove server-side packages, keep `ui`, `utils`, `schema`
+- **Pure SPA**: Remove server-side packages, keep `utils`, `schema`

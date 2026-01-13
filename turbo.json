@@ -6,7 +6,8 @@
     "dev": {
       "cache": false,
       "persistent": true,
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "passThroughEnv": ["DATABASE_URL", "BETTER_AUTH_SECRET", "BETTER_AUTH_URL"]
     },
     "build": {
       "dependsOn": ["^build"],

@@ -7,19 +7,19 @@
 export {}
 declare global {
   const Activity: typeof import('react').Activity
-  const Button: typeof import('@workspace/ui').Button
-  const Card: typeof import('@workspace/ui').Card
-  const CardAction: typeof import('@workspace/ui').CardAction
-  const CardContent: typeof import('@workspace/ui').CardContent
-  const CardDescription: typeof import('@workspace/ui').CardDescription
-  const CardFooter: typeof import('@workspace/ui').CardFooter
-  const CardHeader: typeof import('@workspace/ui').CardHeader
-  const CardTitle: typeof import('@workspace/ui').CardTitle
+  const Button: typeof import('@/components/ui/button').Button
+  const Card: typeof import('@/components/ui/card').Card
+  const CardAction: typeof import('@/components/ui/card').CardAction
+  const CardContent: typeof import('@/components/ui/card').CardContent
+  const CardDescription: typeof import('@/components/ui/card').CardDescription
+  const CardFooter: typeof import('@/components/ui/card').CardFooter
+  const CardHeader: typeof import('@/components/ui/card').CardHeader
+  const CardTitle: typeof import('@/components/ui/card').CardTitle
   const Fragment: typeof import('react').Fragment
-  const Input: typeof import('@workspace/ui').Input
-  const Label: typeof import('@workspace/ui').Label
+  const Input: typeof import('@/components/ui/input').Input
+  const Label: typeof import('@/components/ui/label').Label
   const Link: typeof import('@tanstack/react-router').Link
-  const Spinner: typeof import('@workspace/ui').Spinner
+  const Spinner: typeof import('@/components/ui/spinner').Spinner
   const Suspense: typeof import('react').Suspense
   const cache: typeof import('react').cache
   const cacheSignal: typeof import('react').cacheSignal

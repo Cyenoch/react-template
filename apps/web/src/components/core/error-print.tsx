@@ -1,5 +1,6 @@
 import { type ErrorComponentProps } from "@tanstack/react-router";
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@workspace/ui";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import appCss from "@/index.css?url";
 
 const VITE_META_DEV = import.meta.env.DEV;

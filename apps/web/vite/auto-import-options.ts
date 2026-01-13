@@ -5,10 +5,10 @@ export const autoImportOptions: Parameters<typeof autoImport>[0] = {
     "react",
     {
       "@tanstack/react-router": ["Link", "useRouter"],
-      "@workspace/ui": [
-        "Button",
-        "Input",
-        "Label",
+      "@/components/ui/button": ["Button"],
+      "@/components/ui/input": ["Input"],
+      "@/components/ui/label": ["Label"],
+      "@/components/ui/card": [
         "Card",
         "CardHeader",
         "CardTitle",
@@ -16,8 +16,8 @@ export const autoImportOptions: Parameters<typeof autoImport>[0] = {
         "CardContent",
         "CardFooter",
         "CardAction",
-        "Spinner",
       ],
+      "@/components/ui/spinner": ["Spinner"],
       sonner: ["toast"],
     },
   ],

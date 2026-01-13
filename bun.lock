@@ -16,8 +16,11 @@
       "name": "web",
       "version": "0.0.0",
       "dependencies": {
+        "@base-ui/react": "^1.0.0",
         "@fontsource-variable/inter": "^5.2.8",
         "@hookform/resolvers": "^5.2.2",
+        "@hugeicons/core-free-icons": "^3.1.1",
+        "@hugeicons/react": "^1.1.4",
         "@opentelemetry/api": "catalog:",
         "@opentelemetry/auto-instrumentations-node": "^0.67.3",
         "@opentelemetry/resources": "^2.3.0",
@@ -36,18 +39,28 @@
         "@workspace/auth": "workspace:*",
         "@workspace/database": "workspace:*",
         "@workspace/schema": "workspace:*",
-        "@workspace/ui": "workspace:*",
         "@workspace/utils": "workspace:*",
         "better-auth": "catalog:",
+        "class-variance-authority": "^0.7.1",
+        "cmdk": "^1.1.1",
+        "date-fns": "^4.1.0",
         "defu": "^6.1.4",
+        "embla-carousel-react": "^8.6.0",
+        "framer-motion": "^12.26.1",
+        "input-otp": "^1.4.2",
+        "next-themes": "^0.4.6",
         "pino": "catalog:",
         "pino-pretty": "catalog:",
         "react": "catalog:",
+        "react-day-picker": "^9.13.0",
         "react-dom": "catalog:",
         "react-hook-form": "^7.71.0",
+        "react-resizable-panels": "^4.4.0",
+        "recharts": "2.15.4",
         "shadcn": "^3.6.3",
-        "sonner": "catalog:",
+        "sonner": "^2.0.7",
         "superjson": "^2.2.6",
+        "vaul": "^1.1.2",
         "zod": "catalog:",
       },
       "devDependencies": {
@@ -82,6 +95,7 @@
         "zod": "catalog:",
       },
       "devDependencies": {
+        "pino-pretty": "catalog:",
         "typescript": "catalog:",
       },
     },
@@ -124,36 +138,6 @@
       },
       "devDependencies": {
         "typescript": "catalog:",
-      },
-    },
-    "packages/ui": {
-      "name": "@workspace/ui",
-      "version": "0.0.0",
-      "dependencies": {
-        "@base-ui/react": "^1.0.0",
-        "@hugeicons/core-free-icons": "^3.1.1",
-        "@hugeicons/react": "^1.1.4",
-        "@workspace/utils": "workspace:*",
-        "class-variance-authority": "^0.7.1",
-        "cmdk": "^1.1.1",
-        "embla-carousel-react": "^8.6.0",
-        "framer-motion": "^12.26.1",
-        "input-otp": "^1.4.2",
-        "next-themes": "^0.4.6",
-        "react-day-picker": "^9.13.0",
-        "react-resizable-panels": "^4.4.0",
-        "recharts": "2.15.4",
-        "sonner": "catalog:",
-        "vaul": "^1.1.2",
-      },
-      "devDependencies": {
-        "@types/react": "catalog:",
-        "@types/react-dom": "catalog:",
-        "typescript": "catalog:",
-      },
-      "peerDependencies": {
-        "react": "catalog:",
-        "react-dom": "catalog:",
       },
     },
     "packages/utils": {
@@ -1024,8 +1008,6 @@
     "@workspace/database": ["@workspace/database@workspace:packages/database"],
 
     "@workspace/schema": ["@workspace/schema@workspace:packages/schema"],
-
-    "@workspace/ui": ["@workspace/ui@workspace:packages/ui"],
 
     "@workspace/utils": ["@workspace/utils@workspace:packages/utils"],
 
@@ -2079,7 +2061,7 @@
 
     "system-architecture": ["system-architecture@0.1.0", "", {}, "sha512-ulAk51I9UVUyJgxlv9M6lFot2WP3e7t8Kz9+IS6D4rVba1tR9kON+Ey69f+1R4Q8cd45Lod6a4IcJIxnzGc/zA=="],
 
-    "tabbable": ["tabbable@6.3.0", "", {}, "sha512-EIHvdY5bPLuWForiR/AN2Bxngzpuwn1is4asboytXtpTgsArc+WmSJKVLlhdh71u7jFcryDqB2A8lQvj78MkyQ=="],
+    "tabbable": ["tabbable@6.4.0", "", {}, "sha512-05PUHKSNE8ou2dwIxTngl4EzcnsCDZGJ/iCLtDflR/SHB/ny14rXc+qU5P4mG9JkusiV7EivzY9Mhm55AzAvCg=="],
 
     "tagged-tag": ["tagged-tag@1.0.0", "", {}, "sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng=="],
 

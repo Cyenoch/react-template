@@ -80,11 +80,15 @@ bunx shadcn@latest add button
 
 ## Environment Variables
 
+Create `.env.local` in the **root directory** (not in apps/web):
+
 ```env
 DATABASE_URL=postgresql://user:pass@localhost:5432/db
 BETTER_AUTH_SECRET=your-secret-key
 BETTER_AUTH_URL=http://localhost:3000
 ```
+
+The monorepo is configured to load environment variables from the root.
 
 ## Docker
 

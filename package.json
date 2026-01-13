@@ -10,8 +10,10 @@
     "typecheck": "turbo typecheck",
     "lint": "turbo lint",
     "format": "turbo format",
-    "db:generate": "bun --cwd packages/database generate",
-    "db:migrate": "bun --cwd packages/database migrate",
+    "db:generate": "bun --filter=@workspace/database generate",
+    "db:migrate": "bun --filter=@workspace/database migrate",
+    "auth:generate": "bun --filter=@workspace/auth bunx better-auth generate",
+    "auth:migrate": "bun --filter=@workspace/auth bunx better-auth migrate",
     "up": "bunx -b taze major -w"
   },
   "catalog": {

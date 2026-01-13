@@ -23,6 +23,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "pino-pretty": "catalog:",
     "typescript": "catalog:"
   }
 }
