@@ -1,11 +1,11 @@
-import { orpcBase } from "../base";
+import { base } from "../context";
 import { authMiddleware, requiredAuthMiddleware } from "../middleware/auth";
 
-const me = orpcBase.use(requiredAuthMiddleware).handler(async ({ context }) => {
+const me = base.use(requiredAuthMiddleware).handler(async ({ context }) => {
   return context.auth;
 });
 
-const maybeMe = orpcBase.use(authMiddleware).handler(async ({ context }) => {
+const maybeMe = base.use(authMiddleware).handler(async ({ context }) => {
   return context.auth;
 });
 

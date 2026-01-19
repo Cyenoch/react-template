@@ -3,7 +3,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Session, User } from "better-auth";
-import { cn, seo } from "@workspace/utils";
+import { cn, seo } from "@workspace/shared";
 import { orpcClient } from "@workspace/api/client";
 import { MainLayout } from "@/components/layouts/main-layout";
 import { AppProviders } from "@/components/providers";

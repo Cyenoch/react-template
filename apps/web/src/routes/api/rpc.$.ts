@@ -1,29 +1,31 @@
 import { RPCHandler } from "@orpc/server/fetch";
+import { onError } from "@orpc/server";
 import { createFileRoute } from "@tanstack/react-router";
 import { orpcRootRouter } from "@workspace/api/router";
 
-const handler = new RPCHandler(orpcRootRouter);
-
-async function handle({ request }: { request: Request }) {
-  const { response } = await handler.handle(request, {
-    prefix: "/api/rpc",
-    context: {
-      headers: request.headers,
-    } as any,
-  });
-  return response;
-}
+const handler = new RPCHandler(orpcRootRouter, {
+  interceptors: [
+    onError((error) => {
+      console.error("[oRPC Error]", error);
+    }),
+  ],
+});
 
 export const Route = createFileRoute("/api/rpc/$")({
   server: {
     handlers: {
-      HEAD: handle,
-      GET: handle,
-      POST: handle,
-      PUT: handle,
-      DELETE: handle,
-      PATCH: handle,
-      OPTIONS: handle,
+      ANY: async ({ request }) => {
+        const { response } = await handler.handle(request, {
+          prefix: "/api/rpc",
+          context: {
+            headers: undefined!,
+            clientIP: undefined!,
+            logger: undefined!,
+            activeSpan: undefined!,
+          },
+        });
+        return response ?? new Response("Not Found", { status: 404 });
+      },
     },
   },
 });

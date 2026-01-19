@@ -6,23 +6,32 @@
   "exports": {
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
-    "./router": "./src/router.ts"
+    "./router": "./src/router.ts",
+    "./auth": "./src/auth/index.ts",
+    "./auth/server": "./src/auth/server.ts",
+    "./auth/client": "./src/auth/client.ts"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "auth:generate": "bunx @better-auth/cli generate --config ./src/auth/server.ts --output ../database/src/schema/better-auth.ts -y",
+    "auth:migrate": "bunx @better-auth/cli migrate --config ./src/auth/server.ts -y"
   },
   "dependencies": {
-    "@workspace/auth": "workspace:*",
     "@workspace/database": "workspace:*",
     "@opentelemetry/api": "catalog:",
     "@orpc/client": "catalog:",
     "@orpc/otel": "catalog:",
     "@orpc/server": "catalog:",
     "@tanstack/react-start": "catalog:",
+    "better-auth": "catalog:",
     "pino": "catalog:",
     "zod": "catalog:"
   },
+  "peerDependencies": {
+    "react": "catalog:"
+  },
   "devDependencies": {
+    "@types/react": "catalog:",
     "pino-pretty": "catalog:",
     "typescript": "catalog:"
   }

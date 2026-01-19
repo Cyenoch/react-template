@@ -38,12 +38,10 @@ Open [http://localhost:3000](http://localhost:3000).
 ├── apps/
 │   └── web/                 # TanStack Start app
 ├── packages/
-│   ├── api/                 # oRPC server & client
-│   ├── auth/                # Better Auth
+│   ├── api/                 # oRPC server & client + auth
 │   ├── database/            # Drizzle ORM
 │   ├── schema/              # Zod schemas & types
-│   ├── ui/                  # Shadcn components
-│   └── utils/               # Shared utilities
+│   └── shared/              # Shared utilities
 ├── package.json             # Bun catalog
 └── turbo.json               # Turborepo config
 ```
@@ -65,12 +63,10 @@ bun db:migrate   # Run migrations
 
 | Package | Description |
 |---------|-------------|
-| `@workspace/api` | oRPC router, middleware, client |
-| `@workspace/auth` | Better Auth server & client |
+| `@workspace/api` | oRPC router, middleware, client, auth |
 | `@workspace/database` | Drizzle client & schema |
 | `@workspace/schema` | Zod validation schemas |
-| `@workspace/ui` | Shadcn UI components |
-| `@workspace/utils` | Shared utilities (cn, format, etc.) |
+| `@workspace/shared` | Shared utilities (cn, format, etc.) |
 
 ## Adding UI Components
 

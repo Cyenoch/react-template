@@ -1,6 +1,6 @@
 import { ORPCError, os } from "@orpc/server";
-import type { Session, User } from "@workspace/auth";
-import { auth } from "@workspace/auth/server";
+import type { Session, User } from "../auth";
+import { auth } from "../auth/server";
 
 export type AuthSession = Session;
 export type AuthUser = User;

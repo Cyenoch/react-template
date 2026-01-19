@@ -12,8 +12,8 @@
     "format": "turbo format",
     "db:generate": "dotenv -c -- bun --filter=@workspace/database generate",
     "db:migrate": "dotenv -c -- bun --filter=@workspace/database migrate",
-    "auth:generate": "dotenv -c -- bun --filter=@workspace/auth auth:generate",
-    "auth:migrate": "dotenv -c -- bun --filter=@workspace/auth auth:migrate",
+    "auth:generate": "dotenv -c -- bun --filter=@workspace/api auth:generate",
+    "auth:migrate": "dotenv -c -- bun --filter=@workspace/api auth:migrate",
     "up": "bunx -b taze major -w"
   },
   "catalog": {

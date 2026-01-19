@@ -56,17 +56,13 @@ bun --cwd apps/web dev        # Run web app only
 │       ├── components.json     # Shadcn configuration
 │       └── vite.config.ts
 ├── packages/
-│   ├── api/                    # @workspace/api - oRPC server & client
+│   ├── api/                    # @workspace/api - oRPC server & client + auth
 │   │   ├── src/
 │   │   │   ├── router.ts       # Root router
 │   │   │   ├── client.ts       # Client setup
+│   │   │   ├── auth/           # Better Auth (server & client)
 │   │   │   ├── middleware/     # Auth & context middleware
 │   │   │   └── routers/        # API route handlers
-│   │   └── package.json
-│   ├── auth/                   # @workspace/auth - Better Auth
-│   │   ├── src/
-│   │   │   ├── server.ts       # Server-side auth
-│   │   │   └── client.ts       # Client-side auth
 │   │   └── package.json
 │   ├── database/               # @workspace/database - Drizzle ORM
 │   │   ├── src/
@@ -80,7 +76,7 @@ bun --cwd apps/web dev        # Run web app only
 │   │   │   ├── types.ts        # Shared types
 │   │   │   └── constants.ts    # Constants
 │   │   └── package.json
-│   └── utils/                  # @workspace/utils - Shared utilities
+│   └── shared/                 # @workspace/shared - Shared utilities
 │       ├── src/
 │       │   ├── cn.ts           # className utility
 │       │   ├── format.ts       # Date formatting
@@ -108,12 +104,10 @@ bun --cwd apps/web dev        # Run web app only
 
 ```
 apps/web
-  └── @workspace/api
-        ├── @workspace/auth
-        │     └── @workspace/database
+  └── @workspace/api (includes auth)
         └── @workspace/database
   └── @workspace/schema
-  └── @workspace/utils
+  └── @workspace/shared
 ```
 
 ## Bun Catalog
@@ -138,8 +132,8 @@ Packages reference these with `"dependency": "catalog:"`.
 
 ```typescript
 // Workspace packages
-import { cn } from "@workspace/utils";
-import { auth } from "@workspace/auth/server";
+import { cn } from "@workspace/shared";
+import { auth } from "@workspace/api/auth/server";
 import { orpcClient } from "@workspace/api/client";
 
 // App-local imports (in apps/web)
@@ -175,6 +169,6 @@ BETTER_AUTH_URL=http://localhost:3000
 Packages are designed to be removable:
 
 - **Remove API**: Delete `packages/api`, update `apps/web` routes
-- **Remove Auth**: Delete `packages/auth`, remove auth middleware
+- **Remove Auth**: Delete `packages/api/src/auth`, remove auth middleware
 - **Remove Database**: Delete `packages/database`, use different storage
-- **Pure SPA**: Remove server-side packages, keep `utils`, `schema`
+- **Pure SPA**: Remove server-side packages, keep `shared`, `schema`

@@ -1,7 +1,7 @@
 import { orpcAuthRouter } from "./routers/auth";
-import { orpcBase } from "./base";
+import { base } from "./context";
 
-export const orpcRootRouter = orpcBase.router({
+export const orpcRootRouter = base.router({
   ...orpcAuthRouter,
 });
 

@@ -7,7 +7,13 @@ import { orpcRootRouter, type AppRouter } from "./router";
 const getORPCClient = createIsomorphicFn()
   .server(() => {
     return createRouterClient(orpcRootRouter, {
-      context: {} as any,
+      // context 使用函数形式，每次请求重新获取 headers
+      context: async () => ({
+        headers: undefined!,
+        clientIP: undefined!,
+        activeSpan: undefined!,
+        logger: undefined!,
+      }),
     });
   })
   .client((): RouterClient<AppRouter> => {
