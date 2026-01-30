@@ -1,82 +1,112 @@
-# React Template
+# 🚀 React Template
 
-A modern full-stack React monorepo template with Bun, TanStack Start, and modular architecture.
+A modern, high-performance full-stack React template powered by **Bun**, **TanStack Start**, and **oRPC**. Designed for developer experience, type-safety, and modularity.
 
-## Tech Stack
+## 📋 Overview
 
-- **Runtime**: Bun
-- **Monorepo**: Bun Workspaces + Turborepo
-- **Frontend**: React 19 + TanStack Router + TanStack Start
-- **UI**: Shadcn UI (Base UI) + Tailwind CSS v4
-- **Database**: PostgreSQL + Drizzle ORM
-- **Auth**: Better Auth
-- **API**: oRPC (type-safe RPC)
-- **Bundler**: Vite (Rolldown)
+This template provides a solid foundation for building full-stack applications with the latest React 19 features. It uses a modular monolith architecture that can easily scale or be transitioned to a monorepo if needed.
 
-## Quick Start
+## ✨ Features
+
+- ⚛️ **React 19**: Leveraging the latest React features and improvements.
+- 🚀 **TanStack Start**: Full-stack React framework with type-safe routing and SSR.
+- ⚡ **Bun**: Ultra-fast runtime, package manager, and test runner.
+- 🛡️ **oRPC**: End-to-end type-safe API without the need for code generation.
+- 🗄️ **Drizzle ORM**: Type-safe TypeScript ORM for PostgreSQL.
+- 🔐 **Better Auth**: Comprehensive and extensible authentication solution.
+- 🎨 **Tailwind CSS v4**: Utility-first styling with the latest engine.
+- 🧩 **Shadcn UI**: 50+ accessible UI components built on `@base-ui/react`.
+- 📦 **Modular Design**: Clean separation of concerns within `src/core`.
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- [Bun](https://bun.sh) installed on your machine.
+- [Docker](https://www.docker.com/) (optional, for local PostgreSQL).
+
+### Installation
 
 ```bash
 # Install dependencies
 bun install
 
-# Setup environment
+# Setup environment variables
 cp .env.example .env.local
-# Edit .env.local with your database credentials
+# Edit .env.local with your credentials
+```
 
-# Run database migrations
+### Database Setup
+
+```bash
+# Start PostgreSQL via Docker (optional)
+docker-compose up -d
+
+# Run migrations
 bun db:migrate
+```
 
-# Start development server
+### Development
+
+```bash
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-## Project Structure
+## 🛠️ Tech Stack
+
+| Technology | Category | Description |
+|------------|----------|-------------|
+| [Bun](https://bun.sh) | Runtime | Fast all-in-one JavaScript runtime |
+| [React 19](https://react.dev) | Frontend | The library for web and native user interfaces |
+| [TanStack Start](https://tanstack.com/start) | Framework | Full-stack React framework |
+| [Tailwind CSS v4](https://tailwindcss.com) | Styling | Utility-first CSS framework |
+| [Drizzle ORM](https://orm.drizzle.team) | Database | TypeScript ORM for SQL databases |
+| [Better Auth](https://better-auth.com) | Auth | The most comprehensive auth library |
+| [oRPC](https://orpc.sh) | API | Type-safe RPC for TypeScript |
+| [Vite](https://vitejs.dev) | Bundler | Next generation frontend tooling (Rolldown) |
+
+## 📂 Project Structure
 
 ```
-├── apps/
-│   └── web/                 # TanStack Start app
-├── packages/
-│   ├── api/                 # oRPC server & client + auth
-│   ├── database/            # Drizzle ORM
-│   ├── schema/              # Zod schemas & types
-│   └── shared/              # Shared utilities
-├── package.json             # Bun catalog
-└── turbo.json               # Turborepo config
+├── src/
+│   ├── components/         # UI components, layouts, and providers
+│   ├── core/               # Core business logic & infrastructure
+│   │   ├── api/            # oRPC router, middleware, and auth server
+│   │   ├── database/       # Drizzle client and schema definitions
+│   │   ├── schema/         # Shared Zod validation schemas
+│   │   └── shared/         # Shared utilities and constants
+│   ├── hooks/              # Custom React hooks
+│   ├── lib/                # Application-specific utilities
+│   ├── routes/             # TanStack Router file-based routes
+│   ├── server.ts           # Server entry point
+│   └── start.tsx           # Client entry point
+├── drizzle.config.ts       # Drizzle ORM configuration
+├── package.json            # Project dependencies and scripts
+├── tsconfig.json           # TypeScript configuration
+└── vite.config.ts          # Vite/Rolldown configuration
 ```
 
-## Commands
+## 📜 Development Commands
 
-```bash
-bun dev          # Start dev server
-bun build        # Build for production
-bun typecheck    # Type check
-bun lint         # Lint code
-bun format       # Format code
-
-bun db:generate  # Generate migrations
-bun db:migrate   # Run migrations
-```
-
-## Packages
-
-| Package | Description |
+| Command | Description |
 |---------|-------------|
-| `@workspace/api` | oRPC router, middleware, client, auth |
-| `@workspace/database` | Drizzle client & schema |
-| `@workspace/schema` | Zod validation schemas |
-| `@workspace/shared` | Shared utilities (cn, format, etc.) |
+| `bun dev` | Start development server on port 3000 |
+| `bun build` | Build the application for production |
+| `bun typecheck` | Run TypeScript type checking |
+| `bun lint` | Lint code using oxlint |
+| `bun format` | Format code using oxfmt |
+| `bun test` | Run tests with Vitest |
+| `bun db:generate` | Generate Drizzle migrations |
+| `bun db:migrate` | Apply Drizzle migrations |
+| `bun auth:generate` | Generate Better Auth schema |
+| `bun auth:migrate` | Run Better Auth migrations |
+| `bun up` | Update dependencies to latest versions |
 
-## Adding UI Components
+## 🔐 Environment Variables
 
-```bash
-bunx shadcn@latest add button
-```
-
-## Environment Variables
-
-Create `.env.local` in the **root directory** (not in apps/web):
+Create a `.env.local` file in the root directory:
 
 ```env
 DATABASE_URL=postgresql://user:pass@localhost:5432/db
@@ -84,14 +114,6 @@ BETTER_AUTH_SECRET=your-secret-key
 BETTER_AUTH_URL=http://localhost:3000
 ```
 
-The monorepo is configured to load environment variables from the root.
+## 📄 License
 
-## Docker
-
-```bash
-docker-compose up -d  # Start PostgreSQL
-```
-
-## License
-
-MIT
+This project is licensed under the MIT License.
