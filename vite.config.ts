@@ -48,15 +48,6 @@ export default defineConfig(() => {
       external: ["better-auth"],
     },
 
-    // 构建配置
-    build: {
-      sourcemap: true, // 生成 source map
-      target: "es2020",
-      cssCodeSplit: true,
-      minify: "esbuild",
-      chunkSizeWarningLimit: 1024, // 1MB
-    },
-
     // 实验性功能
     experimental: {
       enableNativePlugin: true, // Rolldown（Rust 打包器，比 Rollup 快 5-10x）

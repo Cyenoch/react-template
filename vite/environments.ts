@@ -17,4 +17,10 @@ export const environments: Record<string, EnvironmentOptions> = {
       },
     },
   },
+  server: {
+    build: {
+      sourcemap: true,
+      target: "es2022"
+    }
+  }
 };
