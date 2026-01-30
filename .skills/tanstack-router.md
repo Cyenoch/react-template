@@ -23,12 +23,13 @@ The root route is defined in `src/routes/__root.tsx`. It sets up the global cont
 
 - **New Routes**: Create a new `.tsx` file in `src/routes/`.
 - **Route Definition**:
-  ```typescript
-  import { createFileRoute } from '@tanstack/react-router'
 
-  export const Route = createFileRoute('/my-route')({
+  ```typescript
+  import { createFileRoute } from "@tanstack/react-router";
+
+  export const Route = createFileRoute("/my-route")({
     component: MyComponent,
-  })
+  });
   ```
 
 ## Best Practices

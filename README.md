@@ -56,16 +56,16 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 ## 🛠️ Tech Stack
 
-| Technology | Category | Description |
-|------------|----------|-------------|
-| [Bun](https://bun.sh) | Runtime | Fast all-in-one JavaScript runtime |
-| [React 19](https://react.dev) | Frontend | The library for web and native user interfaces |
-| [TanStack Start](https://tanstack.com/start) | Framework | Full-stack React framework |
-| [Tailwind CSS v4](https://tailwindcss.com) | Styling | Utility-first CSS framework |
-| [Drizzle ORM](https://orm.drizzle.team) | Database | TypeScript ORM for SQL databases |
-| [Better Auth](https://better-auth.com) | Auth | The most comprehensive auth library |
-| [oRPC](https://orpc.sh) | API | Type-safe RPC for TypeScript |
-| [Vite](https://vitejs.dev) | Bundler | Next generation frontend tooling (Rolldown) |
+| Technology                                   | Category  | Description                                    |
+| -------------------------------------------- | --------- | ---------------------------------------------- |
+| [Bun](https://bun.sh)                        | Runtime   | Fast all-in-one JavaScript runtime             |
+| [React 19](https://react.dev)                | Frontend  | The library for web and native user interfaces |
+| [TanStack Start](https://tanstack.com/start) | Framework | Full-stack React framework                     |
+| [Tailwind CSS v4](https://tailwindcss.com)   | Styling   | Utility-first CSS framework                    |
+| [Drizzle ORM](https://orm.drizzle.team)      | Database  | TypeScript ORM for SQL databases               |
+| [Better Auth](https://better-auth.com)       | Auth      | The most comprehensive auth library            |
+| [oRPC](https://orpc.sh)                      | API       | Type-safe RPC for TypeScript                   |
+| [Vite](https://vitejs.dev)                   | Bundler   | Next generation frontend tooling (Rolldown)    |
 
 ## 📂 Project Structure
 
@@ -90,19 +90,19 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 ## 📜 Development Commands
 
-| Command | Description |
-|---------|-------------|
-| `bun dev` | Start development server on port 3000 |
-| `bun build` | Build the application for production |
-| `bun typecheck` | Run TypeScript type checking |
-| `bun lint` | Lint code using oxlint |
-| `bun format` | Format code using oxfmt |
-| `bun test` | Run tests with Vitest |
-| `bun db:generate` | Generate Drizzle migrations |
-| `bun db:migrate` | Apply Drizzle migrations |
-| `bun auth:generate` | Generate Better Auth schema |
-| `bun auth:migrate` | Run Better Auth migrations |
-| `bun up` | Update dependencies to latest versions |
+| Command             | Description                            |
+| ------------------- | -------------------------------------- |
+| `bun dev`           | Start development server on port 3000  |
+| `bun build`         | Build the application for production   |
+| `bun typecheck`     | Run TypeScript type checking           |
+| `bun lint`          | Lint code using oxlint                 |
+| `bun format`        | Format code using oxfmt                |
+| `bun test`          | Run tests with Vitest                  |
+| `bun db:generate`   | Generate Drizzle migrations            |
+| `bun db:migrate`    | Apply Drizzle migrations               |
+| `bun auth:generate` | Generate Better Auth schema            |
+| `bun auth:migrate`  | Run Better Auth migrations             |
+| `bun up`            | Update dependencies to latest versions |
 
 ## 🔐 Environment Variables
 

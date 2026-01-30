@@ -11,12 +11,17 @@
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
     "jsx": "react-jsx",
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@env": ["src/lib/env/index.ts"]
+      "@/*": ["./src/*"],
+      "@env": ["./src/lib/env/index.ts"]
     },
     "types": ["unplugin-icons/types/react", "@types/bun"]
   },
-  "include": ["src/**/*", "vite/**/*", "vite.config.ts", "vitest.config.ts", "drizzle.config.ts"]
+  "include": [
+    "./src/**/*",
+    "./vite/**/*",
+    "./vite.config.ts",
+    "./vitest.config.ts",
+    "./drizzle.config.ts"
+  ]
 }

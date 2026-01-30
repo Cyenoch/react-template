@@ -12,9 +12,7 @@ export type InputContext = {
 };
 
 // Full server context - populated by middleware
-export type ServerContext = InputContext & {
-  
-};
+export type ServerContext = InputContext & {};
 
 // Base builder for creating middlewares that expect ServerContext
 export const baseBuilder = os.$context<ServerContext>();

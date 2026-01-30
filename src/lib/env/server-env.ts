@@ -29,4 +29,6 @@ if (typeof window === "undefined" && typeof Bun !== "undefined") {
 }
 
 export const serverEnv: IServerEnv =
-  typeof window === "undefined" && typeof Bun !== "undefined" ? serverEnvSchema.parse(Bun.env) : ({} as IServerEnv);
+  typeof window === "undefined" && typeof Bun !== "undefined"
+    ? serverEnvSchema.parse(Bun.env)
+    : ({} as IServerEnv);

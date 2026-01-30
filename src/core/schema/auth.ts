@@ -10,7 +10,10 @@ export const signUpSchema = signInSchema.extend({
   name: z
     .string()
     .min(1, "Please enter your name")
-    .max(VALIDATION.NAME_MAX_LENGTH, `Name must be ${VALIDATION.NAME_MAX_LENGTH} characters or less`)
+    .max(
+      VALIDATION.NAME_MAX_LENGTH,
+      `Name must be ${VALIDATION.NAME_MAX_LENGTH} characters or less`,
+    )
     .refine((val) => val !== "admin", {
       message: "Nice try! Choose a different username",
     }),

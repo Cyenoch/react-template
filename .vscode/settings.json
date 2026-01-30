@@ -5,7 +5,7 @@
   "eslint.enable": false,
   "files.readonlyInclude": {
     "app/routeTree.gen.ts": true,
-    "bun.lock": true,
+    "bun.lock": true
   },
   "editor.defaultFormatter": "oxc.oxc-vscode",
   "typescript.tsdk": "node_modules/typescript/lib",
@@ -13,12 +13,12 @@
     "**/routeTree.gen.ts": true,
     "**/node_modules": true,
     "**/.output": true,
-    "bun.lock": true,
+    "bun.lock": true
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll.oxfmt": "explicit",
+    "source.fixAll.oxfmt": "explicit"
   },
   "files.watcherExclude": {
-    "**/routeTree.gen.ts": true,
-  },
+    "**/routeTree.gen.ts": true
+  }
 }
