@@ -28,12 +28,7 @@ export const advancedChunks: RolldownOptions["advancedChunks"] = {
       priority: 15,
     },
     {
-      test: /node_modules[\\/]framer-motion/,
-      name: "animation",
-      priority: 10,
-    },
-    {
-      test: /node_modules[\\/](zod|superjson)/,
+      test: /node_modules[\\/]zod/,
       name: "validation",
       priority: 10,
     },
