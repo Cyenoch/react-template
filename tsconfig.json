@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/core/*": ["./src/core/*"]
+    }
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "./packages/api" },
+    { "path": "./packages/database" },
+    { "path": "./packages/schema" },
+    { "path": "./packages/shared" }
+  ]
+}
