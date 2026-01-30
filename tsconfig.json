@@ -1,16 +1,22 @@
 {
-  "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/core/*": ["./src/core/*"]
-    }
+      "@/*": ["src/*"],
+      "@env": ["src/lib/env/index.ts"]
+    },
+    "types": ["unplugin-icons/types/react", "@types/bun"]
   },
-  "include": ["src"],
-  "references": [
-    { "path": "./packages/api" },
-    { "path": "./packages/database" },
-    { "path": "./packages/schema" },
-    { "path": "./packages/shared" }
-  ]
+  "include": ["src/**/*", "vite/**/*", "vite.config.ts", "vitest.config.ts", "drizzle.config.ts"]
 }
