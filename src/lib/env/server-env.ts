@@ -21,7 +21,7 @@ const serverEnvSchema = z.object({
 
 export type IServerEnv = z.output<typeof serverEnvSchema>;
 
-if (typeof window === "undefined") {
+if (typeof window === "undefined" && typeof Bun !== "undefined") {
   const parsed = serverEnvSchema.safeParse(Bun.env);
   if (!parsed.success) {
     pino().error(z.treeifyError(parsed.error), "Invalid environment variables");
@@ -29,4 +29,4 @@ if (typeof window === "undefined") {
 }
 
 export const serverEnv: IServerEnv =
-  typeof window === "undefined" ? serverEnvSchema.parse(Bun.env) : ({} as IServerEnv);
+  typeof window === "undefined" && typeof Bun !== "undefined" ? serverEnvSchema.parse(Bun.env) : ({} as IServerEnv);

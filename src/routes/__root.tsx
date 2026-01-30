@@ -2,7 +2,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { Session, User } from "better-auth";
+import type { Session, User } from "better-auth";
 import { cn, seo } from "@/core/shared";
 import { orpcClient } from "@/core/api/client";
 import { MainLayout } from "@/components/layouts/main-layout";

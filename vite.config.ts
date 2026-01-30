@@ -21,7 +21,10 @@ export default defineConfig(() => {
     plugins: [
       tsConfigPaths({ projects: ["./tsconfig.json"] }),
       icons({ compiler: "jsx", jsx: "react" }),
-      tanstackStart({ router: { entry: "router.ts" } }),
+      tanstackStart({ 
+        router: { entry: "router.ts" },
+        server: { entry: "server.ts" }
+      }),
       nitroV2Plugin({ preset: "bun" }),
       react(),
       autoImport(autoImportOptions),
