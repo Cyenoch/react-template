@@ -1,5 +1,8 @@
 # CLAUDE.md
 
+## Important Notes
+- Keep the documentation up to date.
+
 ## Overview
 This project is a full-stack React 19 template built with TanStack Start, featuring a modular architecture designed for scalability and type safety. It uses Bun as the runtime and package manager, and Vite (via Rolldown) as the bundler.
 
