@@ -1,6 +1,6 @@
 import { useRouteContext } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { setTheme } from "@/lib/utils/theme";
+import { setTheme } from "@/core/utils";
 
 export function Header() {
   const router = useRouter();

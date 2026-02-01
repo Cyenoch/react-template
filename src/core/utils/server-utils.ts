@@ -1,17 +1,7 @@
 import { createServerOnlyFn } from "@tanstack/react-start";
 import { getRequestHeader, getRequestIP } from "@tanstack/react-start/server";
-import pino from "pino";
 import { serverEnv } from "../env";
-
-const rootLogger = pino({
-  level: serverEnv.LOG_LEVEL ?? "trace",
-  transport: {
-    target: "pino-pretty",
-    options: {
-      colorize: true,
-    },
-  },
-});
+import { rootLogger } from "./logger";
 
 export const getClientIP = createServerOnlyFn(() => {
   const xForwardedFor = serverEnv.X_FORWARDED_FOR;

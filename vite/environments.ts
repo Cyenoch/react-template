@@ -20,7 +20,7 @@ export const environments: Record<string, EnvironmentOptions> = {
   server: {
     build: {
       sourcemap: true,
-      target: "esnext"
-    }
-  }
+      target: "esnext",
+    },
+  },
 };

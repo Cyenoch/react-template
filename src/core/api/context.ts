@@ -1,5 +1,5 @@
 import { os } from "@orpc/server";
-import { type Logger } from "./logger";
+import { type Logger } from "@/core/utils";
 import { appContextMiddleware } from "./middleware/app-context";
 import type { Span } from "@opentelemetry/api";
 

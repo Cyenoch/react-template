@@ -3,12 +3,12 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import type { Session, User } from "better-auth";
-import { cn, seo } from "@/core/shared";
+import { cn, seo } from "@/core/utils";
 import { orpcClient } from "@/core/api/client";
 import { MainLayout } from "@/components/layouts/main-layout";
 import { AppProviders } from "@/components/providers";
 import appCss from "@/index.css?url";
-import { getTheme } from "@/lib/utils/theme";
+import { getTheme } from "@/core/utils";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;

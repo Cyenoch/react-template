@@ -12,18 +12,29 @@ This project is a full-stack React 19 template built with TanStack Start, featur
 
 The codebase follows a layered architecture centered around the `src/` directory:
 
-- `src/core/`: Core business logic and infrastructure.
+- `src/core/`: Core business logic, infrastructure, and utilities.
   - `api/`: oRPC procedures, routers, and middleware.
   - `database/`: Drizzle ORM schema, migrations, and client.
   - `auth/`: Better-Auth server and client configuration.
   - `schema/`: Shared Zod validation schemas and types.
-  - `shared/`: Core utilities (e.g., `cn`, formatting).
+  - `env/`: Environment variable management (client-env, server-env).
+  - `utils/`: Utility functions (cn, formatting, theme, query-client, trace, server-utils).
 - `src/routes/`: File-based routing using TanStack Router.
 - `src/components/`: UI components.
   - `ui/`: Atomic shadcn-style components using @base-ui/react.
   - `layouts/`: Page layout components.
 - `src/hooks/`: Custom React hooks.
-- `src/lib/`: Application-specific utilities and helpers.
+
+### Design Principles
+
+- **`core/` Directory**: Contains all core business logic, infrastructure, and utilities that form the foundation of the application.
+- **Environment Variables**: Centralized configuration in `core/env/`:
+  - `client-env.ts`: Client-side variables (Vite `import.meta.env`).
+  - `server-env.ts`: All server-side configuration (DATABASE_URL, BETTER_AUTH_SECRET, LOG_LEVEL, X_FORWARDED_FOR, OTEL_*, etc.).
+- **Logging**: Unified logger in `core/utils/logger.ts`:
+  - `rootLogger`: Base Pino logger instance with environment-based configuration.
+  - `getLogger(module)`: Creates child loggers with module context.
+  - All logging should use this centralized logger to avoid duplicate instances.
 
 ## Key Patterns
 
@@ -67,14 +78,14 @@ The codebase follows a layered architecture centered around the `src/` directory
 ## Development Commands
 
 - `bun dev`: Start development server (port 3000).
-- `bun build`: Build for production.
-- `bun typecheck`: Run TypeScript type checking.
-- `bun lint`: Lint code using oxlint.
-- `bun format`: Format code using oxfmt.
-- `bun db:generate`: Generate Drizzle migrations.
-- `bun db:migrate`: Run Drizzle migrations.
-- `bun auth:migrate`: Run Better-Auth migrations.
-- `bun test`: Run tests with Vitest.
+- `bun run build`: Build for production.
+- `bun run typecheck`: Run TypeScript type checking (using `@typescript/native-preview tsgo`).
+- `bun run lint`: Lint code using oxlint.
+- `bun run format`: Format code using oxfmt.
+- `bun run db:generate`: Generate Drizzle migrations.
+- `bun run db:migrate`: Run Drizzle migrations.
+- `bun run auth:migrate`: Run Better-Auth migrations.
+- `bun run test`: Run tests with Vitest.
 
 ## Common Tasks
 

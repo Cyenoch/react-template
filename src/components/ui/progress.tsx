@@ -1,6 +1,6 @@
 import { Progress as ProgressPrimitive } from "@base-ui/react/progress"
 
-import { cn } from "@/lib/utils/index"
+import { cn } from "@/core/utils"
 
 function Progress({
   className,

@@ -1,6 +1,6 @@
 import { createStartHandler, defaultStreamHandler } from "@tanstack/react-start/server";
-import { getRootLogger } from "./lib/utils/server-utils";
-import { traceFetch } from "./lib/utils/trace";
+import { getRootLogger } from "./core/utils/server-utils";
+import { traceFetch } from "./core/utils/trace";
 import "./instrumentation";
 
 const logger = getRootLogger().child({
