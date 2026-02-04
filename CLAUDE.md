@@ -1,8 +1,6 @@
 # CLAUDE.md
 
-## Important Notes
-
-- Keep the documentation up to date.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Overview
 
@@ -44,10 +42,12 @@ The codebase follows a layered architecture centered around the `src/` directory
 - Use `createRootRouteWithContext` for global context (auth, theme, queryClient).
 - Use `beforeLoad` for data prefetching and route guards.
 
-### API (oRPC)
+### API (oRPC Contract-First)
 
-- Type-safe RPC procedures defined in `src/core/api/routers/`.
-- Procedures use `base.use()` for middleware (e.g., `authMiddleware`).
+- **Contracts** define RPC signatures in `src/core/api/contracts/` using `@orpc/contract`.
+- **Implementations** in `src/core/api/routers/` implement the contracts via `os.router()`.
+- **Context flow**: `os` implementer (`context.ts`) → `base` (with `appContextMiddleware`) → routers.
+- **Middleware chain**: `appContextMiddleware` (extracts IP, headers, span, logger) → `authMiddleware` → handlers.
 - Client access via `orpcClient` from `@/core/api/client`.
 
 ### Database (Drizzle ORM)
@@ -78,19 +78,21 @@ The codebase follows a layered architecture centered around the `src/` directory
 ## Development Commands
 
 - `bun dev`: Start development server (port 3000).
-- `bun run build`: Build for production.
-- `bun run typecheck`: Run TypeScript type checking (using `@typescript/native-preview tsgo`).
-- `bun run lint`: Lint code using oxlint.
-- `bun run format`: Format code using oxfmt.
-- `bun run db:generate`: Generate Drizzle migrations.
-- `bun run db:migrate`: Run Drizzle migrations.
-- `bun run auth:migrate`: Run Better-Auth migrations.
-- `bun run test`: Run tests with Vitest.
+- `bun build`: Build for production.
+- `bun typecheck`: Run TypeScript type checking (using `tsgo`).
+- `bun lint`: Lint code using oxlint.
+- `bun format`: Format code using oxfmt.
+- `bun test`: Run all tests with Vitest.
+- `bun test <path>`: Run a single test file (e.g., `bun test src/core/utils/cn.test.ts`).
+- `bun db:generate`: Generate Drizzle migrations.
+- `bun db:migrate`: Run Drizzle migrations.
+- `bun auth:generate`: Generate Better-Auth schema from config.
+- `bun auth:migrate`: Run Better-Auth migrations.
 
 ## Common Tasks
 
 - **Add a Route**: Create a new `.tsx` file in `src/routes/`.
-- **Add an API Endpoint**: Define a procedure in `src/core/api/routers/` and export it in `orpcRootRouter`.
+- **Add an API Endpoint**: Define contract in `src/core/api/contracts/`, implement in `src/core/api/routers/`, export in router.
 - **Add a UI Component**: Run `bunx shadcn@latest add <component-name>`.
 
 ## External References
