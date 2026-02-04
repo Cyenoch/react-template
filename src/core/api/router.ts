@@ -1,8 +1,8 @@
-import { orpcAuthRouter } from "./routers/auth";
+import { authRouter } from "./routers/auth";
 import { base } from "./context";
 
 export const orpcRootRouter = base.router({
-  ...orpcAuthRouter,
+  auth: authRouter,
 });
 
 export type AppRouter = typeof orpcRootRouter;
