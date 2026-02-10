@@ -2,11 +2,11 @@ import { trace } from "@opentelemetry/api";
 import { os } from "@orpc/server";
 import { createServerOnlyFn } from "@tanstack/react-start";
 import { getRequestHeader, getRequestHeaders, getRequestIP } from "@tanstack/react-start/server";
-import { apiEnv } from "../env";
-import { rootLogger } from "../logger";
+import { serverEnv } from "@/core/env";
+import { rootLogger } from "@/core/utils";
 
 export const getClientIP = createServerOnlyFn(() => {
-  const xForwardedFor = apiEnv.X_FORWARDED_FOR;
+  const xForwardedFor = serverEnv.X_FORWARDED_FOR;
   const clientIP =
     !!xForwardedFor || xForwardedFor === "X-Forwarded-For"
       ? getRequestIP({ xForwardedFor: true })

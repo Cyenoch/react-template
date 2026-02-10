@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils/index"
+import { cn } from "@/core/utils"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Loading03Icon } from "@hugeicons/core-free-icons"
 

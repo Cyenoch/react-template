@@ -1,7 +1,8 @@
-import { os } from "@orpc/server";
-import { type Logger } from "./logger";
+import { implement } from "@orpc/server";
+import { type Logger } from "@/core/utils";
 import { appContextMiddleware } from "./middleware/app-context";
 import type { Span } from "@opentelemetry/api";
+import { contract } from "./contracts";
 
 // Input context - only headers are provided by the RPC handler
 export type InputContext = {
@@ -14,7 +15,7 @@ export type InputContext = {
 // Full server context - populated by middleware
 export type ServerContext = InputContext & {};
 
-// Base builder for creating middlewares that expect ServerContext
-export const baseBuilder = os.$context<ServerContext>();
+// Create implementer from contract with context type
+export const os = implement(contract).$context<ServerContext>();
 
-export const base = baseBuilder.use(appContextMiddleware);
+export const base = os.use(appContextMiddleware);

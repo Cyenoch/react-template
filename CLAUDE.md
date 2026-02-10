@@ -1,8 +1,6 @@
 # CLAUDE.md
 
-## Important Notes
-
-- Keep the documentation up to date.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Overview
 
@@ -12,18 +10,29 @@ This project is a full-stack React 19 template built with TanStack Start, featur
 
 The codebase follows a layered architecture centered around the `src/` directory:
 
-- `src/core/`: Core business logic and infrastructure.
+- `src/core/`: Core business logic, infrastructure, and utilities.
   - `api/`: oRPC procedures, routers, and middleware.
   - `database/`: Drizzle ORM schema, migrations, and client.
   - `auth/`: Better-Auth server and client configuration.
   - `schema/`: Shared Zod validation schemas and types.
-  - `shared/`: Core utilities (e.g., `cn`, formatting).
+  - `env/`: Environment variable management (client-env, server-env).
+  - `utils/`: Utility functions (cn, formatting, theme, query-client, trace, server-utils).
 - `src/routes/`: File-based routing using TanStack Router.
 - `src/components/`: UI components.
   - `ui/`: Atomic shadcn-style components using @base-ui/react.
   - `layouts/`: Page layout components.
 - `src/hooks/`: Custom React hooks.
-- `src/lib/`: Application-specific utilities and helpers.
+
+### Design Principles
+
+- **`core/` Directory**: Contains all core business logic, infrastructure, and utilities that form the foundation of the application.
+- **Environment Variables**: Centralized configuration in `core/env/`:
+  - `client-env.ts`: Client-side variables (Vite `import.meta.env`).
+  - `server-env.ts`: All server-side configuration (DATABASE_URL, BETTER_AUTH_SECRET, LOG_LEVEL, X_FORWARDED_FOR, OTEL_*, etc.).
+- **Logging**: Unified logger in `core/utils/logger.ts`:
+  - `rootLogger`: Base Pino logger instance with environment-based configuration.
+  - `getLogger(module)`: Creates child loggers with module context.
+  - All logging should use this centralized logger to avoid duplicate instances.
 
 ## Key Patterns
 
@@ -33,10 +42,12 @@ The codebase follows a layered architecture centered around the `src/` directory
 - Use `createRootRouteWithContext` for global context (auth, theme, queryClient).
 - Use `beforeLoad` for data prefetching and route guards.
 
-### API (oRPC)
+### API (oRPC Contract-First)
 
-- Type-safe RPC procedures defined in `src/core/api/routers/`.
-- Procedures use `base.use()` for middleware (e.g., `authMiddleware`).
+- **Contracts** define RPC signatures in `src/core/api/contracts/` using `@orpc/contract`.
+- **Implementations** in `src/core/api/routers/` implement the contracts via `os.router()`.
+- **Context flow**: `os` implementer (`context.ts`) → `base` (with `appContextMiddleware`) → routers.
+- **Middleware chain**: `appContextMiddleware` (extracts IP, headers, span, logger) → `authMiddleware` → handlers.
 - Client access via `orpcClient` from `@/core/api/client`.
 
 ### Database (Drizzle ORM)
@@ -68,18 +79,20 @@ The codebase follows a layered architecture centered around the `src/` directory
 
 - `bun dev`: Start development server (port 3000).
 - `bun build`: Build for production.
-- `bun typecheck`: Run TypeScript type checking.
+- `bun typecheck`: Run TypeScript type checking (using `tsgo`).
 - `bun lint`: Lint code using oxlint.
 - `bun format`: Format code using oxfmt.
+- `bun test`: Run all tests with Vitest.
+- `bun test <path>`: Run a single test file (e.g., `bun test src/core/utils/cn.test.ts`).
 - `bun db:generate`: Generate Drizzle migrations.
 - `bun db:migrate`: Run Drizzle migrations.
+- `bun auth:generate`: Generate Better-Auth schema from config.
 - `bun auth:migrate`: Run Better-Auth migrations.
-- `bun test`: Run tests with Vitest.
 
 ## Common Tasks
 
 - **Add a Route**: Create a new `.tsx` file in `src/routes/`.
-- **Add an API Endpoint**: Define a procedure in `src/core/api/routers/` and export it in `orpcRootRouter`.
+- **Add an API Endpoint**: Define contract in `src/core/api/contracts/`, implement in `src/core/api/routers/`, export in router.
 - **Add a UI Component**: Run `bunx shadcn@latest add <component-name>`.
 
 ## External References

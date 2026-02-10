@@ -111,7 +111,6 @@ Create a `.env.local` file in the root directory:
 ```env
 DATABASE_URL=postgresql://user:pass@localhost:5432/db
 BETTER_AUTH_SECRET=your-secret-key
-BETTER_AUTH_URL=http://localhost:3000
 ```
 
 ## 📄 License
