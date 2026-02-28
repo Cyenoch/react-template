@@ -1,28 +1,19 @@
 import pino, { type Logger } from "pino";
-import { serverEnv } from "@/core/env";
-import { isDev } from "./env-helper";
+import { getServerEnv } from "../env";
 
-const prettyTransport = {
-  target: "pino-pretty",
-  options: {
-    colorize: true,
-  },
-};
-
-export const rootLogger = pino({
-  level: serverEnv.LOG_LEVEL ?? "trace",
-  transport: isDev ? prettyTransport : undefined,
-});
+let rootLogger: Logger = undefined!;
 
 /**
  * 创建带模块标识的子日志器
  * @param module 模块名称
  * @param bindings 附加绑定字段
  */
-export function getLogger(
-  module: string,
-  bindings?: Record<string, unknown>,
-): Logger {
+export function getLogger(module: string, bindings?: Record<string, unknown>): Logger {
+  if (!rootLogger) {
+    rootLogger = pino({
+      level: getServerEnv().LOG_LEVEL ?? "trace",
+    });
+  }
   return rootLogger.child({ module, ...bindings });
 }
 

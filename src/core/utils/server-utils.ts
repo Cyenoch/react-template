@@ -1,9 +1,9 @@
 import { createServerOnlyFn } from "@tanstack/react-start";
 import { getRequestHeader, getRequestIP } from "@tanstack/react-start/server";
-import { serverEnv } from "../env";
-import { rootLogger } from "./logger";
+import { getServerEnv } from "../env/server-env";
 
 export const getClientIP = createServerOnlyFn(() => {
+  const serverEnv = getServerEnv();
   const xForwardedFor = serverEnv.X_FORWARDED_FOR;
   const clientIP =
     !!xForwardedFor || xForwardedFor === "X-Forwarded-For"
@@ -15,6 +15,7 @@ export const getClientIP = createServerOnlyFn(() => {
 });
 
 export const getClientIPFromRequest = createServerOnlyFn((request: Request) => {
+  const serverEnv = getServerEnv();
   const xForwardedFor = serverEnv.X_FORWARDED_FOR;
   if (!!xForwardedFor || xForwardedFor === "X-Forwarded-For") {
     return request.headers.get("x-forwarded-for");
@@ -25,4 +26,3 @@ export const getClientIPFromRequest = createServerOnlyFn((request: Request) => {
   }
 });
 
-export const getRootLogger = createServerOnlyFn(() => rootLogger);

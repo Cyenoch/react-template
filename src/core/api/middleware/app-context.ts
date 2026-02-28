@@ -1,12 +1,12 @@
+import { getServerEnv } from "@/core/env";
+import { getLogger } from "@/core/utils";
 import { trace } from "@opentelemetry/api";
 import { os } from "@orpc/server";
 import { createServerOnlyFn } from "@tanstack/react-start";
 import { getRequestHeader, getRequestHeaders, getRequestIP } from "@tanstack/react-start/server";
-import { serverEnv } from "@/core/env";
-import { rootLogger } from "@/core/utils";
 
 export const getClientIP = createServerOnlyFn(() => {
-  const xForwardedFor = serverEnv.X_FORWARDED_FOR;
+  const xForwardedFor = getServerEnv().X_FORWARDED_FOR;
   const clientIP =
     !!xForwardedFor || xForwardedFor === "X-Forwarded-For"
       ? getRequestIP({ xForwardedFor: true })
@@ -24,10 +24,7 @@ export const appContextMiddleware = os
     const headers = context.headers ?? new Headers(getRequestHeaders());
     const clientIP = getClientIP() ?? "";
     const activeSpan = trace.getActiveSpan()!;
-    const logger = rootLogger.child({
-      module: `ORPC ${path.join("/")}`,
-      path,
-    });
+    const logger = getLogger(`ORPC ${path.join("/")}`, { path });
 
     activeSpan?.updateName(`middleware.appContext ${path.join("/")}`);
 

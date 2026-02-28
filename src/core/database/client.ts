@@ -1,19 +1,18 @@
 import type { Logger } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
-import { serverEnv } from "@/core/env";
-import { isDev, rootLogger } from "@/core/utils";
+import { getLogger, isDev } from "@/core/utils";
 import * as schema from "./schema";
+import { getServerEnv } from "../env";
 
 declare global {
   var _pool: Pool;
 }
 
-const dbLogger = rootLogger.child({
-  module: "Database",
-});
+const dbLogger = getLogger("Database");
 
 export function getSQLClient(): Pool {
+  const serverEnv = getServerEnv();
   console.assert(!!serverEnv.DATABASE_URL, "DATABASE_URL is not defined");
   if (globalThis._pool) return globalThis._pool;
   dbLogger.info(`Opening database connection`);

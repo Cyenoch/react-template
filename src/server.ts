@@ -1,14 +1,18 @@
 import { createStartHandler, defaultStreamHandler } from "@tanstack/react-start/server";
-import { getRootLogger } from "./core/utils/server-utils";
 import { traceFetch } from "./core/utils/trace";
 import "./instrumentation";
+import { getLogger } from "./core/utils";
+import { getServerEnv } from "./core/env";
 
-const logger = getRootLogger().child({
-  module: "ServerRoot",
-});
+const logger = getLogger("ServerRoot");
 
 const handler = createStartHandler(defaultStreamHandler);
 
 export default { fetch: traceFetch(handler) };
 
-logger.info("Server started successfully");
+logger.info(
+  {
+    env: getServerEnv(),
+  },
+  "Server started successfully",
+);

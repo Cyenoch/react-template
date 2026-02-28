@@ -1,9 +1,21 @@
+import { createIsomorphicFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { getServerEnv, ServerEnvSchema } from "./server-env";
 
-const clientEnvSchema = z.object({});
+export const ClientEnvSchema = ServerEnvSchema.pick({});
 
-export type IClientEnv = z.output<typeof clientEnvSchema>;
-export const clientEnv: IClientEnv =
-  typeof window === "undefined"
-    ? ({} as IClientEnv)
-    : (clientEnvSchema.parse(import.meta.env) as IClientEnv);
+export type ClientEnv = z.output<typeof ClientEnvSchema>;
+
+declare global {
+  interface Window {
+    __INJECTED_PUBLIC_ENV__: ClientEnv;
+  }
+}
+
+export const getClientEnv = createIsomorphicFn()
+  .client((): ClientEnv => {
+    return window.__INJECTED_PUBLIC_ENV__;
+  })
+  .server((): ClientEnv => {
+    return ClientEnvSchema.parse(getServerEnv());
+  });

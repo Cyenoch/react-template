@@ -4,17 +4,19 @@ import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanst
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import type { Session, User } from "better-auth";
 import { cn, seo } from "@/core/utils";
-import { orpcClient } from "@/core/api/client";
+import { orpcQueryClient } from "@/core/api/client";
 import { MainLayout } from "@/components/layouts/main-layout";
 import { AppProviders } from "@/components/providers";
 import appCss from "@/index.css?url";
 import { getTheme } from "@/core/utils";
+import type { ClientEnv } from "@/core/env";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   user: User | undefined;
   session: Session | undefined;
   theme: string;
+  clientEnv: ClientEnv;
 }>()({
   head: () => ({
     meta: [
@@ -38,23 +40,30 @@ export const Route = createRootRouteWithContext<{
     ],
   }),
   component: RootDocument,
-  async beforeLoad() {
-    const session = await orpcClient.auth.maybeMe();
+  async beforeLoad({ context: { queryClient } }) {
+    const session = await queryClient.ensureQueryData(orpcQueryClient.auth.maybeMe.queryOptions());
+    const clientEnv = await queryClient.ensureQueryData(orpcQueryClient.clientEnv.queryOptions());
     return {
       session: session?.session,
       user: session?.user,
       theme: getTheme(),
+      clientEnv,
     };
   },
 });
 
 function RootDocument() {
-  const { theme } = Route.useRouteContext();
+  const { theme, clientEnv } = Route.useRouteContext();
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `;window.__INJECTED_PUBLIC_ENV__ = ${JSON.stringify(clientEnv)};`,
+          }}
+        ></script>
       </head>
 
       <body className={cn("min-h-svh", theme)}>

@@ -23,6 +23,7 @@ export function getRouter() {
       theme: getTheme() || "light",
       user: undefined!,
       session: undefined!,
+      clientEnv: undefined!,
     },
     defaultNotFoundComponent: NotFound,
     defaultErrorComponent: ErrorPrint,
