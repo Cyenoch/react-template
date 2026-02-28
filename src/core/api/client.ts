@@ -5,7 +5,7 @@ import { createIsomorphicFn } from "@tanstack/react-start";
 import { orpcRootRouter, type AppRouter } from "./router";
 
 const getORPCClient = createIsomorphicFn()
-  .server(() => {
+  .server((): RouterClient<AppRouter> => {
     return createRouterClient(orpcRootRouter, {
       // context 使用函数形式，每次请求重新获取 headers
       context: async () => ({
@@ -23,4 +23,4 @@ const getORPCClient = createIsomorphicFn()
     return createORPCClient(link);
   });
 
-export const orpcClient: RouterClient<AppRouter> = getORPCClient();
+export const orpcClient = getORPCClient();

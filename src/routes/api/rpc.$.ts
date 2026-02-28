@@ -2,11 +2,12 @@ import { RPCHandler } from "@orpc/server/fetch";
 import { onError } from "@orpc/server";
 import { createFileRoute } from "@tanstack/react-router";
 import { orpcRootRouter } from "@/core/api/router";
+import { getLogger } from "@/core/api/logger";
 
 const handler = new RPCHandler(orpcRootRouter, {
   interceptors: [
     onError((error) => {
-      console.error("[oRPC Error]", error);
+      getLogger("/api/rpc/$ Route Error").error(error);
     }),
   ],
 });
