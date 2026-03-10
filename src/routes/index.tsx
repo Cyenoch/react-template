@@ -70,7 +70,7 @@ function RouteComponent() {
     <div className="relative overflow-hidden">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[34rem]"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-136"
         style={{
           backgroundImage:
             "radial-gradient(circle at top left, color-mix(in oklab, var(--accent) 65%, transparent), transparent 34%), radial-gradient(circle at top right, color-mix(in oklab, var(--primary) 22%, transparent), transparent 28%)",
@@ -137,7 +137,7 @@ function RouteComponent() {
         <div className="relative">
           <div
             aria-hidden="true"
-            className="absolute inset-0 -z-10 rotate-3 rounded-[2rem] blur-2xl"
+            className="absolute inset-0 -z-10 rotate-3 rounded-4xl blur-2xl"
             style={{
               backgroundImage:
                 "linear-gradient(135deg, color-mix(in oklab, var(--accent) 24%, transparent), transparent 50%), linear-gradient(180deg, color-mix(in oklab, var(--primary) 14%, transparent), transparent 80%)",
@@ -318,7 +318,7 @@ function PreviewItem({
 
 function QuickStep({ title, description }: { title: string; description: string }) {
   return (
-    <div className="rounded-[1.5rem] border border-border/70 bg-background/70 p-4">
+    <div className="rounded-3xl border border-border/70 bg-background/70 p-4">
       <p className="mb-1 font-medium">{title}</p>
       <p className="text-sm leading-6 text-muted-foreground">{description}</p>
     </div>
