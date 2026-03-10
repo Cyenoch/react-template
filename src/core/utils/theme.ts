@@ -36,19 +36,24 @@ export const applyTheme = (themeValue: Theme) => {
 
 export const subscribeToSystemTheme = (onChange: () => void) => {
   const mediaQuery = window.matchMedia(THEME_MEDIA_QUERY);
+  const handleChange = () => {
+    onChange();
+  };
 
   if (typeof mediaQuery.addEventListener === "function") {
-    mediaQuery.addEventListener("change", onChange);
+    mediaQuery.addEventListener("change", handleChange);
 
     return () => {
-      mediaQuery.removeEventListener("change", onChange);
+      mediaQuery.removeEventListener("change", handleChange);
     };
   }
 
-  mediaQuery.addListener(onChange);
+  mediaQuery.onchange = handleChange;
 
   return () => {
-    mediaQuery.removeListener(onChange);
+    if (mediaQuery.onchange === handleChange) {
+      mediaQuery.onchange = null;
+    }
   };
 };
 
