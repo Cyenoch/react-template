@@ -1,1 +1,120 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: oklch(0.985 0.008 85);
+  --foreground: oklch(0.24 0.026 255);
+  --card: oklch(0.995 0.004 85);
+  --card-foreground: oklch(0.24 0.026 255);
+  --popover: oklch(0.995 0.004 85);
+  --popover-foreground: oklch(0.24 0.026 255);
+  --primary: oklch(0.43 0.09 228);
+  --primary-foreground: oklch(0.98 0.004 85);
+  --secondary: oklch(0.94 0.011 82);
+  --secondary-foreground: oklch(0.26 0.024 255);
+  --muted: oklch(0.956 0.01 85);
+  --muted-foreground: oklch(0.52 0.02 255);
+  --accent: oklch(0.88 0.05 48);
+  --accent-foreground: oklch(0.28 0.03 255);
+  --destructive: oklch(0.62 0.2 26);
+  --border: oklch(0.89 0.01 82);
+  --input: oklch(0.92 0.01 82);
+  --ring: oklch(0.67 0.1 228);
+  --radius: 1.25rem;
+}
+
+.dark {
+  --background: oklch(0.2 0.02 255);
+  --foreground: oklch(0.95 0.008 85);
+  --card: oklch(0.24 0.02 255);
+  --card-foreground: oklch(0.95 0.008 85);
+  --popover: oklch(0.24 0.02 255);
+  --popover-foreground: oklch(0.95 0.008 85);
+  --primary: oklch(0.77 0.105 224);
+  --primary-foreground: oklch(0.2 0.02 255);
+  --secondary: oklch(0.29 0.018 255);
+  --secondary-foreground: oklch(0.94 0.008 85);
+  --muted: oklch(0.27 0.016 255);
+  --muted-foreground: oklch(0.74 0.014 85);
+  --accent: oklch(0.42 0.06 45);
+  --accent-foreground: oklch(0.95 0.008 85);
+  --destructive: oklch(0.7 0.16 26);
+  --border: oklch(0.34 0.012 255);
+  --input: oklch(0.3 0.012 255);
+  --ring: oklch(0.78 0.09 224);
+}
+
+@theme inline {
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 8px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 8px);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100svh;
+    background-color: var(--background);
+    background-image:
+      radial-gradient(
+        circle at top left,
+        color-mix(in oklab, var(--accent) 58%, transparent),
+        transparent 34%
+      ),
+      radial-gradient(
+        circle at top right,
+        color-mix(in oklab, var(--primary) 18%, transparent),
+        transparent 28%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--background) 92%, white) 0%,
+        var(--background) 100%
+      );
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--primary) 30%, transparent);
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+}

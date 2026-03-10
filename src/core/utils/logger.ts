@@ -9,13 +9,15 @@ let rootLogger: Logger = undefined!;
  * @param module 模块名称
  * @param bindings 附加绑定字段
  */
-export const getLogger = createServerOnlyFn((module: string, bindings?: Record<string, unknown>): Logger => {
-  if (!rootLogger) {
-    rootLogger = pino({
-      level: getServerEnv().LOG_LEVEL ?? "trace",
-    });
-  }
-  return rootLogger.child({ module, ...bindings });
-});
+export const getLogger = createServerOnlyFn(
+  (module: string, bindings?: Record<string, unknown>): Logger => {
+    if (!rootLogger) {
+      rootLogger = pino({
+        level: getServerEnv().LOG_LEVEL ?? "trace",
+      });
+    }
+    return rootLogger.child({ module, ...bindings });
+  },
+);
 
 export type { Logger };

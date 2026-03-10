@@ -2,15 +2,15 @@ import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { seo, cn, getTheme } from "@/core/utils";
+import { getThemeInitScript, seo } from "@/core/utils";
 import { MainLayout } from "@/components/layouts/main-layout";
 import { AppProviders } from "@/components/providers";
 import appCss from "@/index.css?url";
 import { publicEnv } from "@/core/env";
+import { getInitialAppState } from "@/store";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
-  theme: string;
 }>()({
   head: () => ({
     meta: [
@@ -20,32 +20,44 @@ export const Route = createRootRouteWithContext<{
         content: "width=device-width, initial-scale=1, user-scalable=no",
       },
       ...seo({
-        title: "[ReactTemplate]",
-        description: "[ReactTemplate]",
+        title: "React Template",
+        description:
+          "A polished TanStack Start starter with shadcn/ui, Zustand, and a production-ready homepage.",
       }),
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),
   component: RootDocument,
-  async beforeLoad() {
+  async loader() {
     return {
-      theme: getTheme(),
+      initialAppState: await getInitialAppState(),
     };
   },
 });
 
 function RootDocument() {
-  const { theme } = Route.useRouteContext();
+  const { initialAppState } = Route.useLoaderData();
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
-        <script suppressHydrationWarning dangerouslySetInnerHTML={{__html: `;window.__INJECTED_PUBLIC_ENV__=${JSON.stringify(publicEnv)};`}} />
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: getThemeInitScript(initialAppState.theme),
+          }}
+        />
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `;window.__INJECTED_PUBLIC_ENV__=${JSON.stringify(publicEnv)};`,
+          }}
+        />
       </head>
 
-      <body className={cn("min-h-svh", theme)}>
-        <AppProviders>
+      <body className="min-h-svh bg-background text-foreground">
+        <AppProviders initialState={initialAppState}>
           {/* Content */}
           <MainLayout>
             <RootContent />

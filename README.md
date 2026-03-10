@@ -85,17 +85,17 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 ## 📜 Development Commands
 
-| Command             | Description                            |
-| ------------------- | -------------------------------------- |
-| `bun dev`           | Start development server on port 3000  |
-| `bun build`         | Build the application for production   |
-| `bun typecheck`     | Run TypeScript type checking           |
-| `bun lint`          | Lint code using oxlint                 |
-| `bun format`        | Format code using oxfmt                |
-| `bun test`          | Run tests with Vitest                  |
-| `bun db:generate`   | Generate Drizzle migrations            |
-| `bun db:migrate`    | Apply Drizzle migrations               |
-| `bun up`            | Update dependencies to latest versions |
+| Command           | Description                            |
+| ----------------- | -------------------------------------- |
+| `bun dev`         | Start development server on port 3000  |
+| `bun build`       | Build the application for production   |
+| `bun typecheck`   | Run TypeScript type checking           |
+| `bun lint`        | Lint code using oxlint                 |
+| `bun format`      | Format code using oxfmt                |
+| `bun test`        | Run tests with Vitest                  |
+| `bun db:generate` | Generate Drizzle migrations            |
+| `bun db:migrate`  | Apply Drizzle migrations               |
+| `bun up`          | Update dependencies to latest versions |
 
 ## 🔐 Environment Variables
 

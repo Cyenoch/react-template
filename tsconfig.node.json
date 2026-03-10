@@ -6,8 +6,5 @@
     "types": ["@types/bun"]
   },
   "include": [],
-  "files": [
-    "./src/server.ts",
-    "./src/instrumentation.ts"
-  ]
+  "files": ["./src/server.ts", "./src/instrumentation.ts"]
 }
