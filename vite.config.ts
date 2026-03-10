@@ -41,13 +41,6 @@ export default defineConfig(() => {
     // 依赖优化（详见 ./vite/optimize-deps.ts）
     optimizeDeps,
 
-    // SSR 配置
-    ssr: {
-      // better-auth: 避免 getSession 重复声明
-      // 参考：https://github.com/better-auth/better-auth/issues/7493
-      external: ["better-auth"],
-    },
-
     // 实验性功能
     experimental: {
       enableNativePlugin: true, // Rolldown（Rust 打包器，比 Rollup 快 5-10x）

@@ -21,9 +21,6 @@ export function getRouter() {
     context: {
       queryClient,
       theme: getTheme() || "light",
-      user: undefined!,
-      session: undefined!,
-      clientEnv: undefined!,
     },
     defaultNotFoundComponent: NotFound,
     defaultErrorComponent: ErrorPrint,

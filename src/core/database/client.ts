@@ -1,44 +1,47 @@
 import type { Logger } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
-import { getLogger, isDev } from "@/core/utils";
+import { getLogger } from "@/core/utils/logger";
 import * as schema from "./schema";
 import { getServerEnv } from "../env";
+import { createServerOnlyFn } from "@tanstack/react-start";
 
 declare global {
   var _pool: Pool;
 }
 
-const dbLogger = getLogger("Database");
+const logger = getLogger(import.meta.file);
 
-export function getSQLClient(): Pool {
+export const getSQLClient = createServerOnlyFn((): Pool => {
   const serverEnv = getServerEnv();
   console.assert(!!serverEnv.DATABASE_URL, "DATABASE_URL is not defined");
   if (globalThis._pool) return globalThis._pool;
-  dbLogger.info(`Opening database connection`);
+  logger.info(`Opening database connection`);
   const pool = (globalThis._pool = new Pool({
     connectionString: serverEnv.DATABASE_URL!,
-    max: isDev ? 1 : undefined,
+    max: import.meta.env.DEV ? 1 : undefined,
   }));
   pool.on("error", (err) => {
-    dbLogger.error({ err }, "Database connection error");
+    logger.error({ err }, "Database connection error");
   });
   pool.on("connect", () => {
-    dbLogger.trace("Database connection connected");
+    logger.trace("Database connection connected");
   });
   pool.on("remove", () => {
-    dbLogger.trace("Database connection removed");
+    logger.trace("Database connection removed");
   });
   return pool;
-}
+});
 
-export function getDrizzleInstance(client: Pool = getSQLClient(), logger?: Logger) {
-  return drizzle({
-    client,
-    logger,
-    schema,
-  });
-}
+export const getDrizzleInstance = createServerOnlyFn(
+  (client: Pool = getSQLClient(), logger?: Logger) => {
+    return drizzle({
+      client,
+      logger,
+      schema,
+    });
+  },
+);
 
 export type SQLClient = ReturnType<typeof getSQLClient>;
 export type DrizzleInstance = ReturnType<typeof getDrizzleInstance>;
@@ -46,16 +49,16 @@ export type Transaction = Parameters<Parameters<DrizzleInstance["transaction"]>[
 
 // HMR support for development
 if (typeof import.meta.hot !== "undefined" && import.meta.hot) {
-  import.meta.hot.dispose(() => {
-    dbLogger.trace(`Database HMR disposed`);
+  import.meta.hot.dispose(async () => {
+    logger.trace(`Database HMR disposed`);
     if (globalThis._pool) {
-      dbLogger.trace("Closing old database connection for HMR...");
-      globalThis._pool.end();
+      logger.trace("Closing old database connection for HMR...");
+      await globalThis._pool.end();
       globalThis._pool = undefined as any;
     }
   });
 
   import.meta.hot.accept((_) => {
-    dbLogger.trace("Database module accepted HMR update");
+    logger.trace("Database module accepted HMR update");
   });
 }

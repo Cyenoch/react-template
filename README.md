@@ -1,6 +1,6 @@
 # 🚀 React Template
 
-A modern, high-performance full-stack React template powered by **Bun**, **TanStack Start**, and **oRPC**. Designed for developer experience, type-safety, and modularity.
+A modern, high-performance full-stack React template powered by **Bun** and **TanStack Start**. Designed for developer experience, type-safety, and modularity.
 
 ## 📋 Overview
 
@@ -11,9 +11,7 @@ This template provides a solid foundation for building full-stack applications w
 - ⚛️ **React 19**: Leveraging the latest React features and improvements.
 - 🚀 **TanStack Start**: Full-stack React framework with type-safe routing and SSR.
 - ⚡ **Bun**: Ultra-fast runtime, package manager, and test runner.
-- 🛡️ **oRPC**: End-to-end type-safe API without the need for code generation.
 - 🗄️ **Drizzle ORM**: Type-safe TypeScript ORM for PostgreSQL.
-- 🔐 **Better Auth**: Comprehensive and extensible authentication solution.
 - 🎨 **Tailwind CSS v4**: Utility-first styling with the latest engine.
 - 🧩 **Shadcn UI**: 50+ accessible UI components built on `@base-ui/react`.
 - 📦 **Modular Design**: Clean separation of concerns within `src/core`.
@@ -63,8 +61,6 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 | [TanStack Start](https://tanstack.com/start) | Framework | Full-stack React framework                     |
 | [Tailwind CSS v4](https://tailwindcss.com)   | Styling   | Utility-first CSS framework                    |
 | [Drizzle ORM](https://orm.drizzle.team)      | Database  | TypeScript ORM for SQL databases               |
-| [Better Auth](https://better-auth.com)       | Auth      | The most comprehensive auth library            |
-| [oRPC](https://orpc.sh)                      | API       | Type-safe RPC for TypeScript                   |
 | [Vite](https://vitejs.dev)                   | Bundler   | Next generation frontend tooling (Rolldown)    |
 
 ## 📂 Project Structure
@@ -73,7 +69,6 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 ├── src/
 │   ├── components/         # UI components, layouts, and providers
 │   ├── core/               # Core business logic & infrastructure
-│   │   ├── api/            # oRPC router, middleware, and auth server
 │   │   ├── database/       # Drizzle client and schema definitions
 │   │   ├── schema/         # Shared Zod validation schemas
 │   │   └── shared/         # Shared utilities and constants
@@ -100,8 +95,6 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 | `bun test`          | Run tests with Vitest                  |
 | `bun db:generate`   | Generate Drizzle migrations            |
 | `bun db:migrate`    | Apply Drizzle migrations               |
-| `bun auth:generate` | Generate Better Auth schema            |
-| `bun auth:migrate`  | Run Better Auth migrations             |
 | `bun up`            | Update dependencies to latest versions |
 
 ## 🔐 Environment Variables
@@ -110,7 +103,6 @@ Create a `.env.local` file in the root directory:
 
 ```env
 DATABASE_URL=postgresql://user:pass@localhost:5432/db
-BETTER_AUTH_SECRET=your-secret-key
 ```
 
 ## 📄 License

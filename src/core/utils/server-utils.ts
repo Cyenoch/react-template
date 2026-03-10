@@ -1,18 +1,7 @@
 import { createServerOnlyFn } from "@tanstack/react-start";
-import { getRequestHeader, getRequestIP } from "@tanstack/react-start/server";
+import { getRequest } from "@tanstack/react-start/server";
 import { getServerEnv } from "../env/server-env";
-
-export const getClientIP = createServerOnlyFn(() => {
-  const serverEnv = getServerEnv();
-  const xForwardedFor = serverEnv.X_FORWARDED_FOR;
-  const clientIP =
-    !!xForwardedFor || xForwardedFor === "X-Forwarded-For"
-      ? getRequestIP({ xForwardedFor: true })
-      : xForwardedFor
-        ? getRequestHeader(xForwardedFor)
-        : getRequestIP();
-  return clientIP;
-});
+import { isServer } from "@tanstack/react-query";
 
 export const getClientIPFromRequest = createServerOnlyFn((request: Request) => {
   const serverEnv = getServerEnv();
@@ -26,3 +15,12 @@ export const getClientIPFromRequest = createServerOnlyFn((request: Request) => {
   }
 });
 
+export const getClientIP = createServerOnlyFn(() => {
+  const request = getRequest();
+  return getClientIPFromRequest(request);
+});
+
+export const runServerOnly = <T extends CallableFunction>(fn: T) => {
+  if (!isServer) throw new Error("runServerOnly can only be called on the server");
+  return fn();
+};

@@ -6,16 +6,12 @@ export const ClientEnvSchema = ServerEnvSchema.pick({});
 
 export type ClientEnv = z.output<typeof ClientEnvSchema>;
 
-declare global {
-  interface Window {
-    __INJECTED_PUBLIC_ENV__: ClientEnv;
-  }
-}
-
-export const getClientEnv = createIsomorphicFn()
+const getPublicEnv = createIsomorphicFn()
   .client((): ClientEnv => {
     return window.__INJECTED_PUBLIC_ENV__;
   })
   .server((): ClientEnv => {
     return ClientEnvSchema.parse(getServerEnv());
   });
+
+export const publicEnv = getPublicEnv();

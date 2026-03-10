@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "types": ["@types/bun"]
+  },
+  "include": [],
+  "files": [
+    "./src/server.ts",
+    "./src/instrumentation.ts"
+  ]
+}

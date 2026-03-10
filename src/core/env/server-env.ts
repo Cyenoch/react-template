@@ -5,9 +5,6 @@ export const ServerEnvSchema = z.object({
   // Database
   DATABASE_URL: z.url(),
 
-  // Better Auth
-  BETTER_AUTH_SECRET: z.string().min(32).max(256),
-
   // Reverse Proxy
   X_FORWARDED_FOR: z.string().optional(),
 

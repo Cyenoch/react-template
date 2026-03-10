@@ -1,10 +1,9 @@
 import process from "node:process";
 import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
 import { NodeSDK } from "@opentelemetry/sdk-node";
-import { ORPCInstrumentation } from "@orpc/otel";
-import { getLogger } from "./core/utils";
+import { getLogger } from "./core/utils/logger";
 
-const logger = getLogger("Instrumentation");
+const logger = getLogger(import.meta.file);
 
 const sdk = new NodeSDK({
   instrumentations: [
@@ -15,7 +14,6 @@ const sdk = new NodeSDK({
         requireParentSpan: true,
       },
     }),
-    new ORPCInstrumentation(),
   ],
 });
 

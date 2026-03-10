@@ -23,5 +23,9 @@
     "./vite.config.ts",
     "./vitest.config.ts",
     "./drizzle.config.ts"
+  ],
+  "exclude": [
+    "./src/server.ts",
+    "./src/instrumentation.ts"
   ]
 }
