@@ -18,11 +18,7 @@
     "types": ["unplugin-icons/types/react", "@types/bun"]
   },
   "include": [
-    "./src/**/*",
-    "./vite/**/*",
-    "./vite.config.ts",
-    "./vitest.config.ts",
-    "./drizzle.config.ts"
+    "./src/**/*"
   ],
   "exclude": ["./src/server.ts", "./src/instrumentation.ts"]
 }

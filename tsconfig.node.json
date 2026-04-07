@@ -3,8 +3,14 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["ESNext"],
+    "allowImportingTsExtensions": true,
     "types": ["@types/bun"]
   },
-  "include": [],
+  "include": [
+    "./vite/**/*",
+    "./vite.config.ts",
+    "./vitest.config.ts",
+    "./drizzle.config.ts"
+  ],
   "files": ["./src/server.ts", "./src/instrumentation.ts"]
 }

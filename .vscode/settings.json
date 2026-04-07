@@ -8,7 +8,7 @@
     "bun.lock": true
   },
   "editor.defaultFormatter": "oxc.oxc-vscode",
-  "typescript.tsdk": "node_modules/typescript/lib",
+  "js/ts.experimental.useTsgo": true,
   "search.exclude": {
     "**/routeTree.gen.ts": true,
     "**/node_modules": true,

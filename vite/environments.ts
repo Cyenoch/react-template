@@ -1,5 +1,5 @@
-import type { EnvironmentOptions } from "vite";
-import { rolldownOptions } from "./advanced-chunks";
+import type { EnvironmentOptions } from "vite-plus";
+import { rolldownOptions } from "./advanced-chunks.ts";
 
 /**
  * 环境配置（Vite 5.2+）
