@@ -15,7 +15,7 @@
       "@/*": ["./src/*"],
       "@env": ["./src/lib/env/index.ts"]
     },
-    "types": ["unplugin-icons/types/react", "@types/bun"]
+    "types": ["unplugin-icons/types/react"]
   },
   "include": ["./src/**/*"],
   "exclude": ["./src/server.ts", "./src/instrumentation.ts"]

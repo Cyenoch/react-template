@@ -44,7 +44,7 @@ export const rolldownOptions: Rolldown.RolldownOptions = {
 
         // 数据库相关
         {
-          test: /node_modules[\\/](drizzle-orm|kysely-adapter|bun-sqlite-dialect|node-sqlite-dialect|memory-adapter)/,
+          test: /node_modules[\\/](drizzle-orm|kysely-adapter|node-sqlite-dialect|memory-adapter)/,
           name: "database",
           priority: 8,
         },

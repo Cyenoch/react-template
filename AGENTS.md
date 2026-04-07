@@ -6,24 +6,24 @@ Core application code lives in `src/`. Use `src/routes/` for TanStack Router fil
 
 ## Build, Test, and Development Commands
 
-Use Bun for all local workflows:
+Use Vite+ (`vp`) for all local workflows:
 
-- `bun dev`: start the Vite/TanStack Start dev server on port `3000`.
-- `bun build`: create a production build.
-- `bun typecheck`: run TypeScript checks for app and node configs.
-- `bun lint`: run `oxlint --fix` on the codebase.
-- `bun format`: format files with `oxfmt`.
-- `bun test`: run the Vitest suite.
-- `bun db:generate` / `bun db:migrate`: generate and apply Drizzle migrations.
+- `vp dev --port 3000`: start the Vite/TanStack Start dev server on port `3000`.
+- `vp build`: create a production build.
+- `vp check`: format, lint, and type-check in one pass.
+- `vp lint --fix`: run Oxlint on the codebase.
+- `vp fmt`: format files with Oxfmt.
+- `vp test`: run the Vitest suite.
+- `pnpm db:generate` / `pnpm db:migrate`: generate and apply Drizzle migrations.
 - `docker-compose up -d`: start the local PostgreSQL service when needed.
 
 ## Coding Style & Naming Conventions
 
-Write TypeScript with 2-space indentation, no semicolon style, and ESM imports, matching the existing codebase. Prefer `PascalCase` for React components, `camelCase` for hooks and utilities, and descriptive route filenames such as `index.tsx` and `__root.tsx`. Keep shared UI in `src/components/ui/`, app-wide providers in `src/components/providers/`, and avoid bypassing `src/core/utils/` for common helpers. Run `bun lint` and `bun format` before opening a PR.
+Write TypeScript with 2-space indentation, no semicolon style, and ESM imports, matching the existing codebase. Prefer `PascalCase` for React components, `camelCase` for hooks and utilities, and descriptive route filenames such as `index.tsx` and `__root.tsx`. Keep shared UI in `src/components/ui/`, app-wide providers in `src/components/providers/`, and avoid bypassing `src/core/utils/` for common helpers. Run `vp check` before opening a PR.
 
 ## Testing Guidelines
 
-This repo uses Vitest with `happy-dom`. Name tests `*.test.ts` or `*.test.tsx`; place broad setup-style tests in `src/__tests__/` and keep feature-specific tests close to the code when practical. No coverage threshold is enforced in config, so contributors should add or update tests for new route logic, state transitions, and utility behavior. Run `bun test` locally before pushing.
+This repo uses Vitest with `happy-dom`. Name tests `*.test.ts` or `*.test.tsx`; place broad setup-style tests in `src/__tests__/` and keep feature-specific tests close to the code when practical. No coverage threshold is enforced in config, so contributors should add or update tests for new route logic, state transitions, and utility behavior. Run `vp test` locally before pushing.
 
 ## Commit & Pull Request Guidelines
 

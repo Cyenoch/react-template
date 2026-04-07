@@ -280,11 +280,11 @@ function RouteComponent() {
               </div>
 
               <div className="space-y-3 rounded-2xl border border-border/70 bg-card px-4 py-4 font-mono text-sm">
-                <CommandLine line="bun install" label="安装依赖" />
+                <CommandLine line="pnpm install" label="安装依赖" />
                 <Separator />
-                <CommandLine line="bun run dev" label="启动开发环境" />
+                <CommandLine line="vp dev" label="启动开发环境" />
                 <Separator />
-                <CommandLine line="bun run typecheck" label="提交前校验" />
+                <CommandLine line="vp check" label="提交前校验" />
               </div>
             </div>
           </CardContent>

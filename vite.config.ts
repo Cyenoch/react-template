@@ -1,6 +1,6 @@
 import path from "path";
 import tailwindcss from "@tailwindcss/vite";
-import { nitroV2Plugin } from "@tanstack/nitro-v2-vite-plugin";
+import { nitro } from "nitro/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import react from "@vitejs/plugin-react";
 import autoImport from "unplugin-auto-import/vite";
@@ -29,7 +29,7 @@ export default defineConfig({
       router: { entry: "router.ts" },
       server: { entry: "server.ts" },
     }),
-    nitroV2Plugin({ preset: "node-server" }), // Nitro 服务器适配器
+    nitro({ preset: "node-server", compatibilityDate: "2026-04-07" }), // Nitro 服务器适配器
     react(), // React Fast Refresh
     autoImport(autoImportOptions), // 自动导入 hooks/组件
     tailwindcss(), // Tailwind CSS（必须放最后）

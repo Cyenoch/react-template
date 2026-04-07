@@ -1,3 +1,6 @@
+import { FastResponse } from "srvx";
+globalThis.Response = FastResponse;
+
 import "./instrumentation";
 import { createStartHandler, defaultStreamHandler } from "@tanstack/react-start/server";
 import { getLogger } from "./core/utils/logger";

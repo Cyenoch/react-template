@@ -1,6 +1,6 @@
 # 🚀 React Template
 
-A modern, high-performance full-stack React template powered by **Bun** and **TanStack Start**. Designed for developer experience, type-safety, and modularity.
+A modern, high-performance full-stack React template powered by **Vite+** and **TanStack Start**. Designed for developer experience, type-safety, and modularity.
 
 ## 📋 Overview
 
@@ -10,7 +10,7 @@ This template provides a solid foundation for building full-stack applications w
 
 - ⚛️ **React 19**: Leveraging the latest React features and improvements.
 - 🚀 **TanStack Start**: Full-stack React framework with type-safe routing and SSR.
-- ⚡ **Bun**: Ultra-fast runtime, package manager, and test runner.
+- ⚡ **Vite+**: Unified toolchain for dev, build, lint, format, and test.
 - 🗄️ **Drizzle ORM**: Type-safe TypeScript ORM for PostgreSQL.
 - 🎨 **Tailwind CSS v4**: Utility-first styling with the latest engine.
 - 🧩 **Shadcn UI**: 50+ accessible UI components built on `@base-ui/react`.
@@ -20,14 +20,14 @@ This template provides a solid foundation for building full-stack applications w
 
 ### Prerequisites
 
-- [Bun](https://bun.sh) installed on your machine.
+- [Node.js](https://nodejs.org) v22+ and [pnpm](https://pnpm.io) installed on your machine.
 - [Docker](https://www.docker.com/) (optional, for local PostgreSQL).
 
 ### Installation
 
 ```bash
 # Install dependencies
-bun install
+pnpm install
 
 # Setup environment variables
 cp .env.example .env.local
@@ -41,13 +41,13 @@ cp .env.example .env.local
 docker-compose up -d
 
 # Run migrations
-bun db:migrate
+pnpm db:migrate
 ```
 
 ### Development
 
 ```bash
-bun dev
+vp dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the application.
@@ -56,12 +56,11 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 | Technology                                   | Category  | Description                                    |
 | -------------------------------------------- | --------- | ---------------------------------------------- |
-| [Bun](https://bun.sh)                        | Runtime   | Fast all-in-one JavaScript runtime             |
+| [Vite+](https://viteplus.dev)                | Toolchain | Unified dev, build, lint, format, and test     |
 | [React 19](https://react.dev)                | Frontend  | The library for web and native user interfaces |
 | [TanStack Start](https://tanstack.com/start) | Framework | Full-stack React framework                     |
 | [Tailwind CSS v4](https://tailwindcss.com)   | Styling   | Utility-first CSS framework                    |
 | [Drizzle ORM](https://orm.drizzle.team)      | Database  | TypeScript ORM for SQL databases               |
-| [Vite](https://vitejs.dev)                   | Bundler   | Next generation frontend tooling (Rolldown)    |
 
 ## 📂 Project Structure
 
@@ -85,17 +84,16 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 ## 📜 Development Commands
 
-| Command           | Description                            |
-| ----------------- | -------------------------------------- |
-| `bun dev`         | Start development server on port 3000  |
-| `bun build`       | Build the application for production   |
-| `bun typecheck`   | Run TypeScript type checking           |
-| `bun lint`        | Lint code using oxlint                 |
-| `bun format`      | Format code using oxfmt                |
-| `bun test`        | Run tests with Vitest                  |
-| `bun db:generate` | Generate Drizzle migrations            |
-| `bun db:migrate`  | Apply Drizzle migrations               |
-| `bun up`          | Update dependencies to latest versions |
+| Command            | Description                           |
+| ------------------ | ------------------------------------- |
+| `vp dev`           | Start development server on port 3000 |
+| `vp build`         | Build the application for production  |
+| `vp check`         | Format, lint, and type-check          |
+| `vp lint --fix`    | Lint code using Oxlint                |
+| `vp fmt`           | Format code using Oxfmt               |
+| `vp test`          | Run tests with Vitest                 |
+| `pnpm db:generate` | Generate Drizzle migrations           |
+| `pnpm db:migrate`  | Apply Drizzle migrations              |
 
 ## 🔐 Environment Variables
 
