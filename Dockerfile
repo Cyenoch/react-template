@@ -1,9 +1,9 @@
-FROM oven/bun:latest AS base
+FROM node:22-slim AS base
+RUN corepack enable && corepack prepare pnpm@latest --activate
 WORKDIR /usr/src/app
 COPY . .
-RUN bun install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 ENV NODE_ENV=production
-RUN bun -b run build
-USER bun
+RUN pnpm build
 EXPOSE 3000/tcp
-ENTRYPOINT [ "bun", "run", ".output/server/index.mjs" ]
+ENTRYPOINT [ "node", ".output/server/index.mjs" ]

@@ -17,8 +17,6 @@
     },
     "types": ["unplugin-icons/types/react", "@types/bun"]
   },
-  "include": [
-    "./src/**/*"
-  ],
+  "include": ["./src/**/*"],
   "exclude": ["./src/server.ts", "./src/instrumentation.ts"]
 }

@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vp dev --port 3000 | bun pino-pretty",
+    "dev": "vp dev --port 3000 | pnpm pino-pretty",
     "build": "vp build",
     "typecheck": "tsgo --noEmit -p tsconfig.json && tsgo --noEmit -p tsconfig.node.json",
     "lint": "vp lint --fix",
@@ -11,7 +11,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "test": "vp test",
-    "up": "bunx -b taze major -w"
+    "up": "pnpx taze major -w"
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
@@ -53,7 +53,7 @@
     "@iconify-json/svg-spinners": "^1.2.4",
     "@tailwindcss/vite": "^4.2.2",
     "@tanstack/nitro-v2-vite-plugin": "^1.154.9",
-    "@types/bun": "^1.3.11",
+    "@types/node": "^22.15.3",
     "@types/pg": "^8.20.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -68,9 +68,11 @@
     "vite-plus": "latest",
     "vitest": "npm:@voidzero-dev/vite-plus-test@latest"
   },
-  "overrides": {
-    "vite": "npm:@voidzero-dev/vite-plus-core@latest",
-    "vitest": "npm:@voidzero-dev/vite-plus-test@latest"
-  },
-  "packageManager": "bun@1.3.11"
+  "packageManager": "pnpm@10.33.0",
+  "pnpm": {
+    "overrides": {
+      "vite": "npm:@voidzero-dev/vite-plus-core@latest",
+      "vitest": "npm:@voidzero-dev/vite-plus-test@latest"
+    }
+  }
 }

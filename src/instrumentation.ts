@@ -20,10 +20,12 @@ const sdk = new NodeSDK({
 sdk.start();
 
 process.on("SIGTERM", () => {
+  // oxlint-disable-next-line typescript/no-floating-promises
   sdk.shutdown();
 });
 
 process.on("SIGINT", () => {
+  // oxlint-disable-next-line typescript/no-floating-promises
   sdk.shutdown();
 });
 
