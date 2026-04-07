@@ -14,7 +14,7 @@ import type { Rolldown } from "vite";
  */
 export const rolldownOptions: Rolldown.RolldownOptions = {
   output: {
-    advancedChunks: {
+    codeSplitting: {
       groups: [
         // React 核心
         { test: /node_modules[\\/]react[\\/]/, name: "react", priority: 20 },
