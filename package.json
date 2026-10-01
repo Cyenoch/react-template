@@ -65,15 +65,14 @@
     "tailwindcss": "^4.2.2",
     "unplugin-auto-import": "^21.0.0",
     "unplugin-icons": "^23.0.1",
-    "vite": "npm:@voidzero-dev/vite-plus-core@0.1.24",
-    "vite-plus": "0.1.24",
-    "vitest": "npm:@voidzero-dev/vite-plus-test@0.1.24"
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.0.0",
+    "vite-plus": "1.0.0",
+    "vitest": "5.0.1"
   },
   "packageManager": "pnpm@10.33.0",
   "pnpm": {
     "overrides": {
-      "vite": "npm:@voidzero-dev/vite-plus-core@0.1.24",
-      "vitest": "npm:@voidzero-dev/vite-plus-test@0.1.24"
+      "vite": "npm:@voidzero-dev/vite-plus-core@1.0.0"
     }
   }
 }
